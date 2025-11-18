@@ -10,6 +10,7 @@
     <div class="min-h-screen">
         <!-- Navigation -->
         <nav class="bg-white shadow-sm">
+
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
@@ -45,16 +46,22 @@
         <!-- Themes Section -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <h3 class="text-3xl font-bold text-center mb-12">Choose Your Theme</h3>
-            
+
             <div class="grid md:grid-cols-2 gap-8">
                 @forelse($themes as $theme)
+
+                    @php
+                        $preview = $theme->preview_image;
+                        if ($preview) {
+                            $isUrl = filter_var($preview, FILTER_VALIDATE_URL);
+                            $previewUrl = $isUrl ? $preview : asset('storage/' . $preview);
+                        } else {
+                            $previewUrl = 'https://colorlib.com/wp/wp-content/uploads/sites/2/rezume-free-template-353x278.jpg.avif';
+                        }
+                    @endphp
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                         <div class="h-64 bg-gray-200 flex items-center justify-center">
-                            @if($theme->preview_image)
-                                <img src="{{ asset('storage/' . $theme->preview_image) }}" alt="{{ $theme->name }}" class="w-full h-full object-cover">
-                            @else
-                                <span class="text-gray-400 text-2xl">{{ $theme->name }}</span>
-                            @endif
+                                <img src="{{$previewUrl}}" alt="{{ $theme->name }}" class="w-full h-full object-cover">
                         </div>
                         <div class="p-6">
                             <h4 class="text-xl font-bold mb-2">{{ $theme->name }}</h4>
@@ -64,7 +71,7 @@
                                     Preview
                                 </a>
                                 @auth
-                                    <form method="POST" action="{{ route('select.theme', $theme->id) }}" class="flex-1">
+                                    <form method="GET" action="{{ route('select.theme', $theme->id) }}" class="flex-1">
                                         @csrf
                                         <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
                                             Use This Theme

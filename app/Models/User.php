@@ -74,4 +74,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserGoal::class)->orderBy('sort_order');
     }
+
+    public function educations() { return $this->hasMany(Education::class); }
+    public function experiences() { return $this->hasMany(Experience::class); }
+
 }

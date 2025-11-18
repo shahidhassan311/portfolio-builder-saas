@@ -16,6 +16,21 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                @auth
+                    @if(auth()->user()->is_admin)
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link
+                                :href="route('admin.themes.index')"
+                                :active="request()->routeIs('admin.themes.*')"
+                            >
+                                {{ __('Portfolio Themes') }}
+                            </x-nav-link>
+                        </div>
+                    @endif
+                @endauth
+
+
             </div>
 
             <!-- Settings Dropdown -->

@@ -19,13 +19,14 @@ class DashboardController extends Controller
     public function index()
     {
         $this->checkAdmin();
-        
+
         $stats = [
             'users_count' => User::count(),
             'active_portfolios' => User::whereNotNull('active_theme_id')->count(),
             'themes_count' => Theme::count(),
         ];
 
+//        dd('sadsa');
         return view('admin.dashboard', compact('stats'));
     }
 }

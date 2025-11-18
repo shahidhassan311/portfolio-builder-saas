@@ -22,5 +22,13 @@ class ThemeSeeder extends Seeder
             'preview_image' => null,
             'is_active' => true,
         ]);
+
+        // New super beautiful portfolio theme
+        Theme::create([
+            'name' => 'Super Portfolio',
+            'slug' => 'super-portfolio', // resources/views/themes/super-portfolio.blade.php
+            'preview_image' => null,
+            'is_active' => true,
+        ]);
     }
 }

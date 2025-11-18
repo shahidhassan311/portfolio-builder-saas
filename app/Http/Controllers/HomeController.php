@@ -9,15 +9,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $themes = Theme::where('is_active', true)->take(2)->get();
-        
+        $themes = Theme::where('is_active', true)->get();
+
         return view('home', compact('themes'));
     }
 
     public function previewTheme($id)
     {
         $theme = Theme::findOrFail($id);
-        
+
         // Return demo data for preview
         $demoUser = (object)[
             'id' => 0,
@@ -63,19 +63,19 @@ class HomeController extends Controller
                 (object)['goal_text' => 'Contribute to open source projects'],
             ]),
         ];
-        
+
         return view('themes.' . $theme->slug, ['user' => $demoUser, 'theme' => $theme, 'isPreview' => true]);
     }
 
     public function selectTheme(Request $request, $id)
     {
         $theme = Theme::findOrFail($id);
-        
+
         if (auth()->check()) {
             auth()->user()->update(['active_theme_id' => $theme->id]);
             return redirect()->route('dashboard')->with('success', 'Theme selected successfully!');
         }
-        
+
         return redirect()->route('register', ['theme_id' => $theme->id]);
     }
 }

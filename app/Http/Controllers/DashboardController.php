@@ -7,6 +7,8 @@ use App\Models\UserProfile;
 use App\Models\UserSkill;
 use App\Models\UserProject;
 use App\Models\UserGoal;
+use App\Models\Education;
+use App\Models\Experience;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,9 +17,20 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $user->load(['profile', 'skills', 'projects', 'goals', 'activeTheme']);
+
+        $user->load([
+            'profile',
+            'skills',
+            'projects',
+            'goals',
+            'educations',
+            'experiences',
+            'activeTheme'
+        ]);
+
+
         $themes = Theme::where('is_active', true)->get();
-        
+
         return view('dashboard.index', compact('user', 'themes'));
     }
 
@@ -68,6 +81,8 @@ class DashboardController extends Controller
         return redirect()->route('dashboard')->with('success', 'About section updated successfully!');
     }
 
+    /* ================= SKILLS ================= */
+
     public function storeSkill(Request $request)
     {
         $request->validate([
@@ -100,6 +115,8 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Skill deleted successfully!');
     }
+
+    /* ================= PROJECTS ================= */
 
     public function storeProject(Request $request)
     {
@@ -156,6 +173,8 @@ class DashboardController extends Controller
         return redirect()->route('dashboard')->with('success', 'Project deleted successfully!');
     }
 
+    /* ================= GOALS ================= */
+
     public function storeGoal(Request $request)
     {
         $request->validate([
@@ -187,17 +206,172 @@ class DashboardController extends Controller
         return redirect()->route('dashboard')->with('success', 'Goal deleted successfully!');
     }
 
+    /* ================= EDUCATION ================= */
+
+    public function storeEducation(Request $request)
+    {
+        $request->validate([
+            'institution'     => 'required|string|max:255',
+            'degree'          => 'nullable|string|max:255',
+            'field_of_study'  => 'nullable|string|max:255',
+            'location'        => 'nullable|string|max:255',
+            'start_date'      => 'nullable|date',
+            'end_date'        => 'nullable|date|after_or_equal:start_date',
+            'is_current'      => 'nullable|boolean',
+            'description'     => 'nullable|string',
+            'sort_order'      => 'nullable|integer|min:0',
+        ]);
+
+        $data = $request->only([
+            'institution',
+            'degree',
+            'field_of_study',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'sort_order',
+        ]);
+
+        // checkbox handling
+        $data['is_current'] = $request->boolean('is_current');
+
+        auth()->user()->educations()->create($data);
+
+        return redirect()->route('dashboard')->with('success', 'Education added successfully!');
+    }
+
+    public function updateEducation(Request $request, $id)
+    {
+        $request->validate([
+            'institution'     => 'required|string|max:255',
+            'degree'          => 'nullable|string|max:255',
+            'field_of_study'  => 'nullable|string|max:255',
+            'location'        => 'nullable|string|max:255',
+            'start_date'      => 'nullable|date',
+            'end_date'        => 'nullable|date|after_or_equal:start_date',
+            'is_current'      => 'nullable|boolean',
+            'description'     => 'nullable|string',
+            'sort_order'      => 'nullable|integer|min:0',
+        ]);
+
+        $education = auth()->user()->educations()->findOrFail($id);
+
+        $data = $request->only([
+            'institution',
+            'degree',
+            'field_of_study',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'sort_order',
+        ]);
+
+        $data['is_current'] = $request->boolean('is_current');
+
+        $education->update($data);
+
+        return redirect()->route('dashboard')->with('success', 'Education updated successfully!');
+    }
+
+    public function deleteEducation($id)
+    {
+        $education = auth()->user()->educations()->findOrFail($id);
+        $education->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Education deleted successfully!');
+    }
+
+    /* ================= EXPERIENCE ================= */
+
+    public function storeExperience(Request $request)
+    {
+        $request->validate([
+            'company'         => 'required|string|max:255',
+            'role_title'      => 'required|string|max:255',
+            'employment_type' => 'nullable|string|max:255',
+            'location'        => 'nullable|string|max:255',
+            'start_date'      => 'nullable|date',
+            'end_date'        => 'nullable|date|after_or_equal:start_date',
+            'is_current'      => 'nullable|boolean',
+            'description'     => 'nullable|string',
+            'sort_order'      => 'nullable|integer|min:0',
+        ]);
+
+        $data = $request->only([
+            'company',
+            'role_title',
+            'employment_type',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'sort_order',
+        ]);
+
+        $data['is_current'] = $request->boolean('is_current');
+
+        auth()->user()->experiences()->create($data);
+
+        return redirect()->route('dashboard')->with('success', 'Experience added successfully!');
+    }
+
+    public function updateExperience(Request $request, $id)
+    {
+        $request->validate([
+            'company'         => 'required|string|max:255',
+            'role_title'      => 'required|string|max:255',
+            'employment_type' => 'nullable|string|max:255',
+            'location'        => 'nullable|string|max:255',
+            'start_date'      => 'nullable|date',
+            'end_date'        => 'nullable|date|after_or_equal:start_date',
+            'is_current'      => 'nullable|boolean',
+            'description'     => 'nullable|string',
+            'sort_order'      => 'nullable|integer|min:0',
+        ]);
+
+        $experience = auth()->user()->experiences()->findOrFail($id);
+
+        $data = $request->only([
+            'company',
+            'role_title',
+            'employment_type',
+            'location',
+            'start_date',
+            'end_date',
+            'description',
+            'sort_order',
+        ]);
+
+        $data['is_current'] = $request->boolean('is_current');
+
+        $experience->update($data);
+
+        return redirect()->route('dashboard')->with('success', 'Experience updated successfully!');
+    }
+
+    public function deleteExperience($id)
+    {
+        $experience = auth()->user()->experiences()->findOrFail($id);
+        $experience->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Experience deleted successfully!');
+    }
+
+    /* ================= CONTACT / THEME ================= */
+
     public function updateContact(Request $request)
     {
         $request->validate([
-            'contact_email' => 'nullable|email',
-            'contact_phone' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
+            'contact_email'   => 'nullable|email',
+            'contact_phone'   => 'nullable|string|max:255',
+            'location'        => 'nullable|string|max:255',
             'social_facebook' => 'nullable|url',
-            'social_instagram' => 'nullable|url',
+            'social_instagram'=> 'nullable|url',
             'social_linkedin' => 'nullable|url',
-            'social_github' => 'nullable|url',
-            'social_twitter' => 'nullable|url',
+            'social_github'   => 'nullable|url',
+            'social_twitter'  => 'nullable|url',
         ]);
 
         auth()->user()->profile()->updateOrCreate(

@@ -22,6 +22,12 @@
                             <a href="#about" onclick="showSection('about')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="about">About Me</a>
                             <a href="#skills" onclick="showSection('skills')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="skills">Skills</a>
                             <a href="#projects" onclick="showSection('projects')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="projects">Projects</a>
+
+                            <!-- 🔽 NEW -->
+                            <a href="#experience" onclick="showSection('experience')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="experience">Experience</a>
+                            <a href="#education" onclick="showSection('education')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="education">Education</a>
+                            <!-- 🔼 NEW -->
+
                             <a href="#goals" onclick="showSection('goals')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="goals">Goals</a>
                             <a href="#contact" onclick="showSection('contact')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="contact">Contact Details</a>
                             <a href="#theme" onclick="showSection('theme')" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md section-link" data-section="theme">Theme Settings</a>
@@ -149,6 +155,200 @@
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                    </div>
+
+
+                    {{-- Experience Section --}}
+                    <div id="experience-section" class="section-content hidden bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">Experience</h3>
+
+                        {{-- Add experience --}}
+                        <form method="POST" action="{{ route('dashboard.experience.store') }}" class="mb-4 space-y-3">
+                            @csrf
+                            <div class="grid md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Company</label>
+                                    <input type="text" name="company" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Role / Title</label>
+                                    <input type="text" name="role_title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Employment Type</label>
+                                    <input type="text" name="employment_type" placeholder="Full-time, Part-time, Freelance..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Location</label>
+                                    <input type="text" name="location" placeholder="City, Country" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                                    <input type="date" name="start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">End Date</label>
+                                    <input type="date" name="end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" id="exp_is_current" name="is_current" value="1" class="rounded border-gray-300">
+                                <label for="exp_is_current" class="text-sm text-gray-700">Currently working here</label>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea name="description" rows="3" placeholder="What did you work on? Tech stack, responsibilities..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Sort Order (optional)</label>
+                                <input type="number" name="sort_order" min="0" class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm">
+                            </div>
+
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                                Add Experience
+                            </button>
+                        </form>
+
+                        {{-- List experiences --}}
+                        <div class="space-y-3">
+                            @forelse($user->experiences as $exp)
+                                <div class="border rounded-md p-3 flex flex-col md:flex-row md:items-center md:justify-between bg-gray-50">
+                                    <div>
+                                        <div class="font-semibold">
+                                            {{ $exp->role_title }} @ {{ $exp->company }}
+                                        </div>
+                                        <div class="text-sm text-gray-600">
+                                            {{ $exp->employment_type ? $exp->employment_type . ' · ' : '' }}
+                                            {{ $exp->location }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            @if($exp->start_date)
+                                                {{ \Illuminate\Support\Carbon::parse($exp->start_date)->format('M Y') }}
+                                                –
+                                                @if($exp->is_current)
+                                                    Present
+                                                @elseif($exp->end_date)
+                                                    {{ \Illuminate\Support\Carbon::parse($exp->end_date)->format('M Y') }}
+                                                @else
+                                                    …
+                                                @endif
+                                            @endif
+                                        </div>
+                                        @if($exp->description)
+                                            <p class="text-sm text-gray-700 mt-2">{{ $exp->description }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="mt-2 md:mt-0 flex gap-2">
+                                        {{-- You can later add editExperience() here --}}
+                                        <form method="POST" action="{{ route('dashboard.experience.delete', $exp->id) }}" onsubmit="return confirm('Delete this experience?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 text-sm hover:text-red-800">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500">No experience added yet.</p>
+                            @endforelse
+                        </div>
+                    </div>
+
+
+                    {{-- Education Section --}}
+                    <div id="education-section" class="section-content hidden bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">Education</h3>
+
+                        {{-- Add education --}}
+                        <form method="POST" action="{{ route('dashboard.education.store') }}" class="mb-4 space-y-3">
+                            @csrf
+                            <div class="grid md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Institution</label>
+                                    <input type="text" name="institution" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Degree</label>
+                                    <input type="text" name="degree" placeholder="e.g. BS Computer Science" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Field of Study</label>
+                                    <input type="text" name="field_of_study" placeholder="Computer Science, IT, Design..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Location</label>
+                                    <input type="text" name="location" placeholder="City, Country" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                                    <input type="date" name="start_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">End Date</label>
+                                    <input type="date" name="end_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" id="edu_is_current" name="is_current" value="1" class="rounded border-gray-300">
+                                <label for="edu_is_current" class="text-sm text-gray-700">Currently studying here</label>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea name="description" rows="3" placeholder="Highlights, GPA (optional), relevant courses..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Sort Order (optional)</label>
+                                <input type="number" name="sort_order" min="0" class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm">
+                            </div>
+
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                                Add Education
+                            </button>
+                        </form>
+
+                        {{-- List educations --}}
+                        <div class="space-y-3">
+                            @forelse($user->educations as $edu)
+                                <div class="border rounded-md p-3 flex flex-col md:flex-row md:items-center md:justify-between bg-gray-50">
+                                    <div>
+                                        <div class="font-semibold">
+                                            {{ $edu->degree ?? 'Education' }}
+                                            @if($edu->field_of_study)
+                                                – {{ $edu->field_of_study }}
+                                            @endif
+                                        </div>
+                                        <div class="text-sm text-gray-600">
+                                            {{ $edu->institution }}
+                                            @if($edu->location) · {{ $edu->location }} @endif
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            @if($edu->start_date)
+                                                {{ \Illuminate\Support\Carbon::parse($edu->start_date)->format('Y') }}
+                                                –
+                                                @if($edu->is_current)
+                                                    Present
+                                                @elseif($edu->end_date)
+                                                    {{ \Illuminate\Support\Carbon::parse($edu->end_date)->format('Y') }}
+                                                @else
+                                                    …
+                                                @endif
+                                            @endif
+                                        </div>
+                                        @if($edu->description)
+                                            <p class="text-sm text-gray-700 mt-2">{{ $edu->description }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="mt-2 md:mt-0 flex gap-2">
+                                        <form method="POST" action="{{ route('dashboard.education.delete', $edu->id) }}" onsubmit="return confirm('Delete this education?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 text-sm hover:text-red-800">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500">No education added yet.</p>
+                            @endforelse
                         </div>
                     </div>
 
