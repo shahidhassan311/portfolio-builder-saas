@@ -1,21 +1,99 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
+<style>
+    brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-orb {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background:
+            conic-gradient(from 180deg, #22d3ee, #6366f1, #a855f7, #ec4899, #22d3ee);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 22px rgba(56,189,248,0.8);
+    }
+
+    .brand-orb-inner {
+        width: 28px;
+        height: 28px;
+        border-radius: inherit;
+        background: radial-gradient(circle at 30% 20%, #e5e7eb, #020617);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e5e7eb;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+</style>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
+{{--                    <a href="{{ route('dashboard') }}">--}}
+{{--                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />--}}
+{{--                    </a>--}}
+                    <div class="brand">
+                        <div class="brand-orb">
+                            <div class="brand-orb-inner">PB</div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+{{--                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">--}}
+{{--                        {{ __('My Portfolio Details') }}--}}
+{{--                    </x-nav-link>--}}
+
+                    <x-nav-link :href="route('profile.edit')">
+                        {{ __('Profile Details') }}
+                    </x-nav-link>
+                </div>
+{{--                <x-dropdown-link :href="route('profile.edit')">--}}
+{{--                    {{ __('Profile') }}--}}
+{{--                </x-dropdown-link>--}}
+                @auth
+                    @if(auth()->user()->is_admin)
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link
+                                href="{{ route('admin.dashboard') }}"
+                                :active="request()->routeIs('admin.dashboard.*')"
+                            >
+                                {{ __('Dashboard') }}
+                            </x-nav-link>
+                        </div>
+                    @endif
+                @endauth
+
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('My Portfolio Details') }}
                     </x-nav-link>
                 </div>
+
+
+                @auth
+                    @if(auth()->user()->is_admin)
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <x-nav-link
+                                :href="route('admin.users.index')"
+                                :active="request()->routeIs('admin.users.*')"
+                            >
+                                {{ __('Manage Users') }}
+                            </x-nav-link>
+                        </div>
+                    @endif
+                @endauth
 
                 @auth
                     @if(auth()->user()->is_admin)

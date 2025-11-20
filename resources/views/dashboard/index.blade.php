@@ -146,7 +146,7 @@
                                         <a href="{{ $project->project_url }}" target="_blank" class="text-blue-600 text-sm">View Project</a>
                                     @endif
                                     <div class="mt-2 flex gap-2">
-                                        <button onclick="editProject({{ $project->id }})" class="text-blue-600 text-sm">Edit</button>
+{{--                                        <button onclick="editProject({{ $project->id }})" class="text-blue-600 text-sm">Edit</button>--}}
                                         <form method="POST" action="{{ route('dashboard.projects.delete', $project->id) }}" class="inline">
                                             @csrf
                                             @method('DELETE')

@@ -38,5 +38,12 @@ class ThemeSeeder extends Seeder
             'preview_image' => null,
             'is_active' => true,
         ]);
+
+        Theme::create([
+            'name' => 'Professional page',
+            'slug' => 'professional',
+            'preview_image' => null,
+            'is_active' => true,
+        ]);
     }
 }
