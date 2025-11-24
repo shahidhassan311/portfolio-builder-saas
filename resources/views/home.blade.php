@@ -1149,8 +1149,10 @@
 
         /* HERO */
         .hero {
-            padding: 42px 16px 40px;
+            padding: 58px 16px 52px;
         }
+
+
 
         .hero-inner {
             max-width: 1160px;
@@ -1184,12 +1186,13 @@
         }
 
         .hero-title {
-            font-size: clamp(28px, 4vw, 38px);
-            line-height: 1.1;
+            font-size: clamp(30px, 5vw, 42px);
+            line-height: 1.07;
             font-weight: 800;
             letter-spacing: 0.01em;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
+
 
         .hero-title span.gradient {
             background: linear-gradient(120deg, #22d3ee, #a855f7, #6366f1);
@@ -1308,7 +1311,7 @@
             border-radius: 17px;
             overflow: hidden;
             background: radial-gradient(circle at top left, #6366f1, #0f172a);
-            height: 150px;
+            height: 180px;
             display: grid;
             grid-template-columns: 1.3fr 1fr;
         }
@@ -1629,7 +1632,7 @@
         }
 
         .theme-thumb img {
-            width: 100%;
+            width: auto;
             height: 100%;
             object-fit: cover;
             display: block;
@@ -1857,6 +1860,58 @@
             justify-content: space-between;
             gap: 8px;
         }
+
+
+        /* RESPONSIVE LAYOUTS */
+        @media (max-width: 900px) {
+            .navbar-inner {
+                padding: 10px 16px;
+                position: relative;
+            }
+
+            /* Show burger, hide nav by default on mobile */
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: 0;
+                margin-top: 6px;
+                background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+                border-top: 1px solid rgba(148,163,184,0.35);
+                border-bottom: 1px solid rgba(148,163,184,0.35);
+                padding: 12px 16px 14px;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                font-size: 13px;
+                z-index: 40;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links .nav-link,
+            .nav-links .btn-pill,
+            .nav-links form {
+                width: 100%;
+            }
+
+            .nav-links .btn-pill,
+            .nav-links button.btn-pill {
+                justify-content: center;
+            }
+
+            .nav-links form {
+                margin: 0;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1869,12 +1924,18 @@
                     <div class="brand-orb-inner">PB</div>
                 </div>
 
-
                 <div class="brand-text-main">
                     <span class="brand-title">Portfolio Builder</span>
                     <span class="brand-sub">Free portfolio • PDF ready</span>
                 </div>
             </div>
+
+            <!-- Mobile toggle button -->
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+            </button>
 
             <nav class="nav-links">
                 <a href="#how-it-works" class="nav-link">How it works</a>
@@ -2235,5 +2296,20 @@
         </div>
     </footer>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('.nav-toggle');
+        const nav = document.querySelector('.nav-links');
+
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener('click', function () {
+            const isOpen = nav.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+    });
+</script>
+
 </body>
 </html>
