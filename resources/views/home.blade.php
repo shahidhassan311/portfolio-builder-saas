@@ -21,9 +21,10 @@
         body {
             margin: 0;
             font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at 15% -20%, rgba(134,118,255,0.4), transparent 45%),
-            radial-gradient(circle at 85% -10%, rgba(49,201,255,0.35), transparent 45%),
-            #030711;
+            background:
+                radial-gradient(circle at 15% -20%, rgba(134,118,255,0.4), transparent 45%),
+                radial-gradient(circle at 85% -10%, rgba(49,201,255,0.35), transparent 45%),
+                #030711;
             color: var(--text);
         }
         a { color: inherit; text-decoration: none; }
@@ -61,7 +62,6 @@
         main h2 { font-size: 36px; margin-bottom: 14px; }
         main p.section-sub { color: var(--text-muted); max-width: 600px; margin-bottom: 36px; }
         /* hero */
-        /*.hero { padding: 120px 0 80px; }*/
         .hero-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center; }
         .hero-title { font-size: clamp(48px, 6vw, 66px); font-weight: 700; line-height: 1.05; margin-bottom: 18px; }
         .hero-title em { font-style: normal; background: linear-gradient(120deg, var(--accent-3), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -82,8 +82,9 @@
         .hero-card-preview {
             border-radius: 24px; padding: 24px; min-height: 220px;
             border: 1px solid rgba(255,255,255,0.04);
-            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 60%),
-            linear-gradient(140deg, rgba(93,107,255,0.35), rgba(156,91,255,0.2));
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 60%),
+                linear-gradient(140deg, rgba(93,107,255,0.35), rgba(156,91,255,0.2));
         }
         .hero-card-stats { margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 18px; }
         .stat { background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); }
@@ -99,9 +100,10 @@
         .themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
         .theme-card { background: rgba(10,14,36,0.75); border-radius: 30px; padding: 26px; border: 1px solid rgba(255,255,255,0.06); transition: transform .25s ease, box-shadow .25s ease; }
         .theme-card:hover { transform: translateY(-6px); box-shadow: 0 25px 60px rgba(3,7,18,0.7); }
-        .theme-preview { height: 180px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); background: #0b132c; display: flex; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 18px; }
+        .theme-preview { height: 180px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); background: #0b132c; display: flex; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 18px; overflow: hidden; }
+        .theme-preview img { width: 100%; height: 100%; object-fit: cover; }
         .theme-actions { display: flex; gap: 12px; margin-top: 18px; }
-        .pill { flex: 1; border-radius: 999px; padding: 10px 0; text-align: center; border: 1px solid rgba(255,255,255,0.15); font-weight: 400; }
+        .pill { flex: 1; border-radius: 999px; padding: 10px 0; text-align: center; border: 1px solid rgba(255,255,255,0.15); font-weight: 400; font-size: 14px; }
         .pill.primary { border: none; background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #fff; }
         /* about */
         .about { background: radial-gradient(circle at 20% 20%, rgba(93,107,255,0.12), transparent 60%); border-radius: 42px; padding: 60px; border: 1px solid rgba(255,255,255,0.05); box-shadow: var(--shadow); }
@@ -123,6 +125,10 @@
     </style>
 </head>
 <body>
+@php
+    // dynamic templates count for hero stats
+    $templatesCount = isset($themes) ? $themes->count() : 5;
+@endphp
 <div class="page">
     <header class="nav">
         <div class="max nav-content">
@@ -195,7 +201,7 @@
                         </div>
                         <div class="stat">
                             <span>Templates</span>
-                            <strong>05</strong>
+                            <strong>{{ str_pad($templatesCount, 2, '0', STR_PAD_LEFT) }}</strong>
                         </div>
                         <div class="stat">
                             <span>Exports</span>
@@ -237,25 +243,57 @@
             <div class="max">
                 <h2>Choose your theme</h2>
                 <p class="section-sub">All templates stay in sync: switch anytime, keep content intact.</p>
-                <div class="themes-grid">
-                    @foreach([
-                        ['Classic Portfolio','Perfect for timeless personal sites'],
-                        ['Hero Banner Style','Bold hero-driven layout'],
-                        ['Super Portfolio','Showcase multiple projects'],
-                        ['Super Portfolio Two','Minimal grid-focused variant'],
-                        ['Professional Page','Corporate-ready structure'],
-                    ] as $theme)
-                        <article class="theme-card">
-                            <div class="theme-preview">{{ $theme[0] }}</div>
-                            <h4>{{ $theme[0] }}</h4>
-                            <span style="color:var(--text-muted); font-size:13px;">{{ $theme[1] }}</span>
-                            <div class="theme-actions">
-                                <a class="pill" href="{{ route('login') }}">Preview</a>
-                                <a class="pill primary" href="{{ route('register') }}">Get started</a>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
+
+                @if(isset($themes) && $themes->count())
+                    <div class="themes-grid">
+                        @foreach($themes as $theme)
+                            @php
+                                $preview = $theme->preview_image;
+                                if ($preview) {
+                                    $isUrl = filter_var($preview, FILTER_VALIDATE_URL);
+                                    $previewUrl = $isUrl ? $preview : asset('storage/' . $preview);
+                                } else {
+                                    $previewUrl = 'https://colorlib.com/wp/wp-content/uploads/sites/2/rezume-free-template-353x278.jpg.avif';
+                                }
+                            @endphp
+
+                            <article class="theme-card">
+                                <a href="{{ route('preview.theme', $theme->id) }}" target="_blank">
+                                    <div class="theme-preview">
+                                        <img src="{{ $previewUrl }}" alt="{{ $theme->name }} preview">
+                                    </div>
+                                </a>
+                                <h4>{{ $theme->name }}</h4>
+                                <span style="color:var(--text-muted); font-size:13px;">
+                                    {{ $theme->description ?? 'A clean, modern portfolio layout.' }}
+                                </span>
+
+                                <div class="theme-actions">
+                                    {{-- Preview button --}}
+                                    <a class="pill" href="{{ route('preview.theme', $theme->id) }}" target="_blank">
+                                        Preview
+                                    </a>
+
+                                    {{-- Use / Get started with this theme --}}
+                                    @auth
+                                        <form method="GET" action="{{ route('select.theme', $theme->id) }}" style="flex:1;">
+                                            @csrf
+                                            <button type="submit" class="pill primary" style="width:100%; cursor:pointer;">
+                                                Use this theme
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a class="pill primary" href="{{ route('select.theme', $theme->id) }}">
+                                            Get started
+                                        </a>
+                                    @endauth
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="section-sub">No themes are available yet. Please check back soon — new layouts are coming.</p>
+                @endif
             </div>
         </section>
 
@@ -270,7 +308,7 @@
                                 <div class="point-icon">💡</div>
                                 <div>
                                     <strong>Template driven</strong>
-                                    <p style="margin:6px 0 0; color:var(--text-muted);">Five modern layouts optimized for PDF + responsive web.</p>
+                                    <p style="margin:6px 0 0; color:var(--text-muted);">Modern layouts optimized for PDF + responsive web.</p>
                                 </div>
                             </div>
                             <div class="point">
@@ -304,7 +342,7 @@
                                 </div>
                             </div>
                             <br>
-                            <a href="{{ route('register') }}" class="btn btn-primary pt-6" style="margin-top:28px; width:100%; text-align:center;">Start your free portfolio</a>
+                            <a href="{{ route('register') }}" class="btn btn-primary" style="margin-top:28px; width:100%; text-align:center;">Start your free portfolio</a>
                         </div>
                     </div>
                 </div>
@@ -349,5 +387,3 @@
 </div>
 </body>
 </html>
-
-
