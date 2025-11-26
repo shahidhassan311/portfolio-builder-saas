@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Portfolio Builder - Create a Premium Portfolio</title>
     @vite(['resources/js/app.js'])
@@ -43,6 +44,11 @@
             background: linear-gradient(140deg, var(--accent), var(--accent-2), var(--accent-3));
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
+        }
+        .logo img {
+            height: 200px;
+            width: 200px;
+            display: block;
         }
         .logo-copy span { display: block; font-size: 12px; color: var(--text-muted); }
         .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--text-muted); }
@@ -118,9 +124,62 @@
         .why-card ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; color: var(--text-muted); }
         footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-muted); }
         @media (max-width: 640px) {
-            .nav-content { flex-direction: column; height: auto; gap: 14px; padding: 18px 0; }
+            .nav-content {
+                /* flex-direction: column;  Removed to keep row layout for logo + burger */
+                height: 74px; /* Restore height */
+                padding: 0 24px; /* Restore padding */
+            }
             .about { padding: 36px; }
             .hero-card { padding: 22px; }
+
+            /* Mobile Menu Styles */
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                cursor: pointer;
+                padding: 8px;
+            }
+            .mobile-menu-container {
+                display: none;
+                position: absolute;
+                top: 74px;
+                left: 0;
+                width: 100%;
+                background: rgba(3,7,17,0.98);
+                backdrop-filter: blur(20px);
+                padding: 24px;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                flex-direction: column;
+                gap: 24px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            }
+            .mobile-menu-container.active {
+                display: flex;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                font-size: 16px;
+            }
+            .nav-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 16px;
+            }
+            .nav-actions .btn {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+        @media (min-width: 641px) {
+            .mobile-menu-btn { display: none; }
+            .mobile-menu-container {
+                display: contents; /* Allows children to participate in parent flex layout */
+            }
         }
     </style>
 </head>
@@ -133,28 +192,62 @@
     <header class="nav">
         <div class="max nav-content">
             <div class="logo">
-                <div class="logo-mark">PB</div>
-                <div class="logo-copy">
-                    <strong>Portfolio Builder</strong>
-                    <span>Build once. Ship everywhere.</span>
-                </div>
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('resumizo-logo-white.png') }}"
+                         alt="Resumizo Logo"
+                         class="h-10 w-auto">
+                </a>
             </div>
-            <nav class="nav-links">
-                <a href="#hero">How it works</a>
-                <a href="#themes">Themes</a>
-                <a href="#about">About</a>
-                <a href="#why">Why us</a>
-            </nav>
-            <div class="nav-actions">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="btn btn-outline">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-outline">Log in</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Sign up free</a>
-                @endauth
+
+            {{-- Mobile Menu Button --}}
+            <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            {{-- Mobile Menu Container --}}
+            <div id="mobile-menu" class="mobile-menu-container">
+                <nav class="nav-links">
+                    <a href="#hero">How it works</a>
+                    <a href="#themes">Themes</a>
+                    <a href="#about">About</a>
+                    <a href="#why">Why us</a>
+                </nav>
+                <div class="nav-actions">
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="btn btn-outline">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline">Log in</a>
+                        <a href="{{ route('register') }}" class="btn btn-primary">Sign up free</a>
+                    @endauth
+                </div>
             </div>
         </div>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                });
+
+                // Close menu when clicking a link
+                const links = mobileMenu.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                    });
+                });
+            }
+        });
+    </script>
 
     <main>
         <section class="hero" id="hero">

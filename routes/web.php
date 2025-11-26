@@ -15,6 +15,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/preview/{id}', [HomeController::class, 'previewTheme'])->name('preview.theme');
 Route::get('/select-theme/{id}', [HomeController::class, 'selectTheme'])->name('select.theme');
 
+Route::get('/portfolio/{id}/{username}/pdf', [PortfolioController::class, 'downloadPdf'])
+    ->name('portfolio.pdf');
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

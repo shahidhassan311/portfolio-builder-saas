@@ -623,7 +623,7 @@
                         @endif
 
                         {{-- CV / PDF BUTTON --}}
-                        <a href=""
+                        <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
                            class="btn-outline" target="_blank">
                             Download CV
                         </a>
