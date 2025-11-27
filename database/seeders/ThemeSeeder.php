@@ -10,12 +10,7 @@ class ThemeSeeder extends Seeder
     public function run(): void
     {
         $themes = [
-            [
-                'name' => 'Classic Portfolio',
-                'slug' => 'classic',
-                'preview_image' => null,
-                'is_active' => true,
-            ],
+
             [
                 'name' => 'Hero Banner Style',
                 'slug' => 'hero',
@@ -43,6 +38,25 @@ class ThemeSeeder extends Seeder
             [
                 'name' => 'FreeLance Portfolio',
                 'slug' => 'freelancer',
+                'preview_image' => null,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Cool Theme',
+                'slug' => 'red-white',
+                'preview_image' => null,
+                'is_active' => true,
+            ],
+
+            [
+                'name' => 'Elegant Model',
+                'slug' => 'elegant-modern',
+                'preview_image' => null,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Animation',
+                'slug' => 'dynamic-red',
                 'preview_image' => null,
                 'is_active' => true,
             ],

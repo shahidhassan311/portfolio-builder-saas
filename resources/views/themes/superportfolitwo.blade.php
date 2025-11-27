@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $user->name }} – Portfolio</title>
+    <title>{{ $user->name }} - Portfolio</title>
 
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <style>
         :root {
             --bg: #f5f5fb;
@@ -842,6 +843,11 @@
                                 <span>See selected projects</span>
                             </a>
                         @endif
+
+                        <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
+                           class="btn-ghost" target="_blank">
+                            <span>📄 Download CV</span>
+                        </a>
                     </div>
                 </div>
             </section>

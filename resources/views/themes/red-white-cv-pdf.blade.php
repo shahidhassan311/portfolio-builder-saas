@@ -10,26 +10,24 @@
             padding: 0;
         }
 
-        /* A4-friendly layout */
         body {
             font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
             font-size: 12px;
-            color: #111827;
-            line-height: 1.4;
-            background: #f3f4f6;
-            padding: 10mm; /* consistent print padding */
+            color: #171717;
+            line-height: 1.5;
+            background: #FAFAFA;
+            padding: 10mm;
         }
 
         .page {
             width: 100%;
-            background: #ffffff;
-            border-radius: 6px;
+            background: #FFFFFF;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
+            border: 3px solid #DC2626;
             /* Removed fixed min-height to allow dynamic content adjustment */
         }
 
-        /* LAYOUT: SIDEBAR + MAIN */
         .layout {
             width: 100%;
             border-collapse: collapse;
@@ -41,36 +39,37 @@
         }
 
         .sidebar {
-            width: 30%;
-            background: #111827;
-            color: #f9fafb;
-            padding: 16px 14px 18px;
+            width: 32%;
+            background: #DC2626;
+            color: #FFFFFF;
+            padding: 20px 16px 22px;
         }
 
         .main {
-            width: 70%;
-            padding: 18px 20px 22px;
+            width: 68%;
+            padding: 22px 24px 26px;
         }
 
         /******** SIDEBAR ********/
         .avatar-wrapper {
             text-align: center;
-            margin-bottom: 14px;
+            margin-bottom: 18px;
         }
 
         .avatar-ring {
-            width: 95px;
-            height: 95px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            border: 3px solid #f24e1e;
-            margin: 0 auto 8px;
+            border: 4px solid #FFFFFF;
+            margin: 0 auto 10px;
             overflow: hidden;
-            background: #111827;
+            background: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 40px;
             font-weight: bold;
+            color: #DC2626;
         }
 
         .avatar-ring img {
@@ -80,108 +79,109 @@
         }
 
         .sidebar-name {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             text-align: center;
+            color: #FFFFFF;
         }
 
         .sidebar-title {
             font-size: 11px;
             text-align: center;
-            color: #e5e7eb;
-            margin-bottom: 12px;
+            color: #FEE2E2;
+            margin-bottom: 16px;
+            font-weight: 500;
         }
 
         .sidebar-section {
-            margin-top: 12px;
+            margin-top: 16px;
         }
 
         .sidebar-heading {
             font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: #fca5a5;
-            margin-bottom: 4px;
-        }
-
-        .sidebar-rule {
-            height: 1px;
-            background: #4b5563;
+            letter-spacing: 0.2em;
+            color: #FFFFFF;
             margin-bottom: 6px;
+            font-weight: bold;
+            border-bottom: 2px solid #FFFFFF;
+            padding-bottom: 4px;
         }
 
         .sidebar-text {
             font-size: 10.5px;
-            color: #e5e7eb;
+            color: #FEE2E2;
+            line-height: 1.6;
         }
 
         .sidebar-text div + div {
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .pill-row {
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .pill {
             display: inline-block;
-            font-size: 9.5px;
-            padding: 2px 6px;
-            border-radius: 999px;
-            border: 1px solid #4b5563;
-            margin: 0 3px 4px 0;
-            color: #e5e7eb;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            border: 1px solid #FFFFFF;
+            margin: 0 4px 6px 0;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /******** MAIN HEADER ********/
         .main-header {
-            margin-bottom: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #DC2626;
         }
 
         .main-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: #f24e1e;
-            margin-bottom: 6px;
+            letter-spacing: 0.2em;
+            color: #DC2626;
+            margin-bottom: 8px;
         }
 
         .main-summary {
-            font-size: 11px;
-            color: #374151;
+            font-size: 11.5px;
+            color: #404040;
+            line-height: 1.7;
         }
 
         /******** MAIN SECTIONS ********/
         .section {
-            margin-top: 12px;
-            margin-bottom: 8px;
+            margin-top: 16px;
+            margin-bottom: 12px;
         }
 
         .section-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #f24e1e;
-            margin-bottom: 4px;
-        }
-
-        .section-rule {
-            height: 1px;
-            background: #fecaca;
-            margin-bottom: 5px;
+            letter-spacing: 0.18em;
+            color: #DC2626;
+            margin-bottom: 6px;
+            border-bottom: 2px solid #DC2626;
+            padding-bottom: 4px;
         }
 
         .item {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .item-header {
             display: table;
             width: 100%;
+            margin-bottom: 4px;
         }
 
         .item-header-left,
@@ -195,39 +195,45 @@
         }
 
         .item-title {
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: bold;
+            color: #171717;
         }
 
         .item-place {
-            font-size: 10.5px;
-            color: #4b5563;
+            font-size: 11px;
+            color: #DC2626;
+            font-weight: 600;
+            margin-top: 2px;
         }
 
         .item-dates {
             font-size: 10px;
-            color: #6b7280;
+            color: #525252;
         }
 
         .item-body {
             font-size: 11px;
-            color: #374151;
-            margin-top: 3px;
+            color: #404040;
+            margin-top: 4px;
+            line-height: 1.6;
         }
 
         .list {
             list-style: disc;
-            padding-left: 16px;
-            margin-top: 3px;
+            padding-left: 18px;
+            margin-top: 4px;
         }
 
         .list li {
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            font-size: 11px;
+            color: #404040;
         }
 
         /******** PROJECTS WITH THUMBNAILS ********/
         .project {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .project-layout {
@@ -240,16 +246,17 @@
         }
 
         .project-thumb-cell {
-            width: 32%;
-            padding-right: 6px;
+            width: 35%;
+            padding-right: 8px;
         }
 
         .project-thumb {
             width: 100%;
-            height: 55px;
+            height: 65px;
             border-radius: 6px;
-            background: #fee2e2;
+            background: #FEE2E2;
             overflow: hidden;
+            border: 2px solid #DC2626;
         }
 
         .project-thumb img {
@@ -259,35 +266,61 @@
         }
 
         .project-content-cell {
-            width: 68%;
+            width: 65%;
         }
 
         .project-title {
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: bold;
+            color: #171717;
+            margin-bottom: 2px;
         }
 
         .project-url {
             font-size: 9.5px;
-            color: #f24e1e;
+            color: #DC2626;
+            margin-bottom: 3px;
         }
 
         .project-desc {
             font-size: 10.5px;
-            color: #374151;
-            margin-top: 2px;
+            color: #404040;
+            margin-top: 3px;
+            line-height: 1.5;
         }
 
         /******** GOALS ********/
         .goals-list {
             list-style: disc;
-            padding-left: 16px;
+            padding-left: 18px;
             font-size: 10.5px;
-            color: #e5e7eb;
+            color: #FEE2E2;
         }
 
         .goals-list li {
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+        }
+
+        /******** SKILLS SECTION IN MAIN ********/
+        .skills-grid {
+            display: table;
+            width: 100%;
+        }
+
+        .skill-row {
+            display: table-row;
+        }
+
+        .skill-cell {
+            display: table-cell;
+            padding: 4px 8px 4px 0;
+            font-size: 10.5px;
+            color: #404040;
+        }
+
+        .skill-name-main {
+            font-weight: 600;
+            color: #171717;
         }
     </style>
 </head>
@@ -324,19 +357,21 @@
                 {{-- CONTACT --}}
                 <div class="sidebar-section">
                     <div class="sidebar-heading">Contact</div>
-                    <div class="sidebar-rule"></div>
                     <div class="sidebar-text">
                         @if($profile->contact_email)
-                            <div>{{ $profile->contact_email }}</div>
+                            <div><strong>Email:</strong><br>{{ $profile->contact_email }}</div>
                         @endif
                         @if($profile->contact_phone)
-                            <div>{{ $profile->contact_phone }}</div>
+                            <div><strong>Phone:</strong><br>{{ $profile->contact_phone }}</div>
                         @endif
                         @if($profile->location)
-                            <div>{{ $profile->location }}</div>
+                            <div><strong>Location:</strong><br>{{ $profile->location }}</div>
                         @endif
                         @if($profile->social_linkedin)
-                            <div>LinkedIn: {{ $profile->social_linkedin }}</div>
+                            <div><strong>LinkedIn:</strong><br>{{ $profile->social_linkedin }}</div>
+                        @endif
+                        @if($profile->social_github)
+                            <div><strong>GitHub:</strong><br>{{ $profile->social_github }}</div>
                         @endif
                     </div>
                 </div>
@@ -345,7 +380,6 @@
                 @if($hasSkills)
                     <div class="sidebar-section">
                         <div class="sidebar-heading">Skills</div>
-                        <div class="sidebar-rule"></div>
                         <div class="pill-row">
                             @foreach($user->skills as $skill)
                                 <span class="pill">
@@ -361,7 +395,6 @@
                 @if($hasGoals)
                     <div class="sidebar-section">
                         <div class="sidebar-heading">Goals</div>
-                        <div class="sidebar-rule"></div>
                         <ul class="goals-list">
                             @foreach($user->goals as $goal)
                                 <li>{{ $goal->goal_text }}</li>
@@ -392,8 +425,7 @@
                 {{-- EXPERIENCE --}}
                 @if($hasExp)
                     <section class="section">
-                        <div class="section-title">Experience</div>
-                        <div class="section-rule"></div>
+                        <div class="section-title">Professional Experience</div>
 
                         @foreach($user->experiences as $exp)
                             <div class="item">
@@ -427,7 +459,6 @@
                 @if($hasEdu)
                     <section class="section">
                         <div class="section-title">Education</div>
-                        <div class="section-rule"></div>
 
                         @foreach($user->educations as $edu)
                             <div class="item">
@@ -461,7 +492,6 @@
                 @if($hasProj)
                     <section class="section">
                         <div class="section-title">Selected Projects</div>
-                        <div class="section-rule"></div>
 
                         @foreach($user->projects as $project)
                             <div class="project">
@@ -498,3 +528,4 @@
 </div>
 </body>
 </html>
+

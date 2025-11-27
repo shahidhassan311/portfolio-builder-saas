@@ -5,6 +5,7 @@
     <title>{{ $user->name }} - Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -899,9 +900,14 @@
 
                     @if($hasContact)
                         <a href="#contact" class="btn-ghost">
-                            Let’s collaborate
+                            Let's collaborate
                         </a>
                     @endif
+
+                    <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
+                       class="btn-ghost" target="_blank">
+                        📄 Download CV
+                    </a>
                 </div>
 
                 <div class="hero-meta">

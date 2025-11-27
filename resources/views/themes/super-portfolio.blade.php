@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $user->name }} – Portfolio</title>
 
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <style>
         :root {
             --bg-gradient: radial-gradient(circle at top left, #4f46e5, #a855f7, #ec4899);
@@ -887,7 +888,7 @@
                 <div class="hero-actions">
                     @if(isset($user->profile) && $user->profile->contact_email)
                         <a href="#contact" class="btn-primary">
-                            <span>Let’s work together</span>
+                            <span>Let's work together</span>
                             <span>→</span>
                         </a>
                     @endif
@@ -897,6 +898,11 @@
                             <span>View selected projects</span>
                         </a>
                     @endif
+
+                    <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
+                       class="btn-ghost" target="_blank">
+                        <span>📄 Download CV</span>
+                    </a>
                 </div>
             </div>
         </div>

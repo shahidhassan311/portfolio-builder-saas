@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $user->name }} - Portfolio</title>
+
+
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; }
@@ -57,9 +60,17 @@
             @if(isset($user->profile) && $user->profile->about_short)
                 <p class="hero-description">{{ $user->profile->about_short }}</p>
             @endif
-            @if(isset($user->profile) && ($user->profile->contact_email || $user->profile->location))
-                <a href="#contact" class="cta-button">Contact Me</a>
-            @endif
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                @if(isset($user->profile) && ($user->profile->contact_email || $user->profile->location))
+                    <a href="#contact" class="cta-button">Contact Me</a>
+                @endif
+                <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}" 
+                   class="cta-button" 
+                   target="_blank"
+                   style="background: rgba(255,255,255,0.2); border: 2px solid white;">
+                    📄 Download CV
+                </a>
+            </div>
         </div>
     </div>
 

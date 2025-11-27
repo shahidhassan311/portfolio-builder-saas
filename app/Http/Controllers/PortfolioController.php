@@ -35,10 +35,23 @@ class PortfolioController extends Controller
     {
         $user = User::where('id', $id)
             ->where('username', $username)
-            ->with(['profile', 'skills', 'projects', 'goals', 'educations', 'experiences'])
+            ->with(['profile', 'skills', 'projects', 'goals', 'educations', 'experiences', 'activeTheme'])
             ->firstOrFail();
 
-        $pdf = Pdf::loadView('themes.freelance-cv-pdf', ['user' => $user])
+        // Determine which PDF view to use based on theme
+        $pdfView = 'themes.freelance-cv-pdf'; // default
+        
+        if ($user->activeTheme) {
+            $themeSlug = $user->activeTheme->slug;
+            $themePdfView = 'themes.' . $themeSlug . '-cv-pdf';
+            
+            // Check if theme-specific PDF view exists
+            if (view()->exists($themePdfView)) {
+                $pdfView = $themePdfView;
+            }
+        }
+
+        $pdf = Pdf::loadView($pdfView, ['user' => $user])
             ->setPaper('a4', 'portrait');
 
         return $pdf->download($user->username . '_cv.pdf');

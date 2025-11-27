@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $user->name }} - Portfolio</title>
+    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portfolio Builder - Create a Premium Portfolio</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; }
@@ -57,6 +58,13 @@
                     </ul>
                 </div>
             @endif
+            <div class="section">
+                <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}" 
+                   target="_blank"
+                   style="display: block; text-align: center; padding: 12px 24px; background: #4f46e5; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 20px;">
+                    📄 Download CV
+                </a>
+            </div>
             @if(isset($user->profile) && (isset($user->profile->social_facebook) || isset($user->profile->social_linkedin) || isset($user->profile->social_github) || isset($user->profile->social_instagram) || isset($user->profile->social_twitter)))
                 <div class="social-links">
                     @if(isset($user->profile->social_facebook) && $user->profile->social_facebook)

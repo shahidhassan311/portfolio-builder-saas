@@ -10,30 +10,28 @@
             padding: 0;
         }
 
-        /* A4-friendly layout */
         body {
             font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
             font-size: 12px;
-            color: #111827;
-            line-height: 1.4;
-            background: #f3f4f6;
-            padding: 10mm; /* consistent print padding */
+            color: #1a1a1a;
+            line-height: 1.6;
+            background: #f5f7fa;
+            padding: 10mm;
         }
 
         .page {
             width: 100%;
             background: #ffffff;
-            border-radius: 6px;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
-            /* Removed fixed min-height to allow dynamic content adjustment */
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            /* Dynamic height - adjusts to content */
         }
 
-        /* LAYOUT: SIDEBAR + MAIN */
         .layout {
             width: 100%;
             border-collapse: collapse;
-            /* Removed fixed height to allow dynamic content adjustment */
+            /* Dynamic height - adjusts to content */
         }
 
         .layout td {
@@ -41,36 +39,38 @@
         }
 
         .sidebar {
-            width: 30%;
-            background: #111827;
-            color: #f9fafb;
-            padding: 16px 14px 18px;
+            width: 35%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 24px 20px 28px;
         }
 
         .main {
-            width: 70%;
-            padding: 18px 20px 22px;
+            width: 65%;
+            padding: 24px 28px 28px;
         }
 
         /******** SIDEBAR ********/
         .avatar-wrapper {
             text-align: center;
-            margin-bottom: 14px;
+            margin-bottom: 20px;
         }
 
         .avatar-ring {
-            width: 95px;
-            height: 95px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 3px solid #f24e1e;
-            margin: 0 auto 8px;
+            border: 4px solid #ffffff;
+            margin: 0 auto 12px;
             overflow: hidden;
-            background: #111827;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 48px;
             font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .avatar-ring img {
@@ -80,108 +80,132 @@
         }
 
         .sidebar-name {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
             text-align: center;
+            color: #ffffff;
+            margin-bottom: 6px;
         }
 
         .sidebar-title {
-            font-size: 11px;
+            font-size: 11.5px;
             text-align: center;
-            color: #e5e7eb;
-            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-weight: 500;
         }
 
         .sidebar-section {
-            margin-top: 12px;
+            margin-top: 20px;
         }
 
         .sidebar-heading {
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: #fca5a5;
-            margin-bottom: 4px;
-        }
-
-        .sidebar-rule {
-            height: 1px;
-            background: #4b5563;
-            margin-bottom: 6px;
+            letter-spacing: 0.2em;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-weight: 800;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 6px;
         }
 
         .sidebar-text {
             font-size: 10.5px;
-            color: #e5e7eb;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.7;
         }
 
         .sidebar-text div + div {
-            margin-top: 2px;
+            margin-top: 6px;
+        }
+
+        .sidebar-text strong {
+            color: #ffffff;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
         }
 
         .pill-row {
-            margin-top: 2px;
+            margin-top: 6px;
         }
 
         .pill {
             display: inline-block;
-            font-size: 9.5px;
-            padding: 2px 6px;
-            border-radius: 999px;
-            border: 1px solid #4b5563;
-            margin: 0 3px 4px 0;
-            color: #e5e7eb;
+            font-size: 9px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            margin: 0 4px 6px 0;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+        }
+
+        .goals-list {
+            list-style: disc;
+            padding-left: 18px;
+            font-size: 10.5px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .goals-list li {
+            margin-bottom: 4px;
+            line-height: 1.6;
         }
 
         /******** MAIN HEADER ********/
         .main-header {
-            margin-bottom: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid #667eea;
         }
 
         .main-title {
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: #f24e1e;
-            margin-bottom: 6px;
+            letter-spacing: 0.15em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
         }
 
         .main-summary {
-            font-size: 11px;
-            color: #374151;
+            font-size: 11.5px;
+            color: #404040;
+            line-height: 1.8;
         }
 
         /******** MAIN SECTIONS ********/
         .section {
-            margin-top: 12px;
-            margin-bottom: 8px;
+            margin-top: 20px;
+            margin-bottom: 16px;
         }
 
         .section-title {
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #f24e1e;
-            margin-bottom: 4px;
-        }
-
-        .section-rule {
-            height: 1px;
-            background: #fecaca;
-            margin-bottom: 5px;
+            letter-spacing: 0.15em;
+            color: #667eea;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 6px;
         }
 
         .item {
-            margin-bottom: 8px;
+            margin-bottom: 14px;
         }
 
         .item-header {
             display: table;
             width: 100%;
+            margin-bottom: 6px;
         }
 
         .item-header-left,
@@ -195,39 +219,51 @@
         }
 
         .item-title {
-            font-size: 11.5px;
-            font-weight: bold;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3px;
         }
 
         .item-place {
-            font-size: 10.5px;
-            color: #4b5563;
+            font-size: 11.5px;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 2px;
         }
 
         .item-dates {
             font-size: 10px;
-            color: #6b7280;
+            color: #666666;
+            padding: 3px 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            display: inline-block;
         }
 
         .item-body {
             font-size: 11px;
-            color: #374151;
-            margin-top: 3px;
+            color: #404040;
+            margin-top: 6px;
+            line-height: 1.7;
         }
 
         .list {
             list-style: disc;
-            padding-left: 16px;
-            margin-top: 3px;
+            padding-left: 20px;
+            margin-top: 6px;
         }
 
         .list li {
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            font-size: 11px;
+            color: #404040;
+            line-height: 1.6;
         }
 
         /******** PROJECTS WITH THUMBNAILS ********/
         .project {
-            margin-bottom: 8px;
+            margin-bottom: 14px;
         }
 
         .project-layout {
@@ -240,16 +276,17 @@
         }
 
         .project-thumb-cell {
-            width: 32%;
-            padding-right: 6px;
+            width: 38%;
+            padding-right: 10px;
         }
 
         .project-thumb {
             width: 100%;
-            height: 55px;
-            border-radius: 6px;
-            background: #fee2e2;
+            height: 75px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
+            border: 2px solid rgba(102, 126, 234, 0.2);
         }
 
         .project-thumb img {
@@ -259,35 +296,55 @@
         }
 
         .project-content-cell {
-            width: 68%;
+            width: 62%;
         }
 
         .project-title {
-            font-size: 11.5px;
-            font-weight: bold;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
         }
 
         .project-url {
             font-size: 9.5px;
-            color: #f24e1e;
+            color: #667eea;
+            margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .project-desc {
             font-size: 10.5px;
-            color: #374151;
-            margin-top: 2px;
+            color: #404040;
+            margin-top: 4px;
+            line-height: 1.6;
         }
 
-        /******** GOALS ********/
-        .goals-list {
-            list-style: disc;
-            padding-left: 16px;
+        /******** SKILLS SECTION IN MAIN ********/
+        .skills-grid {
+            display: table;
+            width: 100%;
+        }
+
+        .skill-row {
+            display: table-row;
+        }
+
+        .skill-cell {
+            display: table-cell;
+            padding: 6px 12px 6px 0;
             font-size: 10.5px;
-            color: #e5e7eb;
+            color: #404040;
         }
 
-        .goals-list li {
-            margin-bottom: 2px;
+        .skill-name-main {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .skill-level-main {
+            color: #667eea;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -324,19 +381,36 @@
                 {{-- CONTACT --}}
                 <div class="sidebar-section">
                     <div class="sidebar-heading">Contact</div>
-                    <div class="sidebar-rule"></div>
                     <div class="sidebar-text">
                         @if($profile->contact_email)
-                            <div>{{ $profile->contact_email }}</div>
+                            <div>
+                                <strong>Email:</strong>
+                                {{ $profile->contact_email }}
+                            </div>
                         @endif
                         @if($profile->contact_phone)
-                            <div>{{ $profile->contact_phone }}</div>
+                            <div>
+                                <strong>Phone:</strong>
+                                {{ $profile->contact_phone }}
+                            </div>
                         @endif
                         @if($profile->location)
-                            <div>{{ $profile->location }}</div>
+                            <div>
+                                <strong>Location:</strong>
+                                {{ $profile->location }}
+                            </div>
                         @endif
                         @if($profile->social_linkedin)
-                            <div>LinkedIn: {{ $profile->social_linkedin }}</div>
+                            <div>
+                                <strong>LinkedIn:</strong>
+                                {{ $profile->social_linkedin }}
+                            </div>
+                        @endif
+                        @if($profile->social_github)
+                            <div>
+                                <strong>GitHub:</strong>
+                                {{ $profile->social_github }}
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -345,7 +419,6 @@
                 @if($hasSkills)
                     <div class="sidebar-section">
                         <div class="sidebar-heading">Skills</div>
-                        <div class="sidebar-rule"></div>
                         <div class="pill-row">
                             @foreach($user->skills as $skill)
                                 <span class="pill">
@@ -361,7 +434,6 @@
                 @if($hasGoals)
                     <div class="sidebar-section">
                         <div class="sidebar-heading">Goals</div>
-                        <div class="sidebar-rule"></div>
                         <ul class="goals-list">
                             @foreach($user->goals as $goal)
                                 <li>{{ $goal->goal_text }}</li>
@@ -392,8 +464,7 @@
                 {{-- EXPERIENCE --}}
                 @if($hasExp)
                     <section class="section">
-                        <div class="section-title">Experience</div>
-                        <div class="section-rule"></div>
+                        <div class="section-title">Professional Experience</div>
 
                         @foreach($user->experiences as $exp)
                             <div class="item">
@@ -427,7 +498,6 @@
                 @if($hasEdu)
                     <section class="section">
                         <div class="section-title">Education</div>
-                        <div class="section-rule"></div>
 
                         @foreach($user->educations as $edu)
                             <div class="item">
@@ -461,7 +531,6 @@
                 @if($hasProj)
                     <section class="section">
                         <div class="section-title">Selected Projects</div>
-                        <div class="section-rule"></div>
 
                         @foreach($user->projects as $project)
                             <div class="project">
@@ -474,7 +543,9 @@
                                                          alt="{{ $project->title }}">
                                                 </div>
                                             @else
-                                                <div class="project-thumb"></div>
+                                                <div class="project-thumb" style="display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900;">
+                                                    {{ strtoupper(substr($project->title, 0, 1)) }}
+                                                </div>
                                             @endif
                                         </td>
                                         <td class="project-content-cell">
@@ -492,9 +563,31 @@
                         @endforeach
                     </section>
                 @endif
+
+                {{-- SKILLS IN MAIN (if not in sidebar or additional display) --}}
+                @if($hasSkills && false)
+                    <section class="section">
+                        <div class="section-title">Technical Skills</div>
+                        <table class="skills-grid">
+                            @foreach($user->skills->chunk(2) as $skillRow)
+                                <tr class="skill-row">
+                                    @foreach($skillRow as $skill)
+                                        <td class="skill-cell">
+                                            <span class="skill-name-main">{{ $skill->name }}</span>
+                                            @if($skill->level)
+                                                <span class="skill-level-main"> · {{ $skill->level }}</span>
+                                            @endif
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </table>
+                    </section>
+                @endif
             </td>
         </tr>
     </table>
 </div>
 </body>
 </html>
+
