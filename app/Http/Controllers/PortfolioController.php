@@ -11,7 +11,15 @@ class PortfolioController extends Controller
     {
         $user = User::where('id', $id)
             ->where('username', $username)
-            ->with(['profile', 'skills', 'projects', 'goals', 'activeTheme'])
+            ->with([
+                'profile',
+                'skills',
+                'projects',
+                'goals',
+                'educations' => fn ($query) => $query->orderBy('sort_order')->orderByDesc('start_date'),
+                'experiences' => fn ($query) => $query->orderBy('sort_order')->orderByDesc('start_date'),
+                'activeTheme',
+            ])
             ->firstOrFail();
 
         if (!$user->activeTheme) {

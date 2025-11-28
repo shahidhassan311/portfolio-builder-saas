@@ -62,6 +62,14 @@ class DashboardController extends Controller
 
         $user->profile()->updateOrCreate(['user_id' => $user->id], $profileData);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Profile updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Profile updated successfully!');
     }
 
@@ -77,6 +85,13 @@ class DashboardController extends Controller
             ['user_id' => auth()->id()],
             $request->only(['about_title', 'about_short', 'about_long'])
         );
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'About section updated successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'About section updated successfully!');
     }
@@ -92,6 +107,14 @@ class DashboardController extends Controller
 
         auth()->user()->skills()->create($request->only(['name', 'level']));
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Skill added successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Skill added successfully!');
     }
 
@@ -105,6 +128,14 @@ class DashboardController extends Controller
         $skill = auth()->user()->skills()->findOrFail($id);
         $skill->update($request->only(['name', 'level']));
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Skill updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Skill updated successfully!');
     }
 
@@ -112,6 +143,14 @@ class DashboardController extends Controller
     {
         $skill = auth()->user()->skills()->findOrFail($id);
         $skill->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Skill deleted successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Skill deleted successfully!');
     }
@@ -134,6 +173,14 @@ class DashboardController extends Controller
         }
 
         auth()->user()->projects()->create($projectData);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Project added successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Project added successfully!');
     }
@@ -159,6 +206,14 @@ class DashboardController extends Controller
 
         $project->update($projectData);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Project updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Project updated successfully!');
     }
 
@@ -169,6 +224,14 @@ class DashboardController extends Controller
             Storage::disk('public')->delete($project->project_image);
         }
         $project->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Project deleted successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Project deleted successfully!');
     }
@@ -183,6 +246,14 @@ class DashboardController extends Controller
 
         auth()->user()->goals()->create($request->only(['goal_text']));
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Goal added successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Goal added successfully!');
     }
 
@@ -195,6 +266,14 @@ class DashboardController extends Controller
         $goal = auth()->user()->goals()->findOrFail($id);
         $goal->update($request->only(['goal_text']));
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Goal updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Goal updated successfully!');
     }
 
@@ -202,6 +281,14 @@ class DashboardController extends Controller
     {
         $goal = auth()->user()->goals()->findOrFail($id);
         $goal->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Goal deleted successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Goal deleted successfully!');
     }
@@ -238,6 +325,14 @@ class DashboardController extends Controller
 
         auth()->user()->educations()->create($data);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Education added successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Education added successfully!');
     }
 
@@ -272,6 +367,14 @@ class DashboardController extends Controller
 
         $education->update($data);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Education updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Education updated successfully!');
     }
 
@@ -279,6 +382,14 @@ class DashboardController extends Controller
     {
         $education = auth()->user()->educations()->findOrFail($id);
         $education->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Education deleted successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Education deleted successfully!');
     }
@@ -314,6 +425,14 @@ class DashboardController extends Controller
 
         auth()->user()->experiences()->create($data);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Experience added successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Experience added successfully!');
     }
 
@@ -348,6 +467,14 @@ class DashboardController extends Controller
 
         $experience->update($data);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Experience updated successfully!',
+                'reload' => true,
+            ]);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Experience updated successfully!');
     }
 
@@ -355,6 +482,14 @@ class DashboardController extends Controller
     {
         $experience = auth()->user()->experiences()->findOrFail($id);
         $experience->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Experience deleted successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Experience deleted successfully!');
     }
@@ -382,6 +517,13 @@ class DashboardController extends Controller
                 'social_github', 'social_twitter'
             ])
         );
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Contact details updated successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Contact details updated successfully!');
     }
@@ -393,6 +535,14 @@ class DashboardController extends Controller
         ]);
 
         auth()->user()->update(['active_theme_id' => $request->active_theme_id]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Theme updated successfully!',
+                'reload' => true,
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Theme updated successfully!');
     }
