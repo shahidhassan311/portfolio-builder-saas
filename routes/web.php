@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('themes', AdminThemeController::class);
+        Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class);
         Route::resource('users', AdminUserController::class);
         Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
         Route::post('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
@@ -70,4 +71,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 // Public portfolio route (must be last to avoid conflicts)
+// Public portfolio route (must be last to avoid conflicts)
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 Route::get('/{id}/{username}', [PortfolioController::class, 'show'])->name('portfolio.show');

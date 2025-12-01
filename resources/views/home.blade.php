@@ -4,7 +4,54 @@
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Portfolio Builder - Create a Premium Portfolio</title>
+
+    <!-- Primary Meta Tags -->
+    <title>Resumizo - Create a Premium Portfolio</title>
+    <meta name="title" content="Resumizo - Create a Premium Portfolio">
+    <meta name="description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired. No coding required.">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="portfolio builder, online portfolio, freelancer portfolio, designer portfolio, professional portfolio, resumizo">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.resumizo.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.resumizo.com/">
+    <meta property="og:title" content="Resumizo - Create a Premium Portfolio">
+    <meta property="og:description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired.">
+    <meta property="og:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.resumizo.com/">
+    <meta property="twitter:title" content="Resumizo - Create a Premium Portfolio">
+    <meta property="twitter:description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired.">
+    <meta property="twitter:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
+
+    <!-- Favicon / Apple Touch -->
+    <link rel="apple-touch-icon" href="resumizo-logo-white.png">
+
+    <!-- Structured Data / JSON-LD for Google -->
+    <script type="application/ld+json">
+        @php
+            $jsonLd = [
+                "@context" => "https://schema.org",
+                "@type" => "WebSite",
+                "name" => "Resumizo",
+                "url" => "https://www.resumizo.com/",
+                "potentialAction" => [
+                    "@type" => "SearchAction",
+                    "target" => "https://www.resumizo.com/search?q={search_term_string}",
+                    "query-input" => "required name=search_term_string"
+                ]
+            ];
+        @endphp
+
+        {!! json_encode($jsonLd, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+
+
     @vite(['resources/js/app.js'])
     <style>
         :root {
@@ -103,11 +150,17 @@
         .step-icon { width: 56px; height: 56px; border-radius: 18px; background: rgba(93,107,255,0.16); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
         .step-card p { color: var(--text-muted); margin: 0; }
         /* themes */
-        .themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+        .themes-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 640px) {
+            .themes-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .themes-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         .theme-card { background: rgba(10,14,36,0.75); border-radius: 30px; padding: 26px; border: 1px solid rgba(255,255,255,0.06); transition: transform .25s ease, box-shadow .25s ease; }
         .theme-card:hover { transform: translateY(-6px); box-shadow: 0 25px 60px rgba(3,7,18,0.7); }
         .theme-preview { height: 180px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); background: #0b132c; display: flex; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 18px; overflow: hidden; }
-        .theme-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .theme-preview img { width: 100%; height: 100%; object-fit: contain; }
         .theme-actions { display: flex; gap: 12px; margin-top: 18px; }
         .pill { flex: 1; border-radius: 999px; padding: 10px 0; text-align: center; border: 1px solid rgba(255,255,255,0.15); font-weight: 400; font-size: 14px; }
         .pill.primary { border: none; background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #fff; }
@@ -215,6 +268,7 @@
                     <a href="#themes">Themes</a>
                     <a href="#about">About</a>
                     <a href="#why">Why us</a>
+                    <a href="{{ route('blog.index') }}">Blog</a>
                 </nav>
                 <div class="nav-actions">
                     @auth
@@ -475,7 +529,9 @@
     </main>
 
     <footer>
-        <div class="max">Build once, share everywhere — web + PDF. © {{ date('Y') }} Portfolio Builder.</div>
+        <div class="max">
+            &copy; 2025 Resumizo. All rights reserved.
+        </div>
     </footer>
 </div>
 </body>

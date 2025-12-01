@@ -503,10 +503,22 @@
 
         .projects-container {
             display: grid;
-            grid-template-columns: minmax(0, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 24px;
-            max-width: 900px;
+            max-width: 1120px;
             margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .projects-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .projects-container {
+                grid-template-columns: minmax(0, 1fr);
+            }
         }
 
         .project-card {
@@ -514,8 +526,9 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .project-image {

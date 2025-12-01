@@ -1066,7 +1066,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-2">
+            <div class="grid">
                 @foreach($user->projects as $project)
                     <article class="card project-card">
                         <div>
