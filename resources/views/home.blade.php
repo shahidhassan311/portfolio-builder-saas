@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Primary Meta Tags -->
-    <title>Resumizo - Create a Premium Portfolio</title>
-    <meta name="title" content="Resumizo - Create a Premium Portfolio">
-    <meta name="description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired. No coding required.">
+    <title>Portfolio Builder & Resume Builder - Resumizo | Create Your Resume Website</title>
+    <meta name="title" content="Portfolio Builder & Resume Builder - Resumizo">
+    <meta name="description" content="Create your professional portfolio and resume website effortlessly with Resumizo. Build online resumes, showcase your work, and get hired. No coding required.">
 
     <!-- SEO Meta Tags -->
-    <meta name="keywords" content="portfolio builder, online portfolio, freelancer portfolio, designer portfolio, professional portfolio, resumizo">
+    <meta name="keywords" content="portfolio builder, resume builder, resume website, online portfolio, professional portfolio, resumizo">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.resumizo.com/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.resumizo.com/">
-    <meta property="og:title" content="Resumizo - Create a Premium Portfolio">
-    <meta property="og:description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired.">
+    <meta property="og:title" content="Portfolio Builder & Resume Builder - Resumizo">
+    <meta property="og:description" content="Build your professional portfolio and resume website online with Resumizo. Showcase your work, impress clients, and get hired.">
     <meta property="og:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.resumizo.com/">
-    <meta property="twitter:title" content="Resumizo - Create a Premium Portfolio">
-    <meta property="twitter:description" content="Build your professional portfolio online effortlessly with Resumizo. Showcase your work, attract clients, and get hired.">
+    <meta property="twitter:title" content="Portfolio Builder & Resume Builder - Resumizo">
+    <meta property="twitter:description" content="Create your resume website and portfolio online with Resumizo. Showcase your skills, projects, and get hired.">
     <meta property="twitter:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
 
     <!-- Favicon / Apple Touch -->
@@ -50,9 +50,11 @@
 
         {!! json_encode($jsonLd, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) !!}
     </script>
+</head>
 
 
-    @vite(['resources/js/app.js'])
+
+@vite(['resources/js/app.js'])
     <style>
         :root {
             --bg: #050914;
