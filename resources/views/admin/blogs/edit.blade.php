@@ -31,9 +31,10 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-                        <textarea name="content" id="content" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>{{ old('content', $blog->content) }}</textarea>
+                        <label for="content" class="block text-sm font-medium text-gray-700">Content <span class="text-red-500">*</span></label>
+                        <textarea name="content" id="content" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('content', $blog->content) }}</textarea>
                         @error('content') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        <span id="content-error" class="text-red-500 text-sm hidden">Content is required.</span>
                     </div>
 
                     <div class="mb-4">
@@ -74,6 +75,8 @@
     </div>
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
+        let editorInstance;
+        
         ClassicEditor
             .create(document.querySelector('#content'), {
                 toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
@@ -86,8 +89,28 @@
                     ]
                 }
             })
+            .then(editor => {
+                editorInstance = editor;
+            })
             .catch(error => {
                 console.error(error);
             });
+
+        // Form validation before submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const contentError = document.getElementById('content-error');
+            const editorData = editorInstance.getData();
+            
+            if (!editorData || editorData.trim() === '') {
+                e.preventDefault();
+                contentError.classList.remove('hidden');
+                editorInstance.editing.view.focus();
+                return false;
+            }
+            
+            contentError.classList.add('hidden');
+            // Sync editor data to textarea before submit
+            document.querySelector('#content').value = editorData;
+        });
     </script>
 </x-app-layout>
