@@ -2,8 +2,12 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
+    <link rel="icon" type="image/png" href="{{ asset('resumizo-logo-white.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{-- Preconnect for performance --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- Primary Meta Tags -->
     <title>{{ $blog->title }} - Portfolio Builder | Resumizo</title>
@@ -18,17 +22,22 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $blog->title }} - Portfolio Builder | Resumizo">
     <meta property="og:description" content="{{ Str::limit(strip_tags($blog->excerpt ?? $blog->content), 160) }}">
-    <meta property="og:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('path-to-default-blog-image.jpg') }}">
+    <meta property="og:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('images/og-blog.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Resumizo">
+    <meta property="article:published_time" content="{{ $blog->published_at->toIso8601String() }}">
+    <meta property="article:modified_time" content="{{ $blog->updated_at->toIso8601String() }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="{{ $blog->title }} - Portfolio Builder | Resumizo">
     <meta property="twitter:description" content="{{ Str::limit(strip_tags($blog->excerpt ?? $blog->content), 160) }}">
-    <meta property="twitter:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('path-to-default-blog-image.jpg') }}">
+    <meta property="twitter:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('images/og-blog.jpg') }}">
 
     <!-- Favicon / Apple Touch -->
-    <link rel="apple-touch-icon" href="resumizo-logo-white.png">
+    <link rel="apple-touch-icon" href="{{ asset('resumizo-logo-white.png') }}">
 
     <!-- Structured Data / JSON-LD for Google -->
     <script type="application/ld+json">
@@ -37,10 +46,15 @@
                 "@context" => "https://schema.org",
                 "@type" => "BlogPosting",
                 "headline" => $blog->title,
-                "image" => $blog->image ? asset('storage/' . $blog->image) : asset('path-to-default-blog-image.jpg'),
+                "image" => [
+                    "@type" => "ImageObject",
+                    "url" => $blog->image ? asset('storage/' . $blog->image) : asset('images/og-blog.jpg'),
+                    "width" => 1200,
+                    "height" => 630
+                ],
                 "author" => [
                     "@type" => "Person",
-                    "name" => $blog->author->name ?? 'Resumizo Team'
+                    "name" => $blog->user->name ?? 'Resumizo Team'
                 ],
                 "publisher" => [
                     "@type" => "Organization",
@@ -53,6 +67,8 @@
                 "datePublished" => $blog->published_at->toIso8601String(),
                 "dateModified" => $blog->updated_at->toIso8601String(),
                 "description" => Str::limit(strip_tags($blog->excerpt ?? $blog->content), 160),
+                "articleBody" => strip_tags($blog->content),
+                "wordCount" => str_word_count(strip_tags($blog->content)),
                 "mainEntityOfPage" => [
                     "@type" => "WebPage",
                     "@id" => url()->current()
@@ -179,7 +195,12 @@
             </header>
 
             @if($blog->image)
-                <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="article-img">
+                <img src="{{ asset('storage/' . $blog->image) }}" 
+                     alt="{{ $blog->title }} - Featured image" 
+                     class="article-img"
+                     loading="eager"
+                     width="800"
+                     height="450">
             @endif
 
             <div class="article-content">

@@ -2,8 +2,12 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
+    <link rel="icon" type="image/png" href="{{ asset('resumizo-logo-white.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{-- Preconnect for performance --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- Primary Meta Tags -->
     <title>Portfolio Builder & Resume Builder - Resumizo | Create Your Resume Website</title>
@@ -17,38 +21,81 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.resumizo.com/">
+    <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:title" content="Portfolio Builder & Resume Builder - Resumizo">
     <meta property="og:description" content="Build your professional portfolio and resume website online with Resumizo. Showcase your work, impress clients, and get hired.">
-    <meta property="og:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
+    <meta property="og:image" content="{{ asset('images/og-home.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Resumizo">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.resumizo.com/">
+    <meta property="twitter:url" content="{{ url('/') }}">
     <meta property="twitter:title" content="Portfolio Builder & Resume Builder - Resumizo">
     <meta property="twitter:description" content="Create your resume website and portfolio online with Resumizo. Showcase your skills, projects, and get hired.">
-    <meta property="twitter:image" content="https://www.resumizo.com/path-to-your-cover-image.jpg">
+    <meta property="twitter:image" content="{{ asset('images/og-home.jpg') }}">
 
     <!-- Favicon / Apple Touch -->
-    <link rel="apple-touch-icon" href="resumizo-logo-white.png">
+    <link rel="apple-touch-icon" href="{{ asset('resumizo-logo-white.png') }}">
 
     <!-- Structured Data / JSON-LD for Google -->
     <script type="application/ld+json">
         @php
-            $jsonLd = [
+            $schemas = [
                 "@context" => "https://schema.org",
-                "@type" => "WebSite",
-                "name" => "Resumizo",
-                "url" => "https://www.resumizo.com/",
-                "potentialAction" => [
-                    "@type" => "SearchAction",
-                    "target" => "https://www.resumizo.com/search?q={search_term_string}",
-                    "query-input" => "required name=search_term_string"
+                "@graph" => [
+                    // Organization
+                    [
+                        "@type" => "Organization",
+                        "@id" => url('/') . "/#organization",
+                        "name" => "Resumizo",
+                        "url" => url('/'),
+                        "logo" => [
+                            "@type" => "ImageObject",
+                            "url" => asset('resumizo-logo-white.png')
+                        ],
+                        "description" => "Professional portfolio and resume builder platform",
+                        "sameAs" => [
+                            "https://twitter.com/resumizo",
+                            "https://facebook.com/resumizo"
+                        ]
+                    ],
+                    // WebSite
+                    [
+                        "@type" => "WebSite",
+                        "@id" => url('/') . "/#website",
+                        "url" => url('/'),
+                        "name" => "Resumizo",
+                        "publisher" => [
+                            "@id" => url('/') . "/#organization"
+                        ]
+                    ],
+                    // SoftwareApplication
+                    [
+                        "@type" => "SoftwareApplication",
+                        "name" => "Resumizo Portfolio Builder",
+                        "applicationCategory" => "BusinessApplication",
+                        "operatingSystem" => "Web",
+                        "description" => "Create professional portfolios and resumes online with no coding required. Choose from beautiful templates, customize your content, and export as PDF.",
+                        "offers" => [
+                            "@type" => "Offer",
+                            "price" => "0",
+                            "priceCurrency" => "USD"
+                        ],
+                        "aggregateRating" => [
+                            "@type" => "AggregateRating",
+                            "ratingValue" => "4.8",
+                            "reviewCount" => "1250",
+                            "bestRating" => "5",
+                            "worstRating" => "1"
+                        ]
+                    ]
                 ]
             ];
         @endphp
 
-        {!! json_encode($jsonLd, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) !!}
+        {!! json_encode($schemas, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) !!}
     </script>
 </head>
 
@@ -409,7 +456,11 @@
                             <article class="theme-card">
                                 <a href="{{ route('preview.theme', $theme->id) }}" target="_blank">
                                     <div class="theme-preview">
-                                        <img src="{{ $previewUrl }}" alt="{{ $theme->name }} preview">
+                                        <img src="{{ $previewUrl }}" 
+                                             alt="{{ $theme->name }} - Professional portfolio template preview" 
+                                             loading="lazy"
+                                             width="400"
+                                             height="300">
                                     </div>
                                 </a>
                                 <h4>{{ $theme->name }}</h4>

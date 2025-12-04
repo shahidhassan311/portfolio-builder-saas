@@ -2,8 +2,12 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="resumizo-logo-white.png"/>
+    <link rel="icon" type="image/png" href="{{ asset('resumizo-logo-white.png') }}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{-- Preconnect for performance --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- Primary Meta Tags -->
     <title>Blog - Portfolio Builder | Resumizo</title>
@@ -21,7 +25,9 @@
     <meta property="og:title" content="Blog - Portfolio Builder | Resumizo">
     <meta property="og:description"
           content="Read latest insights, tutorials, and news from Resumizo – the ultimate portfolio builder. Learn how to showcase your work professionally and attract clients.">
-    <meta property="og:image" content="{{ asset('path-to-blog-cover-image.jpg') }}">
+    <meta property="og:image" content="{{ asset('images/og-blog.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -29,10 +35,10 @@
     <meta property="twitter:title" content="Blog - Portfolio Builder | Resumizo">
     <meta property="twitter:description"
           content="Read latest insights, tutorials, and news from Resumizo – the ultimate portfolio builder. Learn how to showcase your work professionally and attract clients.">
-    <meta property="twitter:image" content="{{ asset('path-to-blog-cover-image.jpg') }}">
+    <meta property="twitter:image" content="{{ asset('images/og-blog.jpg') }}">
 
     <!-- Favicon / Apple Touch -->
-    <link rel="apple-touch-icon" href="resumizo-logo-white.png">
+    <link rel="apple-touch-icon" href="{{ asset('resumizo-logo-white.png') }}">
 
 
     <!-- Structured Data / JSON-LD for Google -->
@@ -361,7 +367,11 @@
                 <article class="blog-card">
                     <a href="{{ route('blog.show', $blog->slug) }}" class="blog-img">
                         @if($blog->image)
-                            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}">
+                            <img src="{{ asset('storage/' . $blog->image) }}" 
+                                 alt="{{ $blog->title }} - Blog post cover image" 
+                                 loading="lazy"
+                                 width="400"
+                                 height="220">
                         @else
                             <div
                                 style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.1); font-size:40px;">
