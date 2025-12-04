@@ -154,7 +154,13 @@
         .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); margin-top: 60px; font-weight: 500; transition: color .2s; }
         .back-link:hover { color: var(--accent-3); }
 
-        footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; margin-top: auto; text-align: center; color: var(--text-muted); }
+        footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; margin-top: auto; color: var(--text-muted); }
+        .footer-content { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+        .footer-content p { margin: 0; }
+        .footer-links { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent-3); }
+        .footer-links .separator { color: rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
@@ -249,7 +255,14 @@
 
         <footer>
             <div class="max">
-                &copy; 2025 Resumizo. All rights reserved.
+                <div class="footer-content">
+                    <p>&copy; 2025 Resumizo. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="{{ route('privacy') }}">Privacy Policy</a>
+                        <span class="separator">•</span>
+                        <a href="{{ route('terms') }}">Terms & Conditions</a>
+                    </div>
+                </div>
             </div>
         </footer>
     </div>

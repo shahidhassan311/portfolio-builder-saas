@@ -15,6 +15,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/preview/{id}', [HomeController::class, 'previewTheme'])->name('preview.theme');
 Route::get('/select-theme/{id}', [HomeController::class, 'selectTheme'])->name('select.theme');
 
+// Contact form
+Route::post('/contact', [HomeController::class, 'contactSubmit'])->name('contact.submit');
+
+// Legal pages
+Route::view('/privacy', 'privacy')->name('privacy');
+Route::view('/terms', 'terms')->name('terms');
+
 Route::get('/portfolio/{id}/{username}/pdf', [PortfolioController::class, 'downloadPdf'])
     ->name('portfolio.pdf');
 

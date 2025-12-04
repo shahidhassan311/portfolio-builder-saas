@@ -224,7 +224,44 @@
         .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 26px; }
         .why-card { background: var(--card); border-radius: 28px; padding: 32px; border: 1px solid rgba(255,255,255,0.05); box-shadow: var(--shadow); }
         .why-card ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; color: var(--text-muted); }
-        footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-muted); }
+        /* contact */
+        .contact-container { max-width: 900px; margin: 0 auto; }
+        .contact-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .contact-info-card { background: rgba(10,14,36,0.6); border-radius: 20px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .contact-icon { font-size: 36px; margin-bottom: 12px; }
+        .contact-info-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+        .contact-info-card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        .contact-form-wrapper { background: rgba(10,14,36,0.6); border-radius: 28px; padding: 40px; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow); }
+        .contact-form { display: flex; flex-direction: column; gap: 24px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 14px; font-weight: 600; color: var(--text); }
+        .form-group input,
+        .form-group select,
+        .form-group textarea { 
+            padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05); color: var(--text); font-size: 15px;
+            font-family: inherit; transition: all 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08);
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .alert { padding: 16px 20px; border-radius: 14px; margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px; }
+        .alert svg { flex-shrink: 0; margin-top: 2px; }
+        .alert ul { margin: 0; padding-left: 20px; }
+        .alert li { margin-bottom: 4px; }
+        .alert-success { background: rgba(49,201,255,0.15); border: 1px solid rgba(49,201,255,0.3); color: var(--accent-3); }
+        .alert-error { background: rgba(255,91,91,0.15); border: 1px solid rgba(255,91,91,0.3); color: #ff9b9b; }
+        footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0; margin-top: 60px; color: var(--text-muted); }
+        .footer-content { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+        .footer-content p { margin: 0; }
+        .footer-links { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent-3); }
+        .footer-links .separator { color: rgba(255,255,255,0.3); }
         @media (max-width: 640px) {
             .nav-content {
                 /* flex-direction: column;  Removed to keep row layout for logo + burger */
@@ -318,6 +355,7 @@
                     <a href="#about">About</a>
                     <a href="#why">Why us</a>
                     <a href="{{ route('blog.index') }}">Blog</a>
+                    <a href="#contact">Contact</a>
                 </nav>
                 <div class="nav-actions">
                     @auth
@@ -579,11 +617,100 @@
                 </div>
             </div>
         </section>
+
+        <section id="contact">
+            <div class="max">
+                <h2>Get in Touch</h2>
+                <p class="section-sub">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                
+                <div class="contact-container">
+                    <div class="contact-info-grid">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">📧</div>
+                            <h3>Email Us</h3>
+                            <p>support@resumizo.com</p>
+                        </div>
+                        <div class="contact-info-card">
+                            <div class="contact-icon">💬</div>
+                            <h3>Live Chat</h3>
+                            <p>Available Mon-Fri, 9am-5pm EST</p>
+                        </div>
+                        <div class="contact-info-card">
+                            <div class="contact-icon">📚</div>
+                            <h3>Help Center</h3>
+                            <p>Browse our documentation</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-wrapper">
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if($errors->any())
+                            <div class="alert alert-error">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('contact.submit') }}" method="POST" class="contact-form">
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Name *</label>
+                                    <input type="text" id="name" name="name" value="{{ old('name') }}" required placeholder="Your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="your@email.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject *</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Select a topic</option>
+                                    <option value="general" {{ old('subject') == 'general' ? 'selected' : '' }}>General Inquiry</option>
+                                    <option value="support" {{ old('subject') == 'support' ? 'selected' : '' }}>Technical Support</option>
+                                    <option value="billing" {{ old('subject') == 'billing' ? 'selected' : '' }}>Billing Question</option>
+                                    <option value="feature" {{ old('subject') == 'feature' ? 'selected' : '' }}>Feature Request</option>
+                                    <option value="bug" {{ old('subject') == 'bug' ? 'selected' : '' }}>Report a Bug</option>
+                                    <option value="other" {{ old('subject') == 'other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="How can we help you?">{{ old('message') }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
         <div class="max">
-            &copy; 2025 Resumizo. All rights reserved.
+            <div class="footer-content">
+                <p>&copy; 2025 Resumizo. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="{{ route('privacy') }}">Privacy Policy</a>
+                    <span class="separator">•</span>
+                    <a href="{{ route('terms') }}">Terms & Conditions</a>
+                </div>
+            </div>
         </div>
     </footer>
 </div>

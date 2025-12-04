@@ -78,4 +78,23 @@ class HomeController extends Controller
 
         return redirect()->route('register', ['theme_id' => $theme->id]);
     }
+
+    public function contactSubmit(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|in:general,support,billing,feature,bug,other',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        // TODO: Send email notification
+        // You can use Laravel's Mail facade to send emails
+        // Mail::to('support@resumizo.com')->send(new ContactFormMail($validated));
+        
+        // For now, we'll just log the contact form submission
+        \Log::info('Contact form submission', $validated);
+
+        return redirect()->route('home')->with('success', 'Thank you for contacting us! We\'ll get back to you soon.');
+    }
 }
