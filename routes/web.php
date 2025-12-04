@@ -68,6 +68,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Sitemap
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 require __DIR__.'/auth.php';
 
 // Public portfolio route (must be last to avoid conflicts)

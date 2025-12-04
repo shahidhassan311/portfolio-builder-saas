@@ -1,2 +1,15 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow admin and user-specific pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+
+# Sitemap location
+Sitemap: https://www.resumizo.com/sitemap.xml
