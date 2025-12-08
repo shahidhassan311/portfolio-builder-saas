@@ -27,6 +27,21 @@
         <priority>0.8</priority>
     </url>
 
+    {{-- Legal Pages --}}
+    <url>
+        <loc>{{ route('privacy') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <url>
+        <loc>{{ route('terms') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
     {{-- Blog Index --}}
     <url>
         <loc>{{ route('blog.index') }}</loc>
@@ -46,23 +61,23 @@
     @endforeach
 
     {{-- Theme Previews --}}
-    @foreach($themes as $theme)
-    <url>
-        <loc>{{ route('preview.theme', $theme->id) }}</loc>
-        <lastmod>{{ $theme->updated_at->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    @endforeach
+{{--    @foreach($themes as $theme)--}}
+{{--    <url>--}}
+{{--        <loc>{{ route('preview.theme', $theme->id) }}</loc>--}}
+{{--        <lastmod>{{ $theme->updated_at->toAtomString() }}</lastmod>--}}
+{{--        <changefreq>monthly</changefreq>--}}
+{{--        <priority>0.6</priority>--}}
+{{--    </url>--}}
+{{--    @endforeach--}}
 
     {{-- Public Portfolios --}}
-    @foreach($users as $user)
-    <url>
-        <loc>{{ route('portfolio.show', ['id' => $user->id, 'username' => $user->username ?? $user->name]) }}</loc>
-        <lastmod>{{ $user->updated_at->toAtomString() }}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    @endforeach
+{{--    @foreach($users as $user)--}}
+{{--    <url>--}}
+{{--        <loc>{{ route('portfolio.show', ['id' => $user->id, 'username' => $user->username ?? $user->name]) }}</loc>--}}
+{{--        <lastmod>{{ $user->updated_at->toAtomString() }}</lastmod>--}}
+{{--        <changefreq>weekly</changefreq>--}}
+{{--        <priority>0.8</priority>--}}
+{{--    </url>--}}
+{{--    @endforeach--}}
 
 </urlset>
