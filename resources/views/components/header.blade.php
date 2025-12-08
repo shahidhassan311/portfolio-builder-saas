@@ -1,5 +1,15 @@
 @props(['activePage' => null])
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CFMKG2H8Y4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-CFMKG2H8Y4');
+</script>
+
 <style>
     header.nav {
         position: sticky;
