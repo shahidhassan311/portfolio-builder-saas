@@ -34,23 +34,7 @@
         a { color: inherit; text-decoration: none; }
         .page { min-height: 100vh; display: flex; flex-direction: column; }
         .max { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-        header.nav {
-            position: sticky; top: 0; z-index: 40;
-            backdrop-filter: blur(14px);
-            background: rgba(3,7,17,0.85);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .nav-content { height: 74px; display: flex; align-items: center; justify-content: space-between; }
-        .logo img { height: 200px; width: 200px; display: block; }
-        .btn {
-            border: none; border-radius: 999px;
-            padding: 12px 24px; font-size: 14px;
-            font-weight: 600; cursor: pointer; transition: all .2s ease;
-        }
-        .btn-primary {
-            background: linear-gradient(130deg, var(--accent), var(--accent-2));
-            color: #fff; box-shadow: 0 15px 40px rgba(93,107,255,0.4);
-        }
+
         .legal-page {
             max-width: 900px;
             margin: 60px auto 80px;
@@ -118,16 +102,7 @@
 </head>
 <body>
 <div class="page">
-    <header class="nav">
-        <div class="max nav-content">
-            <div class="logo">
-                <a href="{{ url('/') }}">
-                    <img src="{{ asset('resumizo-logo-white.png') }}" alt="Resumizo Logo">
-                </a>
-            </div>
-            <a href="{{ url('/') }}" class="btn btn-primary">Back to Home</a>
-        </div>
-    </header>
+    <x-header />
 
     <main class="legal-page">
         <h1>Privacy Policy</h1>

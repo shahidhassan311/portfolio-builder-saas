@@ -131,63 +131,6 @@
             padding: 0 24px;
         }
 
-        header.nav {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            backdrop-filter: blur(14px);
-            background: rgba(3, 7, 17, 0.85);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav-content {
-            height: 74px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo-mark {
-            width: 46px;
-            height: 46px;
-            border-radius: 16px;
-            background: linear-gradient(140deg, var(--accent), var(--accent-2), var(--accent-3));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .logo img {
-            height: 200px;
-            width: 200px;
-            display: block;
-        }
-
-        .logo-copy span {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 28px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .nav-actions {
-            display: flex;
-            gap: 12px;
-        }
-
         .btn {
             border: none;
             border-radius: 999px;
@@ -335,32 +278,7 @@
 </head>
 <body>
 <div class="page">
-    <header class="nav">
-        <div class="max nav-content">
-            <div class="logo">
-                <a href="{{ url('/') }}">
-                    <img src="{{ asset('resumizo-logo-white.png') }}"
-                         alt="Resumizo Logo"
-                         class="h-10 w-auto">
-                </a>
-            </div>
-            <div class="nav-links">
-                <a href="{{ url('/') }}#hero">How it works</a>
-                <a href="{{ url('/') }}#themes">Themes</a>
-                <a href="{{ url('/') }}#about">About</a>
-                <a href="{{ url('/') }}#why">Why us</a>
-                <a href="{{ route('blog.index') }}">Blog</a>
-            </div>
-            <div class="nav-actions">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="btn btn-outline">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-outline">Log in</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Sign up free</a>
-                @endauth
-            </div>
-        </div>
-    </header>
+    <x-header activePage="blog" />
 
     <main class="max">
         <div class="blog-header">
