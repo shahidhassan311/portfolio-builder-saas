@@ -4,21 +4,23 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
+        <x-seo-head :seo="$seo ?? []" :include-performance-hints="true" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"></noscript>
 
-        <title>{{ config('app.name', 'Portfolio Builder - Create a Premium Portfolio') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/css/portal.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    @php
+        $usePortalShell = auth()->check() && ! request()->routeIs('admin.*');
+    @endphp
+    <body class="font-sans antialiased {{ $usePortalShell ? 'portal-body' : '' }}">
 
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+        <div class="min-h-screen {{ $usePortalShell ? '' : 'bg-gray-100' }}">
+            @if($usePortalShell)
+                @include('layouts.portal-navigation')
+            @else
+                @include('layouts.navigation')
+            @endif
 
             <!-- Page Heading -->
             @isset($header)
@@ -30,9 +32,10 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="{{ $usePortalShell ? 'portal-main-slot' : '' }}">
                 {{ $slot }}
             </main>
         </div>
+        @stack('portal-scripts')
     </body>
 </html>

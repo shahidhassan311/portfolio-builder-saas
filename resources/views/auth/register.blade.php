@@ -1,76 +1,103 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <div class="auth-header">
+        <h1>Create your account</h1>
+        <p>Start building your portfolio in minutes — free to get started.</p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="auth-form">
         @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="auth-row">
+            <div class="auth-field">
+                <label for="name">Full name</label>
+                <input id="name" class="auth-input" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Alex Johnson">
+                @if ($errors->has('name'))
+                    <ul class="auth-error">
+                        @foreach ($errors->get('name') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+
+            <div class="auth-field">
+                <label for="username">Username</label>
+                <input id="username" class="auth-input" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" placeholder="alexj">
+                <p class="auth-hint">Used in your portfolio URL (e.g. resumizo.com/alexj)</p>
+                @if ($errors->has('username'))
+                    <ul class="auth-error">
+                        @foreach ($errors->get('username') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
         </div>
 
-        <!-- Username -->
-        <div class="mt-4">
-            <x-input-label for="username" :value="__('Username')" />
-            <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('username')" class="mt-2" />
-            <p class="mt-1 text-sm text-gray-600">This will be used in your portfolio URL</p>
+        <div class="auth-field">
+            <label for="email">Email</label>
+            <input id="email" class="auth-input" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="you@email.com">
+            @if ($errors->has('email'))
+                <ul class="auth-error">
+                    @foreach ($errors->get('email') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="email" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="auth-row">
+            <div class="auth-field">
+                <label for="password">Password</label>
+                <input id="password" class="auth-input" type="password" name="password" required autocomplete="new-password" placeholder="••••••••">
+                @if ($errors->has('password'))
+                    <ul class="auth-error">
+                        @foreach ($errors->get('password') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+
+            <div class="auth-field">
+                <label for="password_confirmation">Confirm password</label>
+                <input id="password_confirmation" class="auth-input" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••">
+                @if ($errors->has('password_confirmation'))
+                    <ul class="auth-error">
+                        @foreach ($errors->get('password_confirmation') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <!-- Theme Selection -->
         @if(isset($themes) && $themes->count() > 0)
-        <div class="mt-4">
-            <x-input-label for="theme_id" :value="__('Select Theme (Optional)')" />
-            <select id="theme_id" name="theme_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                <option value="">-- Select a theme --</option>
-                @foreach($themes as $theme)
-                    <option value="{{ $theme->id }}" {{ old('theme_id', $selectedTheme?->id) == $theme->id ? 'selected' : '' }}>
-                        {{ $theme->name }}
-                    </option>
-                @endforeach
-            </select>
-            <x-input-error :messages="$errors->get('theme_id')" class="mt-2" />
-        </div>
+            <div class="auth-field">
+                <label for="theme_id">Starting template <span style="font-weight:400;color:var(--text-dim);">(optional)</span></label>
+                <select id="theme_id" name="theme_id" class="auth-input auth-select">
+                    <option value="">Choose a template later</option>
+                    @foreach($themes as $theme)
+                        <option value="{{ $theme->id }}" {{ old('theme_id', $selectedTheme?->id) == $theme->id ? 'selected' : '' }}>
+                            {{ $theme->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @if ($errors->has('theme_id'))
+                    <ul class="auth-error">
+                        @foreach ($errors->get('theme_id') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
         @endif
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div class="auth-actions">
+            <button type="submit" class="btn btn-primary auth-submit">Create free account</button>
+            <p class="auth-footer-text">
+                Already have an account? <a href="{{ route('login') }}">Log in</a>
+            </p>
         </div>
     </form>
 </x-guest-layout>

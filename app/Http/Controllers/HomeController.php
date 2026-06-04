@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Theme;
+use App\Support\Seo;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -11,7 +12,11 @@ class HomeController extends Controller
     {
         $themes = Theme::where('is_active', true)->get();
 
-        return view('home', compact('themes'));
+        $seo = Seo::forPage('home', [
+            'canonical' => Seo::canonicalUrl('/'),
+        ]);
+
+        return view('home', compact('themes', 'seo'));
     }
 
     public function previewTheme($id)
@@ -64,7 +69,11 @@ class HomeController extends Controller
             ]),
         ];
 
-        return view('themes.' . $theme->slug, ['user' => $demoUser, 'theme' => $theme, 'isPreview' => true]);
+        return view('themes.'.$theme->slug, [
+            'user' => $demoUser,
+            'theme' => $theme,
+            'isPreview' => true,
+        ]);
     }
 
     public function selectTheme(Request $request, $id)
@@ -73,7 +82,7 @@ class HomeController extends Controller
 
         if (auth()->check()) {
             auth()->user()->update(['active_theme_id' => $theme->id]);
-            return redirect()->route('dashboard')->with('success', 'Theme selected successfully!');
+            return redirect()->route('dashboard.templates')->with('success', 'Theme selected successfully!');
         }
 
         return redirect()->route('register', ['theme_id' => $theme->id]);

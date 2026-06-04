@@ -3,21 +3,99 @@
 namespace App\Http\Controllers;
 
 use App\Models\Theme;
-use App\Models\UserProfile;
-use App\Models\UserSkill;
-use App\Models\UserProject;
-use App\Models\UserGoal;
-use App\Models\Education;
-use App\Models\Experience;
+use App\Models\WaitlistSignup;
+use App\Services\ResumeImporter;
+use App\Services\ResumeParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function overview()
+    {
+        $user = $this->loadDashboardUser();
+        $themes = $this->activeThemes();
+        $onProWaitlist = WaitlistSignup::where('email', $user->email)->where('plan', 'pro')->exists();
+        $portfolioUrl = route('portfolio.show', ['id' => $user->id, 'username' => $user->username]);
+        $pdfUrl = route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]);
+        $completion = $this->portfolioCompletion($user);
+
+        return view('dashboard.overview', compact(
+            'user',
+            'themes',
+            'onProWaitlist',
+            'portfolioUrl',
+            'pdfUrl',
+            'completion'
+        ));
+    }
+
+    public function content()
+    {
+        $user = $this->loadDashboardUser();
+        $themes = $this->activeThemes();
+
+        return view('dashboard.content', compact('user', 'themes'));
+    }
+
+    public function templates()
+    {
+        $user = $this->loadDashboardUser();
+        $themes = $this->activeThemes();
+
+        return view('dashboard.templates', compact('user', 'themes'));
+    }
+
+    public function publish()
+    {
+        $user = $this->loadDashboardUser();
+        $portfolioUrl = route('portfolio.show', ['id' => $user->id, 'username' => $user->username]);
+
+        return view('dashboard.publish', compact('user', 'portfolioUrl'));
+    }
+
+    public function export()
+    {
+        $user = $this->loadDashboardUser();
+        $pdfUrl = route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]);
+        $portfolioUrl = route('portfolio.show', ['id' => $user->id, 'username' => $user->username]);
+
+        return view('dashboard.export', compact('user', 'pdfUrl', 'portfolioUrl'));
+    }
+
+    public function upgrade()
+    {
+        $user = $this->loadDashboardUser();
+        $onProWaitlist = WaitlistSignup::where('email', $user->email)->where('plan', 'pro')->exists();
+        $plans = config('plans');
+
+        return view('dashboard.upgrade', compact('user', 'onProWaitlist', 'plans'));
+    }
+
+    public function joinWaitlist(Request $request)
     {
         $user = auth()->user();
 
+        WaitlistSignup::firstOrCreate(
+            ['email' => $user->email, 'plan' => 'pro'],
+            ['user_id' => $user->id]
+        );
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'You\'re on the Pro waitlist! We\'ll email you when Pro launches.',
+            ]);
+        }
+
+        return redirect()
+            ->route('dashboard.upgrade')
+            ->with('success', 'You\'re on the Pro waitlist! We\'ll email you when Pro launches.');
+    }
+
+    protected function loadDashboardUser()
+    {
+        $user = auth()->user();
         $user->load([
             'profile',
             'skills',
@@ -25,13 +103,82 @@ class DashboardController extends Controller
             'goals',
             'educations',
             'experiences',
-            'activeTheme'
+            'activeTheme',
         ]);
 
+        return $user;
+    }
 
-        $themes = Theme::where('is_active', true)->get();
+    protected function activeThemes()
+    {
+        return Theme::where('is_active', true)->get();
+    }
 
-        return view('dashboard.index', compact('user', 'themes'));
+    protected function portfolioCompletion($user): array
+    {
+        $checks = [
+            'profile' => filled($user->name) && filled($user->username),
+            'about' => filled($user->profile?->about_short),
+            'skills' => $user->skills->isNotEmpty(),
+            'projects' => $user->projects->isNotEmpty(),
+            'experience' => $user->experiences->isNotEmpty(),
+            'education' => $user->educations->isNotEmpty(),
+            'theme' => filled($user->active_theme_id),
+            'contact' => filled($user->profile?->contact_email) || filled($user->email),
+        ];
+
+        $done = count(array_filter($checks));
+
+        return [
+            'checks' => $checks,
+            'done' => $done,
+            'total' => count($checks),
+            'percent' => (int) round(($done / max(count($checks), 1)) * 100),
+        ];
+    }
+
+    public function importResume(Request $request, ResumeParser $parser, ResumeImporter $importer)
+    {
+        $request->validate([
+            'resume' => 'required|file|mimes:pdf,txt|max:5120',
+        ]);
+
+        try {
+            $text = $parser->extractText($request->file('resume'));
+
+            if (strlen(trim($text)) < 30) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Could not read enough text from this file. Try a text-based PDF or export as TXT.',
+                ], 422);
+            }
+
+            $parsed = $parser->parse($text);
+            $stats = $importer->apply(auth()->user(), $parsed);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $importer->buildMessage($stats),
+                'stats' => $stats,
+                'preview' => [
+                    'name' => $parsed['name'] ?? null,
+                    'email' => $parsed['email'] ?? null,
+                    'skills_count' => count($parsed['skills'] ?? []),
+                    'experiences_count' => count($parsed['experiences'] ?? []),
+                    'educations_count' => count($parsed['educations'] ?? []),
+                ],
+                'reload' => true,
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to parse resume. Please ensure the file is a readable PDF or TXT.',
+            ], 500);
+        }
     }
 
     public function updateProfile(Request $request)
@@ -322,8 +469,10 @@ class DashboardController extends Controller
 
         // checkbox handling
         $data['is_current'] = $request->boolean('is_current');
+        $user = auth()->user();
+        $data['sort_order'] = $request->input('sort_order', ((int) $user->educations()->max('sort_order')) + 1);
 
-        auth()->user()->educations()->create($data);
+        $user->educations()->create($data);
 
         if ($request->ajax()) {
             return response()->json([
@@ -371,11 +520,25 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Education updated successfully!',
-                'reload' => true,
             ]);
         }
 
         return redirect()->route('dashboard')->with('success', 'Education updated successfully!');
+    }
+
+    public function reorderEducations(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'integer',
+        ]);
+
+        $user = auth()->user();
+        foreach ($request->order as $index => $id) {
+            $user->educations()->where('id', $id)->update(['sort_order' => $index]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Order saved.']);
     }
 
     public function deleteEducation($id)
@@ -422,8 +585,10 @@ class DashboardController extends Controller
         ]);
 
         $data['is_current'] = $request->boolean('is_current');
+        $user = auth()->user();
+        $data['sort_order'] = $request->input('sort_order', ((int) $user->experiences()->max('sort_order')) + 1);
 
-        auth()->user()->experiences()->create($data);
+        $user->experiences()->create($data);
 
         if ($request->ajax()) {
             return response()->json([
@@ -471,11 +636,25 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Experience updated successfully!',
-                'reload' => true,
             ]);
         }
 
         return redirect()->route('dashboard')->with('success', 'Experience updated successfully!');
+    }
+
+    public function reorderExperiences(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'integer',
+        ]);
+
+        $user = auth()->user();
+        foreach ($request->order as $index => $id) {
+            $user->experiences()->where('id', $id)->update(['sort_order' => $index]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Order saved.']);
     }
 
     public function deleteExperience($id)
@@ -544,6 +723,6 @@ class DashboardController extends Controller
             ]);
         }
 
-        return redirect()->route('dashboard')->with('success', 'Theme updated successfully!');
+        return redirect()->route('dashboard.templates')->with('success', 'Theme updated successfully!');
     }
 }

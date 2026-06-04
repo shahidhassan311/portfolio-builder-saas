@@ -1,83 +1,27 @@
 {!! '<?xml version="1.0" encoding="UTF-8"?>' !!}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-    {{-- Home Page --}}
+    @foreach($staticEntries as $entry)
     <url>
-        <loc>{{ url('/') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
+        <loc>{{ $entry['loc'] }}</loc>
+        @if(!empty($entry['lastmod']))
+        <lastmod>{{ $entry['lastmod'] }}</lastmod>
+        @endif
+        <changefreq>{{ $entry['changefreq'] }}</changefreq>
+        <priority>{{ $entry['priority'] }}</priority>
     </url>
+    @endforeach
 
-    {{-- Authentication Pages --}}
-    <url>
-        <loc>{{ route('login') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>{{ route('register') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    {{-- Legal Pages --}}
-    <url>
-        <loc>{{ route('privacy') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    <url>
-        <loc>{{ route('terms') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    {{-- Blog Index --}}
-    <url>
-        <loc>{{ route('blog.index') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    {{-- Individual Blog Posts --}}
     @foreach($blogs as $blog)
     <url>
-        <loc>{{ route('blog.show', $blog->slug) }}</loc>
+        <loc>{{ \App\Support\Seo::canonicalUrl('/blog/'.$blog->slug) }}</loc>
         <lastmod>{{ $blog->updated_at->toAtomString() }}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     @endforeach
-
-    {{-- Theme Previews --}}
-{{--    @foreach($themes as $theme)--}}
-{{--    <url>--}}
-{{--        <loc>{{ route('preview.theme', $theme->id) }}</loc>--}}
-{{--        <lastmod>{{ $theme->updated_at->toAtomString() }}</lastmod>--}}
-{{--        <changefreq>monthly</changefreq>--}}
-{{--        <priority>0.6</priority>--}}
-{{--    </url>--}}
-{{--    @endforeach--}}
-
-    {{-- Public Portfolios --}}
-{{--    @foreach($users as $user)--}}
-{{--    <url>--}}
-{{--        <loc>{{ route('portfolio.show', ['id' => $user->id, 'username' => $user->username ?? $user->name]) }}</loc>--}}
-{{--        <lastmod>{{ $user->updated_at->toAtomString() }}</lastmod>--}}
-{{--        <changefreq>weekly</changefreq>--}}
-{{--        <priority>0.8</priority>--}}
-{{--    </url>--}}
-{{--    @endforeach--}}
 
 </urlset>

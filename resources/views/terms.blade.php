@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="{{ asset('resumizo-logo-white.png') }}"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Terms & Conditions - Resumizo</title>
-    <meta name="description" content="Read the terms and conditions for using Resumizo portfolio builder platform.">
-    <meta name="robots" content="noindex, nofollow">
-
-    @vite(['resources/js/app.js'])
+<x-marketing-layout :seo="$seo" :show-breadcrumbs="true">
+@push('head')
     <style>
         :root {
             --bg: #050914;
@@ -99,12 +89,9 @@
         .footer-links a:hover { color: var(--accent-3); }
         .footer-links .separator { color: rgba(255,255,255,0.3); }
     </style>
-</head>
-<body>
-<div class="page">
-    <x-header />
+@endpush
 
-    <main class="legal-page">
+    <main class="legal-page seo-page-main">
         <h1>Terms & Conditions</h1>
         <p class="last-updated">Last Updated: December 4, 2025</p>
 
@@ -213,19 +200,4 @@
             </ul>
         </section>
     </main>
-
-    <footer>
-        <div class="max">
-            <div class="footer-content">
-                <p>&copy; 2025 Resumizo. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="{{ route('privacy') }}">Privacy Policy</a>
-                    <span class="separator">•</span>
-                    <a href="{{ route('terms') }}">Terms & Conditions</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-</div>
-</body>
-</html>
+</x-marketing-layout>

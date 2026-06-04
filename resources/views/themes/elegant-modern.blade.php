@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
-    <title>{{ $user->name }} - Portfolio</title>
+    <link rel="icon" type="image/png" href="{{ asset(config('branding.logo')) }}" />
+    @include('themes.partials.seo-meta')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Google Font -->

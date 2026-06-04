@@ -3,35 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\User;
-use App\Models\Theme;
+use App\Support\Seo;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        // Get published blogs
-        $blogs = Blog::where('status', 'published')
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        // Get users with active themes (who have portfolios)
-        $users = User::whereNotNull('active_theme_id')
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        // Get all themes
-        $themes = Theme::orderBy('updated_at', 'desc')
+        $blogs = Blog::query()
+            ->where('status', 'published')
+            ->orderByDesc('updated_at')
             ->get();
 
         $content = view('sitemap', [
+            'staticEntries' => Seo::sitemapEntries(),
             'blogs' => $blogs,
-            'users' => $users,
-            'themes' => $themes,
         ])->render();
 
-        return response($content, 200)
-            ->header('Content-Type', 'text/xml');
+        return response($content, 200, [
+            'Content-Type' => 'application/xml; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
     }
 }

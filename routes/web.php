@@ -8,7 +8,21 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ThemeController as AdminThemeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\ProgrammaticSeoController;
+use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
+
+// SEO: dynamic robots.txt (do not add a static public/robots.txt)
+Route::get('/robots.txt', RobotsController::class)->name('robots');
+
+// Programmatic SEO hubs (must stay above the portfolio catch-all route)
+$seoHubs = implode('|', array_keys(config('seo.programmatic_hubs', [])));
+Route::get('/{hub}', [ProgrammaticSeoController::class, 'hub'])
+    ->where('hub', $seoHubs)
+    ->name('seo.hub');
+Route::get('/{hub}/{slug}', [ProgrammaticSeoController::class, 'page'])
+    ->where('hub', $seoHubs)
+    ->name('seo.page');
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -19,15 +33,22 @@ Route::get('/select-theme/{id}', [HomeController::class, 'selectTheme'])->name('
 Route::post('/contact', [HomeController::class, 'contactSubmit'])->name('contact.submit');
 
 // Legal pages
-Route::view('/privacy', 'privacy')->name('privacy');
-Route::view('/terms', 'terms')->name('terms');
+Route::get('/privacy', [App\Http\Controllers\LegalController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [App\Http\Controllers\LegalController::class, 'terms'])->name('terms');
 
 Route::get('/portfolio/{id}/{username}/pdf', [PortfolioController::class, 'downloadPdf'])
     ->name('portfolio.pdf');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'overview'])->name('dashboard');
+    Route::get('/dashboard/content', [DashboardController::class, 'content'])->name('dashboard.content');
+    Route::get('/dashboard/templates', [DashboardController::class, 'templates'])->name('dashboard.templates');
+    Route::get('/dashboard/publish', [DashboardController::class, 'publish'])->name('dashboard.publish');
+    Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
+    Route::get('/dashboard/upgrade', [DashboardController::class, 'upgrade'])->name('dashboard.upgrade');
+    Route::post('/dashboard/waitlist', [DashboardController::class, 'joinWaitlist'])->name('dashboard.waitlist');
+    Route::post('/dashboard/resume/import', [DashboardController::class, 'importResume'])->name('dashboard.resume.import');
 
     // Dashboard update routes
     Route::post('/dashboard/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.profile.update');
@@ -53,10 +74,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/dashboard/education', [DashboardController::class, 'storeEducation'])->name('dashboard.education.store');
     Route::put('/dashboard/education/{id}', [DashboardController::class, 'updateEducation'])->name('dashboard.education.update');
+    Route::post('/dashboard/education/reorder', [DashboardController::class, 'reorderEducations'])->name('dashboard.education.reorder');
     Route::delete('/dashboard/education/{id}', [DashboardController::class, 'deleteEducation'])->name('dashboard.education.delete');
 
     Route::post('/dashboard/experience', [DashboardController::class, 'storeExperience'])->name('dashboard.experience.store');
     Route::put('/dashboard/experience/{id}', [DashboardController::class, 'updateExperience'])->name('dashboard.experience.update');
+    Route::post('/dashboard/experience/reorder', [DashboardController::class, 'reorderExperiences'])->name('dashboard.experience.reorder');
     Route::delete('/dashboard/experience/{id}', [DashboardController::class, 'deleteExperience'])->name('dashboard.experience.delete');
 
     // Profile routes

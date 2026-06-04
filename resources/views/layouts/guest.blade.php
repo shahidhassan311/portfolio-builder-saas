@@ -4,45 +4,21 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/png" href="resumizo-logo-white.png" />
+        <x-seo-head :seo="$seo ?? []" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"></noscript>
 
-        <title>{{ config('app.name', 'Portfolio Builder - Create a Premium Portfolio') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/landing.css', 'resources/js/app.js'])
     </head>
 
-    <body class="font-sans text-gray-900 antialiased">
-
-    <style>
-        .brand-logo {
-            width: 100px;
-            height: 90px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #4f46e5, #a855f7, #06b6d4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 800;
-            font-size: 60px;
-        }
-    </style>
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-
-                <a href="/">
-                    <div class="brand-logo">PB</div>
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+    <body class="marketing font-sans antialiased">
+        <div class="auth-wrap">
+            <x-brand-logo class="auth-logo" />
+            <div class="auth-card {{ request()->routeIs('register') ? 'auth-card--register' : '' }}">
                 {{ $slot }}
             </div>
+            <p class="auth-back"><a href="{{ url('/') }}">&larr; Back to home</a></p>
         </div>
+        <x-webchat-widget />
     </body>
 </html>
