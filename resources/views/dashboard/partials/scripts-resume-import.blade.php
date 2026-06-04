@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function uploadResume(file) {
         if (!file) return;
         const ext = file.name.split('.').pop()?.toLowerCase();
-        const allowed = ['application/pdf', 'text/plain'];
+        const allowed = ['application/pdf', 'text/plain', 'application/octet-stream'];
         if (!allowed.includes(file.type) && ext !== 'pdf' && ext !== 'txt') {
             showFlash('Please upload a PDF or TXT file.', 'error');
             return;
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(importUrl, {
             method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
             },

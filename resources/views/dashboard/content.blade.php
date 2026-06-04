@@ -332,7 +332,6 @@
 
             </div>
         </div>
-</x-portal-layout>
 
 @push('portal-scripts')
     <script>
@@ -701,3 +700,4 @@
         }
     </script>
 @endpush
+</x-portal-layout>

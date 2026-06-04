@@ -28,8 +28,8 @@
             </article>
         @endforeach
     </div>
-</x-portal-layout>
 
-@push('portal-scripts')
-    @include('dashboard.partials.scripts-ajax-forms')
-@endpush
+    @push('portal-scripts')
+        @include('dashboard.partials.scripts-ajax-forms')
+    @endpush
+</x-portal-layout>

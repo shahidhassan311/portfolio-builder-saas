@@ -140,7 +140,7 @@ class DashboardController extends Controller
     public function importResume(Request $request, ResumeParser $parser, ResumeImporter $importer)
     {
         $request->validate([
-            'resume' => 'required|file|mimes:pdf,txt|max:5120',
+            'resume' => ['required', 'file', 'max:5120', 'extensions:pdf,txt'],
         ]);
 
         try {

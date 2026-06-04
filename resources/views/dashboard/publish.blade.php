@@ -39,9 +39,8 @@
             @endif
         </ul>
     </div>
-</x-portal-layout>
 
-@push('portal-scripts')
+    @push('portal-scripts')
 <script>
 document.getElementById('copy-portfolio-url')?.addEventListener('click', () => {
     const input = document.getElementById('portfolio-url');
@@ -54,4 +53,5 @@ document.getElementById('copy-portfolio-url')?.addEventListener('click', () => {
     });
 });
 </script>
-@endpush
+    @endpush
+</x-portal-layout>

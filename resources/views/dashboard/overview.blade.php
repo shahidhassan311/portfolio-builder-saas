@@ -128,10 +128,10 @@
             </div>
         </div>
     @endif
-</x-portal-layout>
 
-@if ($user->isFreePlan())
-    @push('portal-scripts')
-        @include('dashboard.partials.scripts-resume-import')
-    @endpush
-@endif
+    @if ($user->isFreePlan())
+        @push('portal-scripts')
+            @include('dashboard.partials.scripts-resume-import')
+        @endpush
+    @endif
+</x-portal-layout>
