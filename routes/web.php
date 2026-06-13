@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ThemeController as AdminThemeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\BlogFeedController;
 use App\Http\Controllers\ProgrammaticSeoController;
 use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,11 @@ Route::get('/{hub}/{slug}', [ProgrammaticSeoController::class, 'page'])
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/preview/{id}', [HomeController::class, 'previewTheme'])->name('preview.theme');
 Route::get('/select-theme/{id}', [HomeController::class, 'selectTheme'])->name('select.theme');
+
+// Blog (must stay above portfolio catch-all)
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/feed.xml', BlogFeedController::class)->name('blog.feed');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
 // Contact form
 Route::post('/contact', [HomeController::class, 'contactSubmit'])->name('contact.submit');
@@ -104,7 +110,4 @@ Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'inde
 require __DIR__.'/auth.php';
 
 // Public portfolio route (must be last to avoid conflicts)
-// Public portfolio route (must be last to avoid conflicts)
-Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 Route::get('/{id}/{username}', [PortfolioController::class, 'show'])->name('portfolio.show');

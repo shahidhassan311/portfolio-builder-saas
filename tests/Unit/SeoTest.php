@@ -34,4 +34,15 @@ class SeoTest extends TestCase
         $this->assertContains('https://www.example.com/resume-templates', $locs);
         $this->assertContains('https://www.example.com/job-resumes/software-engineer-resume', $locs);
     }
+
+    #[Test]
+    public function asset_url_uses_canonical_site_url(): void
+    {
+        config(['seo.site_url' => 'https://resumizo.com']);
+
+        $this->assertSame(
+            'https://resumizo.com/resumizo-logo.png',
+            Seo::assetUrl('resumizo-logo.png')
+        );
+    }
 }

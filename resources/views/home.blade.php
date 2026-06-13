@@ -404,6 +404,51 @@
             </div>
         </section>
 
+        </section>
+
+        @if(isset($latestBlogs) && $latestBlogs->isNotEmpty())
+        <section id="blog" class="section--alt">
+            <div class="max">
+                <div class="section-head">
+                    <span class="section-label">Blog</span>
+                    <h2>Latest resume &amp; portfolio tips</h2>
+                    <p class="section-sub">Practical guides to help you get hired faster.</p>
+                </div>
+                <div class="blog-grid">
+                    @foreach($latestBlogs as $blog)
+                        <article class="blog-card">
+                            <a href="{{ route('blog.show', $blog->slug) }}" class="blog-img">
+                                @if($blog->image)
+                                    <img src="{{ \App\Support\Seo::assetUrl('storage/' . $blog->image) }}"
+                                         alt="{{ $blog->title }} — Resumizo blog"
+                                         loading="lazy"
+                                         decoding="async"
+                                         width="400"
+                                         height="200">
+                                @else
+                                    <div class="blog-img-placeholder" aria-hidden="true">R</div>
+                                @endif
+                            </a>
+                            <div class="blog-content">
+                                <time class="blog-date" datetime="{{ $blog->published_at->toIso8601String() }}">
+                                    {{ $blog->published_at->format('M d, Y') }}
+                                </time>
+                                <h3 class="blog-heading">
+                                    <a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a>
+                                </h3>
+                                <p class="blog-excerpt">{{ Str::limit($blog->excerpt ?? strip_tags($blog->content), 120) }}</p>
+                                <a href="{{ route('blog.show', $blog->slug) }}" class="blog-link">Read article <span aria-hidden="true">→</span></a>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+                <div style="text-align:center; margin-top:32px;">
+                    <a href="{{ route('blog.index') }}" class="btn btn-outline">View all articles</a>
+                </div>
+            </div>
+        </section>
+        @endif
+
         <section id="faq" class="faq-section section--alt">
             <div class="max">
                 <div class="section-head" style="margin:0 auto; text-align:center; max-width:560px;">

@@ -69,6 +69,7 @@ class Seo
     {
         return self::forPage('blog.index', [
             'canonical' => self::canonicalUrl('/blog'),
+            'feed_url' => self::canonicalUrl('/blog/feed.xml'),
             'breadcrumbs' => [
                 ['name' => 'Home', 'url' => self::siteUrl()],
                 ['name' => 'Blog', 'url' => self::canonicalUrl('/blog')],
@@ -80,11 +81,28 @@ class Seo
     /**
      * @return array<string, mixed>
      */
-    public static function forBlogPost(Blog $blog): array
+    /**
+     * @param  array<int, array{question: string, answer: string}>  $faqItems
+     * @return array<string, mixed>
+     */
+    public static function forBlogPost(Blog $blog, array $faqItems = []): array
     {
         $description = Str::limit(strip_tags($blog->excerpt ?? $blog->content), 160);
         $canonical = self::canonicalUrl('/blog/'.$blog->slug);
-        $image = $blog->image ? asset('storage/'.$blog->image) : self::ogImageUrl();
+        $image = $blog->image ? self::assetUrl('storage/'.$blog->image) : self::ogImageUrl();
+        $schemas = ['article', 'breadcrumb'];
+
+        if ($faqItems !== []) {
+            $schemas[] = 'faq';
+        }
+
+        $schemaGraph = [
+            self::articleSchema($blog, $canonical, $image, $description),
+        ];
+
+        if ($faqItems !== []) {
+            $schemaGraph[] = self::faqSchemaFromItems($faqItems);
+        }
 
         return [
             'title' => self::formatTitle($blog->title),
@@ -97,16 +115,44 @@ class Seo
             'article_published' => $blog->published_at?->toIso8601String(),
             'article_modified' => $blog->updated_at->toIso8601String(),
             'author' => $blog->user->name ?? 'Resumizo Team',
-            'schemas' => ['article', 'breadcrumb'],
+            'schemas' => $schemas,
             'breadcrumbs' => [
                 ['name' => 'Home', 'url' => self::siteUrl()],
                 ['name' => 'Blog', 'url' => self::canonicalUrl('/blog')],
                 ['name' => $blog->title, 'url' => $canonical],
             ],
-            'schema_graph' => [
-                self::articleSchema($blog, $canonical, $image, $description),
-            ],
+            'schema_graph' => $schemaGraph,
+            'faq_items' => $faqItems,
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function forBlogIndexPagination(int $currentPage, bool $hasMorePages): array
+    {
+        $seo = self::forBlogIndex();
+        $seo['feed_url'] = self::canonicalUrl('/blog/feed.xml');
+
+        if ($currentPage <= 1) {
+            return $seo;
+        }
+
+        $seo['title'] = self::formatTitle('Blog — Page '.$currentPage);
+        $seo['canonical'] = self::canonicalUrl('/blog').'?page='.$currentPage;
+
+        if ($currentPage > 1) {
+            $previousPage = $currentPage - 1;
+            $seo['pagination_prev'] = $previousPage === 1
+                ? self::canonicalUrl('/blog')
+                : self::canonicalUrl('/blog').'?page='.$previousPage;
+        }
+
+        if ($hasMorePages) {
+            $seo['pagination_next'] = self::canonicalUrl('/blog').'?page='.($currentPage + 1);
+        }
+
+        return $seo;
     }
 
     /**
@@ -203,9 +249,18 @@ class Seo
 
     public static function ogImageUrl(?string $relative = null): string
     {
-        $file = $relative ?? config('seo.og_image');
+        return self::assetUrl($relative ?? config('seo.og_image'));
+    }
 
-        return asset($file);
+    public static function assetUrl(string $path): string
+    {
+        $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return rtrim(self::siteUrl(), '/').'/'.$path;
     }
 
     public static function formatTitle(string $title): string
@@ -249,7 +304,8 @@ class Seo
         }
 
         if (in_array('faq', $schemas, true)) {
-            $graph[] = self::faqSchema();
+            $faqItems = $seo['faq_items'] ?? config('seo.home_faq', []);
+            $graph[] = self::faqSchemaFromItems($faqItems);
         }
 
         if (in_array('reviews', $schemas, true)) {
@@ -304,7 +360,7 @@ class Seo
             'url' => self::siteUrl(),
             'logo' => [
                 '@type' => 'ImageObject',
-                'url' => asset($org['logo']),
+                'url' => self::assetUrl($org['logo']),
             ],
             'email' => $org['email'] ?? null,
             'sameAs' => array_values($org['same_as'] ?? []),
@@ -323,11 +379,6 @@ class Seo
             'name' => config('seo.site_name'),
             'description' => config('seo.default_description'),
             'publisher' => ['@id' => self::siteUrl().'/#organization'],
-            'potentialAction' => [
-                '@type' => 'SearchAction',
-                'target' => self::siteUrl().'/blog?q={search_term_string}',
-                'query-input' => 'required name=search_term_string',
-            ],
         ];
     }
 
@@ -389,7 +440,16 @@ class Seo
      */
     public static function faqSchema(): array
     {
-        $items = collect(config('seo.home_faq', []))->map(fn (array $item) => [
+        return self::faqSchemaFromItems(config('seo.home_faq', []));
+    }
+
+    /**
+     * @param  array<int, array{question: string, answer: string}>  $items
+     * @return array<string, mixed>
+     */
+    public static function faqSchemaFromItems(array $items): array
+    {
+        $entities = collect($items)->map(fn (array $item) => [
             '@type' => 'Question',
             'name' => $item['question'],
             'acceptedAnswer' => [
@@ -400,7 +460,7 @@ class Seo
 
         return [
             '@type' => 'FAQPage',
-            'mainEntity' => $items,
+            'mainEntity' => $entities,
         ];
     }
 
@@ -432,7 +492,7 @@ class Seo
     public static function articleSchema(Blog $blog, string $canonical, string $image, string $description): array
     {
         return [
-            '@type' => 'Article',
+            '@type' => 'BlogPosting',
             'headline' => $blog->title,
             'image' => [$image],
             'author' => [
@@ -444,15 +504,21 @@ class Seo
                 'name' => config('seo.organization.name'),
                 'logo' => [
                     '@type' => 'ImageObject',
-                    'url' => asset(config('seo.organization.logo')),
+                    'url' => self::assetUrl(config('seo.organization.logo')),
                 ],
             ],
             'datePublished' => $blog->published_at?->toIso8601String(),
             'dateModified' => $blog->updated_at->toIso8601String(),
             'description' => $description,
+            'url' => $canonical,
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
                 '@id' => $canonical,
+            ],
+            'isPartOf' => [
+                '@type' => 'Blog',
+                'name' => config('seo.site_name').' Blog',
+                'url' => self::canonicalUrl('/blog'),
             ],
         ];
     }
