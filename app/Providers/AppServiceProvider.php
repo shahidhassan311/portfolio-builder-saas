@@ -31,12 +31,13 @@ class AppServiceProvider extends ServiceProvider
             $username = request()->route('username') ?? $user->username ?? 'portfolio';
             $path = '/'.$id.'/'.$username;
 
-            $view->with('portfolioSeo', Seo::forPortfolio(
+            $portfolioSeo = Seo::forPortfolio(
                 $user->name ?? 'Portfolio',
                 $path
-            ) + [
-                'robots' => $isPreview ? 'noindex, nofollow' : 'noindex, follow',
-            ]);
+            );
+            $portfolioSeo['robots'] = $isPreview ? 'noindex, nofollow' : 'noindex, follow';
+
+            $view->with('portfolioSeo', $portfolioSeo);
         });
 
         View::composer(['layouts.app', 'layouts.guest'], function ($view): void {

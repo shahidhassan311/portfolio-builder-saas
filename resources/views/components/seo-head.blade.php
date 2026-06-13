@@ -17,6 +17,15 @@
 @endif
 <meta name="robots" content="{{ $robots }}">
 <link rel="canonical" href="{{ $canonical }}">
+@if(!empty($seo['feed_url']))
+<link rel="alternate" type="application/rss+xml" title="{{ config('seo.site_name') }} Blog" href="{{ $seo['feed_url'] }}">
+@endif
+@if(!empty($seo['pagination_prev']))
+<link rel="prev" href="{{ $seo['pagination_prev'] }}">
+@endif
+@if(!empty($seo['pagination_next']))
+<link rel="next" href="{{ $seo['pagination_next'] }}">
+@endif
 
 <meta property="og:locale" content="{{ config('seo.locale') }}">
 <meta property="og:type" content="{{ $ogType }}">

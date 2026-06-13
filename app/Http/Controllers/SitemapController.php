@@ -11,16 +11,16 @@ class SitemapController extends Controller
     public function index(): Response
     {
         $blogs = Blog::query()
-            ->where('status', 'published')
+            ->published()
             ->orderByDesc('updated_at')
-            ->get();
+            ->get(['id', 'slug', 'updated_at']);
 
         $content = view('sitemap', [
             'staticEntries' => Seo::sitemapEntries(),
             'blogs' => $blogs,
         ])->render();
 
-        return response($content, 200, [
+        return response('<?xml version="1.0" encoding="UTF-8"?>'."\n".$content, 200, [
             'Content-Type' => 'application/xml; charset=UTF-8',
             'Cache-Control' => 'public, max-age=3600',
         ]);
