@@ -11,7 +11,7 @@
                 <article class="blog-card">
                     <a href="{{ route('blog.show', $blog->slug) }}" class="blog-img">
                         @if($blog->image)
-                            <img src="{{ asset('storage/' . $blog->image) }}"
+                            <img src="{{ \App\Support\Seo::assetUrl('storage/' . $blog->image) }}"
                                  alt="{{ $blog->title }} — Resumizo blog"
                                  loading="lazy"
                                  decoding="async"

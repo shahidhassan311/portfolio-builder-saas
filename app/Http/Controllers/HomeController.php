@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\Theme;
 use App\Support\Seo;
 use Illuminate\Http\Request;
@@ -11,12 +12,17 @@ class HomeController extends Controller
     public function index()
     {
         $themes = Theme::where('is_active', true)->get();
+        $latestBlogs = Blog::query()
+            ->published()
+            ->latest('published_at')
+            ->limit(3)
+            ->get(['title', 'slug', 'excerpt', 'content', 'published_at', 'image']);
 
         $seo = Seo::forPage('home', [
             'canonical' => Seo::canonicalUrl('/'),
         ]);
 
-        return view('home', compact('themes', 'seo'));
+        return view('home', compact('themes', 'latestBlogs', 'seo'));
     }
 
     public function previewTheme($id)
@@ -69,11 +75,13 @@ class HomeController extends Controller
             ]),
         ];
 
-        return view('themes.'.$theme->slug, [
-            'user' => $demoUser,
-            'theme' => $theme,
-            'isPreview' => true,
-        ]);
+        return response()
+            ->view('themes.'.$theme->slug, [
+                'user' => $demoUser,
+                'theme' => $theme,
+                'isPreview' => true,
+            ])
+            ->header('X-Robots-Tag', 'noindex, nofollow');
     }
 
     public function selectTheme(Request $request, $id)

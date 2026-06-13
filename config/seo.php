@@ -345,6 +345,7 @@ return [
         '/verify-email',
         '/confirm-password',
         '/preview/',
+        '/select-theme/',
         '/*/pdf',
     ],
 
