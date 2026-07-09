@@ -13,6 +13,9 @@ class ResumeImporter
             'skills' => 0,
             'experiences' => 0,
             'educations' => 0,
+            'certifications' => 0,
+            'services' => 0,
+
         ];
 
         if (!empty($parsed['name']) || !empty($parsed['email']) || !empty($parsed['tagline'])) {
@@ -41,10 +44,11 @@ class ResumeImporter
             if ($name === '' || in_array(strtolower($name), $existingSkills, true)) {
                 continue;
             }
-            $user->skills()->create([
-                'name' => $name,
-                'level' => $skill['level'] ?? 'Intermediate',
-            ]);
+
+                $user->skills()->create([
+                    'name' => $name,
+                    'level' => $skill['level'] ?? 'Intermediate',
+                ]);
             $existingSkills[] = strtolower($name);
             $stats['skills']++;
         }
@@ -80,6 +84,83 @@ class ResumeImporter
             $stats['educations']++;
         }
 
+        $certOrder = (int) $user->certifications()->max('sort_order');
+
+$existing = $user->certifications()
+    ->pluck('title')
+    ->map(fn($title) => mb_strtolower(trim($title)))
+    ->toArray();
+    foreach ($parsed['certifications'] ?? [] as $cert) {
+
+        if (!is_array($cert)) {
+            continue;
+        }
+
+        $title = trim($cert['title'] ?? '');
+
+        if ($title === '') {
+            continue;
+        }
+
+        if (mb_strtolower($title) === 'certifications') {
+            continue;
+        }
+
+        if (
+            $title === '' &&
+            empty($cert['organization']) &&
+            empty($cert['issue_date']) &&
+            empty($cert['credential_url']) &&
+            empty($cert['description'])
+        ) {
+            continue;
+        }
+
+        if (in_array(mb_strtolower($title), $existing, true)) {
+            continue;
+        }
+
+        $user->certifications()->create([
+            'title' => $title,
+            'organization' => $cert['organization'] ?? null,
+            'issue_date' => $cert['issue_date'] ?? null,
+            'credential_url' => $cert['credential_url'] ?? null,
+            'description' => $cert['description'] ?? null,
+            'sort_order' => ++$certOrder,
+        ]);
+
+        $existing[] = mb_strtolower($title);
+        $stats['certifications']++;
+    }
+
+    $serviceOrder = (int) ($user->services()->max('sort_order') ?? 0);
+
+$existingServices = $user->services()
+    ->pluck('title')
+    ->map(fn($t) => mb_strtolower(trim($t)))
+    ->toArray();
+
+foreach ($parsed['services'] ?? [] as $service) {
+
+    if (!is_array($service)) continue;
+
+    $title = trim($service['title'] ?? '');
+
+    if ($title === '') continue;
+
+    if (in_array(mb_strtolower($title), $existingServices, true)) continue;
+
+    $user->services()->create([
+        'title' => $title,
+        'icon' => $service['icon'] ?? null,
+        'description' => $service['description'] ?? null,
+        'sort_order' => ++$serviceOrder,
+    ]);
+
+    $existingServices[] = mb_strtolower($title);
+    $stats['services']++;
+}
+
         return $stats;
     }
 
@@ -99,9 +180,18 @@ class ResumeImporter
             $parts[] = $stats['educations'] . ' education(s)';
         }
 
+        if ($stats['certifications'] > 0) {
+            $parts[] = $stats['certifications'].' certification(s)';
+        }
+
+        if ($stats['services'] > 0) {
+            $parts[] = $stats['services'].' services';
+        }
+
         if (empty($parts)) {
             return 'Resume processed, but we could not detect much structured data. Please review and fill sections manually.';
         }
+
 
         return 'Imported from resume: ' . implode(', ', $parts) . '. Please review each section.';
     }

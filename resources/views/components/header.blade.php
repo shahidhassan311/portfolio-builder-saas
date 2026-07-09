@@ -40,7 +40,9 @@
                     <a href="{{ url('/dashboard') }}" class="btn btn-outline">Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline">Log in</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Sign up free</a>
+                    <a href="{{ route('register') }}    " class="btn btn-primary">
+    Sign up free
+</a>
                 @endauth
             </div>
         </div>

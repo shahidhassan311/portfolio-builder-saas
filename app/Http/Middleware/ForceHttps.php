@@ -16,7 +16,7 @@ class ForceHttps
 
         if ($request->secure()) {
             return $next($request);
-        }
+        } 
 
         return redirect()->secure($request->getRequestUri(), 301);
     }

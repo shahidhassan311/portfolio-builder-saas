@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('themes.partials.seo-meta')
 
-
     <link rel="icon" type="image/png" href="{{ asset(config('branding.logo')) }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: #667eea;
             --primary-dark: #4c51bf;
             --primary-soft: #e0e7ff;
+            --primary-light: rgba(102, 126, 234, 0.12);
             --bg-soft: #f9fafb;
             --text-main: #111827;
             --text-muted: #6b7280;
             --card-bg: #ffffff;
             --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.18);
+            --shadow-hover: 0 24px 60px rgba(15, 23, 42, 0.25);
+            --radius-card: 24px;
+            --radius-sm: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -26,12 +34,13 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-main);
             background: radial-gradient(circle at 0% 0%, rgba(102, 126, 234, 0.18), transparent 55%),
                         radial-gradient(circle at 100% 0%, rgba(118, 75, 162, 0.18), transparent 55%),
                         #0f172a;
+            min-height: 100vh;
         }
 
         .page-wrapper {
@@ -41,6 +50,7 @@
                 radial-gradient(circle at 90% 10%, rgba(129, 140, 248, 0.15), transparent 55%);
         }
 
+        /* ─── HERO ─── */
         .hero {
             background: radial-gradient(circle at 0% 0%, rgba(129, 140, 248, 0.3), transparent 55%),
                         linear-gradient(135deg, #1e293b 0%, #020617 65%);
@@ -148,7 +158,7 @@
             letter-spacing: 0.08em;
             font-size: 13px;
             border: 1px solid transparent;
-            transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease, border-color 0.28s ease, color 0.28s ease;
+            transition: var(--transition);
             cursor: pointer;
         }
 
@@ -306,7 +316,7 @@
             justify-content: center;
             text-decoration: none;
             background: rgba(15, 23, 42, 0.7);
-            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+            transition: var(--transition);
         }
 
         .hero-social a:hover {
@@ -316,6 +326,7 @@
             box-shadow: 0 12px 30px rgba(15, 23, 42, 0.8);
         }
 
+        /* ─── SECTIONS ─── */
         .section {
             padding: 70px 24px;
             max-width: 1120px;
@@ -355,6 +366,7 @@
             color: var(--text-muted);
         }
 
+        /* ─── GRID LAYOUTS ─── */
         .two-col {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -362,11 +374,40 @@
             align-items: flex-start;
         }
 
+        .grid-three {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: minmax(0, 1fr); }
+            .grid-three { grid-template-columns: minmax(0, 1fr); }
+            .grid-gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+
+        /* ─── CARDS ─── */
         .card {
             background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-soft);
             padding: 24px 24px 22px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
         }
 
         .card-header {
@@ -392,6 +433,7 @@
             border-radius: 999px;
         }
 
+        /* ─── TIMELINE ─── */
         .timeline {
             display: flex;
             flex-direction: column;
@@ -455,6 +497,7 @@
             margin-top: 6px;
         }
 
+        /* ─── SKILLS ─── */
         .skills-container {
             display: flex;
             flex-direction: column;
@@ -466,9 +509,15 @@
         .skill-item {
             background: var(--card-bg);
             padding: 16px 18px 14px;
-            border-radius: 16px;
+            border-radius: var(--radius-sm);
             box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
             border: 1px solid rgba(148, 163, 255, 0.4);
+            transition: var(--transition);
+        }
+
+        .skill-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-hover);
         }
 
         .skill-name {
@@ -501,6 +550,7 @@
             transition: width 0.9s ease-out;
         }
 
+        /* ─── PROJECTS ─── */
         .projects-container {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -510,25 +560,27 @@
         }
 
         @media (max-width: 1024px) {
-            .projects-container {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            .projects-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 640px) {
-            .projects-container {
-                grid-template-columns: minmax(0, 1fr);
-            }
+            .projects-container { grid-template-columns: minmax(0, 1fr); }
         }
 
         .project-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: var(--radius-card);
             overflow: hidden;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+            box-shadow: var(--shadow-soft);
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
         }
 
         .project-image {
@@ -561,8 +613,15 @@
             font-size: 13px;
             letter-spacing: 0.08em;
             text-transform: uppercase;
+            transition: var(--transition);
         }
 
+        .project-link:hover {
+            color: var(--primary);
+            letter-spacing: 0.12em;
+        }
+
+        /* ─── GOALS ─── */
         .goals-list {
             list-style: none;
             max-width: 800px;
@@ -575,13 +634,245 @@
         .goals-list li {
             background: var(--card-bg);
             padding: 16px 18px 14px;
-            border-radius: 16px;
+            border-radius: var(--radius-sm);
             border-left: 4px solid var(--primary);
             color: var(--text-muted);
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.09);
             font-size: 14px;
+            transition: var(--transition);
         }
 
+        .goals-list li:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ─── CERTIFICATIONS ─── */
+        .certification-item {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+
+        .certification-item:hover {
+            background: rgba(148, 163, 255, 0.08);
+            transform: translateX(4px);
+            border-color: rgba(148, 163, 255, 0.5);
+        }
+
+        .certification-badge {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .certification-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .certification-info {
+            flex: 1;
+        }
+
+        .certification-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .certification-issuer {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .certification-date {
+            color: var(--text-muted);
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* ─── SERVICES ─── */
+        .service-card {
+            padding: 32px 24px;
+            border-radius: var(--radius-card);
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            background: var(--card-bg);
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .service-icon {
+            font-size: 44px;
+            margin-bottom: 16px;
+        }
+
+        .service-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .service-description {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ─── ACHIEVEMENTS ─── */
+        .achievement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .achievement-item:hover {
+            background: rgba(148, 163, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .achievement-icon {
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .achievement-content {
+            flex: 1;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .achievement-description {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* ─── VOLUNTEER ─── */
+        .volunteer-item {
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .volunteer-item:hover {
+            background: rgba(148, 163, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .volunteer-organization {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .volunteer-role {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .volunteer-date {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* ─── TESTIMONIALS ─── */
+        .testimonial-card {
+            padding: 28px;
+            border-radius: var(--radius-card);
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            background: var(--card-bg);
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .testimonial-rating {
+            margin-top: 10px;
+            color: #FFD700;
+            font-size: 18px;
+        }
+
+        /* ─── GALLERY ─── */
+        .gallery-item {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 255, 0.2);
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.05);
+        }
+
+        /* ─── FOOTER ─── */
         .footer {
             background: #020617;
             color: #e5e7eb;
@@ -591,11 +882,26 @@
             margin-top: 40px;
         }
 
+        .footer-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c7d2fe;
+            font-size: 14px;
+        }
+
         .social-links {
             display: flex;
             gap: 18px;
             justify-content: center;
-            margin-top: 16px;
             flex-wrap: wrap;
         }
 
@@ -605,8 +911,21 @@
             font-size: 14px;
             letter-spacing: 0.16em;
             text-transform: uppercase;
+            transition: var(--transition);
         }
 
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .footer-copy {
+            margin-top: 24px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ─── ANIMATIONS ─── */
         .fade-in-section {
             opacity: 0;
             transform: translateY(40px);
@@ -640,6 +959,7 @@
             }
         }
 
+        /* ─── RESPONSIVE ─── */
         @media (max-width: 900px) {
             .hero-inner {
                 grid-template-columns: minmax(0, 1fr);
@@ -668,57 +988,121 @@
         @media (max-width: 768px) {
             .section {
                 padding-inline: 18px;
+                padding-top: 48px;
+                padding-bottom: 48px;
             }
 
-            .project-card {
-                grid-template-columns: minmax(0, 1fr);
+            .section-title {
+                font-size: 24px;
             }
+
+            .hero {
+                padding: 48px 18px 40px;
+            }
+
+            .hero-card {
+                width: 100%;
+                padding: 20px 16px;
+            }
+
+            .hero-avatar,
+            .hero-avatar-fallback {
+                width: 100px;
+                height: 100px;
+                font-size: 36px;
+            }
+
+            .certification-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .testimonial-card {
+                padding: 20px;
+            }
+        }
+
+        /* ─── UTILITY ─── */
+        .empty {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
     <div class="page-wrapper">
+        @php
+            // ─── SAME VARIABLES AS TEMPLATE 1 ───
+            $profile        = optional($user->profile);
+            $experiences    = $user->experiences ?? collect();
+            $educations     = $user->educations ?? collect();
+            $projects       = $user->projects ?? collect();
+            $skills         = $user->skills ?? collect();
+            $goals          = $user->goals ?? collect();
+            $certifications = $user->certifications ?? collect();
+            $gallery        = $user->gallery ?? collect();
+            $volunteers     = $user->volunteer ?? collect();  // same as template 1
+            $achievements   = $user->achievements ?? collect();
+            $services       = $user->services ?? collect();
+            $testimonials   = $user->testimonials ?? collect();
+
+            // ─── SAME PRIMARY CONTACT LOGIC ───
+            $primaryContact = $profile?->contact_email
+                ? 'mailto:' . $profile->contact_email
+                : ($profile?->contact_phone ? 'tel:' . $profile->contact_phone : null);
+        @endphp
+
+        <!-- ─── HERO ─── -->
         <div class="hero" id="hero">
             <div class="hero-inner">
                 <div class="hero-main">
-                    <div class="hero-pill">Personal Portfolio</div>
+                    <div class="hero-pill">✨ Personal Portfolio</div>
                     <h1 class="hero-name">
                         Hi, I'm <span>{{ $user->name }}</span>
                     </h1>
-                    @if(isset($user->profile) && $user->profile->tagline)
-                        <p class="hero-tagline">{{ $user->profile->tagline }}</p>
+                    @if($profile && $profile->tagline)
+                        <p class="hero-tagline">{{ $profile->tagline }}</p>
                     @endif
-                    @if(isset($user->profile) && $user->profile->about_short)
-                        <p class="hero-description">{{ $user->profile->about_short }}</p>
+                    @if($profile && ($profile->about_short || $profile->about_long))
+                        <p class="hero-description">{{ $profile->about_long ?? $profile->about_short }}</p>
                     @endif
 
                     <div class="hero-actions">
-                        @if(isset($user->profile) && ($user->profile->contact_email || $user->profile->location))
-                            <a href="#contact" class="cta-button cta-primary">
-                                <span>Contact Me</span>
+                        @if($primaryContact)
+                            <a href="{{ $primaryContact }}" class="cta-button cta-primary">
+                                📬 Let's collaborate
                             </a>
                         @endif
                         <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
-                           class="cta-button cta-secondary"
-                           target="_blank">
-                            <span>📄 Download CV</span>
+                           class="cta-button cta-secondary" target="_blank">
+                            📄 Download PDF
                         </a>
+                        @if($profile && $profile->live_link)
+                            <a href="{{ $profile->live_link }}" target="_blank" class="cta-button cta-secondary">
+                                🌐 Live Demo
+                            </a>
+                        @endif
                     </div>
 
                     <div class="hero-meta">
-                        @if(isset($user->profile) && $user->profile->location)
-                            <span>📍 {{ $user->profile->location }}</span>
+                        @if($profile && $profile->location)
+                            <span>📍 {{ $profile->location }}</span>
                         @endif
-                        @if(isset($user->profile) && $user->profile->contact_email)
-                            <span>✉️ {{ $user->profile->contact_email }}</span>
+                        @if($profile && $profile->contact_email)
+                            <span>✉️ {{ $profile->contact_email }}</span>
+                        @endif
+                        @if($profile && $profile->contact_phone)
+                            <span>📱 {{ $profile->contact_phone }}</span>
                         @endif
                     </div>
                 </div>
 
                 <div class="hero-side">
                     <div class="hero-card">
-                        @if(isset($user->profile) && $user->profile->profile_image)
-                            <img src="{{ asset('storage/' . $user->profile->profile_image) }}" alt="{{ $user->name }}" class="hero-avatar">
+                        @if($profile && $profile->profile_image)
+                            <img src="{{ asset('storage/' . $profile->profile_image) }}" alt="{{ $user->name }}" class="hero-avatar">
                         @else
                             <div class="hero-avatar-fallback">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -727,53 +1111,42 @@
 
                         <div class="hero-card-name">{{ $user->name }}</div>
                         <div class="hero-card-role">
-                            {{ isset($user->profile) && $user->profile->tagline ? $user->profile->tagline : 'Creative Professional' }}
+                            {{ $profile && $profile->tagline ? $profile->tagline : 'Creative Professional' }}
                         </div>
 
                         <div class="hero-card-divider"></div>
 
-                        @php
-                            $expCount = isset($user->experiences) ? $user->experiences->count() : 0;
-                            $projCount = isset($user->projects) ? $user->projects->count() : 0;
-                            $skillCount = isset($user->skills) ? $user->skills->count() : 0;
-                        @endphp
                         <div class="hero-badges">
                             <div class="hero-badge">
-                                <strong>{{ $expCount }}</strong>
+                                <strong>{{ $experiences->count() }}</strong>
                                 <span>Experience</span>
                             </div>
                             <div class="hero-badge">
-                                <strong>{{ $projCount }}</strong>
+                                <strong>{{ $projects->count() }}</strong>
                                 <span>Projects</span>
                             </div>
                             <div class="hero-badge">
-                                <strong>{{ $skillCount }}</strong>
+                                <strong>{{ $skills->count() }}</strong>
                                 <span>Skills</span>
                             </div>
                         </div>
 
-                        @if(isset($user->profile) && (
-                            $user->profile->social_linkedin ||
-                            $user->profile->social_github   ||
-                            $user->profile->social_twitter  ||
-                            $user->profile->social_instagram||
-                            $user->profile->social_facebook
-                        ))
+                        @if($profile && ($profile->social_linkedin || $profile->social_github || $profile->social_twitter || $profile->social_instagram || $profile->social_facebook))
                             <div class="hero-social">
-                                @if($user->profile->social_linkedin)
-                                    <a href="{{ $user->profile->social_linkedin }}" target="_blank">in</a>
+                                @if($profile->social_linkedin)
+                                    <a href="{{ $profile->social_linkedin }}" target="_blank">in</a>
                                 @endif
-                                @if($user->profile->social_github)
-                                    <a href="{{ $user->profile->social_github }}" target="_blank">GH</a>
+                                @if($profile->social_github)
+                                    <a href="{{ $profile->social_github }}" target="_blank">GH</a>
                                 @endif
-                                @if($user->profile->social_twitter)
-                                    <a href="{{ $user->profile->social_twitter }}" target="_blank">X</a>
+                                @if($profile->social_twitter)
+                                    <a href="{{ $profile->social_twitter }}" target="_blank">X</a>
                                 @endif
-                                @if($user->profile->social_instagram)
-                                    <a href="{{ $user->profile->social_instagram }}" target="_blank">IG</a>
+                                @if($profile->social_instagram)
+                                    <a href="{{ $profile->social_instagram }}" target="_blank">IG</a>
                                 @endif
-                                @if($user->profile->social_facebook)
-                                    <a href="{{ $user->profile->social_facebook }}" target="_blank">f</a>
+                                @if($profile->social_facebook)
+                                    <a href="{{ $profile->social_facebook }}" target="_blank">f</a>
                                 @endif
                             </div>
                         @endif
@@ -782,219 +1155,366 @@
             </div>
         </div>
 
-    @php
-        $hasAbout = isset($user->profile) && ($user->profile->about_title || $user->profile->about_short || $user->profile->about_long);
-        $hasSkills = isset($user->skills) && $user->skills->count() > 0;
-        $hasProjects = isset($user->projects) && $user->projects->count() > 0;
-        $hasGoals = isset($user->goals) && $user->goals->count() > 0;
-        $hasExperience = isset($user->experiences) && $user->experiences->count() > 0;
-        $hasEducation = isset($user->educations) && $user->educations->count() > 0;
-    @endphp
-
-    @if($hasAbout)
-        <div class="section section alt fade-in-section" id="about">
-            <h2 class="section-title">{{ $user->profile->about_title ?? 'About Me' }}</h2>
-            <p class="section-sub">A quick snapshot of who I am, how I work, and what I love building.</p>
-            <div class="about-text">
-                @if($user->profile->about_short)
-                    <p>{{ $user->profile->about_short }}</p>
-                @endif
-                @if($user->profile->about_long)
-                    <p style="margin-top: 18px;">{{ $user->profile->about_long }}</p>
-                @endif
+        <!-- ─── ABOUT ─── -->
+        @if($profile && ($profile->about_title || $profile->about_short || $profile->about_long))
+            <div class="section section alt fade-in-section" id="about">
+                <h2 class="section-title">{{ $profile->about_title ?? 'About Me' }}</h2>
+                <p class="section-sub">A quick snapshot of who I am, how I work, and what I love building.</p>
+                <div class="about-text">
+                    @if($profile->about_short)
+                        <p>{{ $profile->about_short }}</p>
+                    @endif
+                    @if($profile->about_long)
+                        <p style="margin-top: 18px;">{{ $profile->about_long }}</p>
+                    @endif
+                </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    @if($hasExperience || $hasEducation)
-        <div class="section fade-in-section" id="experience">
-            <h2 class="section-title">Journey</h2>
-            <p class="section-sub">Where I've been investing my time — professionally and academically.</p>
-
-            <div class="two-col">
-                @if($hasExperience)
-                    <div class="card">
-                        <div class="card-header">
-                            <p class="card-title">Experience</p>
-                            <span class="card-chip">Professional</span>
-                        </div>
-                        <div class="timeline">
-                            @foreach($user->experiences as $exp)
-                                <div class="timeline-item">
-                                    <div class="timeline-title">
-                                        {{ $exp->title ?? $exp->role_title ?? 'Experience' }}
-                                    </div>
-                                    <div class="timeline-meta">
-                                        {{ $exp->company }}
-                                        @if(!empty($exp->location))
-                                            · {{ $exp->location }}
-                                        @endif
-                                    </div>
-                                    <div class="timeline-dates">
-                                        @if($exp->start_date)
-                                            {{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }}
-                                        @endif
-                                        @if($exp->end_date)
-                                            – {{ \Carbon\Carbon::parse($exp->end_date)->format('M Y') }}
-                                        @elseif(!empty($exp->is_current))
-                                            – Present
-                                        @endif
-                                    </div>
-                                    @if(!empty($exp->description))
-                                        <div class="timeline-body">{{ $exp->description }}</div>
-                                    @endif
+        <!-- ─── EXPERIENCE ─── -->
+        @if($experiences->count())
+            <div class="section fade-in-section" id="experience">
+                <h2 class="section-title">💼 Experience</h2>
+                <p class="section-sub">Where I've been investing my time professionally.</p>
+                <div class="card">
+                    <div class="timeline">
+                        @foreach($experiences as $experience)
+                            <div class="timeline-item">
+                                <div class="timeline-title">{{ $experience->role_title ?? $experience->company }}</div>
+                                <div class="timeline-meta">
+                                    {{ $experience->company }}
+                                    @if($experience->location) • {{ $experience->location }} @endif
+                                    @if($experience->employment_type) • {{ $experience->employment_type }} @endif
                                 </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                @if($hasEducation)
-                    <div class="card">
-                        <div class="card-header">
-                            <p class="card-title">Education</p>
-                            <span class="card-chip">Academic</span>
-                        </div>
-                        <div class="timeline">
-                            @foreach($user->educations as $edu)
-                                <div class="timeline-item">
-                                    <div class="timeline-title">
-                                        {{ $edu->degree ?? 'Education' }}
-                                    </div>
-                                    <div class="timeline-meta">
-                                        {{ $edu->institution }}
-                                        @if(!empty($edu->field_of_study))
-                                            · {{ $edu->field_of_study }}
-                                        @endif
-                                    </div>
-                                    <div class="timeline-dates">
-                                        @if($edu->start_date)
-                                            {{ \Carbon\Carbon::parse($edu->start_date)->format('Y') }}
-                                        @endif
-                                        @if($edu->end_date)
-                                            – {{ \Carbon\Carbon::parse($edu->end_date)->format('Y') }}
-                                        @elseif(!empty($edu->is_current))
-                                            – Present
-                                        @endif
-                                    </div>
-                                    @if(!empty($edu->description))
-                                        <div class="timeline-body">{{ $edu->description }}</div>
-                                    @endif
+                                <div class="timeline-dates">
+                                    {{ optional($experience->start_date)->format('M Y') ?? '—' }} –
+                                    {{ $experience->is_current ? 'Present' : (optional($experience->end_date)->format('M Y') ?? '—') }}
                                 </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
-    @endif
-
-    @if($hasSkills)
-        <div class="section fade-in-section" id="skills">
-            <h2 class="section-title">Skills</h2>
-            <p class="section-sub">A mix of tools, technologies, and disciplines I use to ship work.</p>
-            <div class="skills-container">
-                @foreach($user->skills as $skill)
-                    @php
-                        $percent = 60;
-                        if ($skill->level === 'Beginner') $percent = 40;
-                        if ($skill->level === 'Intermediate') $percent = 75;
-                        if ($skill->level === 'Expert') $percent = 95;
-                    @endphp
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>{{ $skill->name }}</span>
-                            @if($skill->level)
-                                <span>{{ $skill->level }}</span>
-                            @endif
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-level" data-skill-width="{{ $percent }}%"></div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    @if($hasProjects)
-        <div class="section fade-in-section" id="projects">
-            <h2 class="section-title">Projects</h2>
-            <p class="section-sub">Selected work that reflects how I think about design, code, and impact.</p>
-            <div class="projects-container">
-                @foreach($user->projects as $project)
-                    <div class="project-card">
-                        @if($project->project_image)
-                            <img src="{{ asset('storage/' . $project->project_image) }}" alt="{{ $project->title }}" class="project-image">
-                        @else
-                            <div style="background: var(--primary-soft); display:flex; align-items:center; justify-content:center; color: var(--primary-dark); font-weight: 700; font-size: 24px;">
-                                {{ strtoupper(substr($project->title, 0, 1)) }}
+                                @if($experience->description)
+                                    <div class="timeline-body">{{ $experience->description }}</div>
+                                @endif
                             </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── EDUCATION ─── -->
+        @if($educations->count())
+            <div class="section fade-in-section" id="education">
+                <h2 class="section-title">🎓 Education</h2>
+                <p class="section-sub">My academic journey and learning milestones.</p>
+                <div class="card">
+                    <div class="timeline">
+                        @foreach($educations as $education)
+                            <div class="timeline-item">
+                                <div class="timeline-title">{{ $education->degree ?? $education->institution }}</div>
+                                <div class="timeline-meta">
+                                    {{ $education->institution }}
+                                    @if($education->field_of_study) • {{ $education->field_of_study }} @endif
+                                    @if($education->location) • {{ $education->location }} @endif
+                                </div>
+                                <div class="timeline-dates">
+                                    {{ optional($education->start_date)->format('M Y') ?? '—' }} –
+                                    {{ $education->is_current ? 'Present' : (optional($education->end_date)->format('M Y') ?? '—') }}
+                                </div>
+                                @if($education->description)
+                                    <div class="timeline-body">{{ $education->description }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── SKILLS & GOALS ─── -->
+        <div class="section fade-in-section grid two" id="skills-goals">
+            @if($skills->count())
+                <div class="card">
+                    <div class="section-header" style="margin-bottom: 18px; display:flex; justify-content:space-between; align-items:center;">
+                        <p class="section-title" style="font-size:18px; margin:0;">⚡ Skills</p>
+                    </div>
+                    <div class="skills-container" style="max-width:100%;">
+                        @foreach($skills as $skill)
+                            @php
+                                $percent = 60;
+                                if ($skill->level === 'Beginner') $percent = 40;
+                                if ($skill->level === 'Intermediate') $percent = 75;
+                                if ($skill->level === 'Expert') $percent = 95;
+                            @endphp
+                            <div class="skill-item">
+                                <div class="skill-name">
+                                    <span>{{ $skill->name }}</span>
+                                    @if($skill->level)
+                                        <span>{{ $skill->level }}</span>
+                                    @endif
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-level" data-skill-width="{{ $percent }}%"></div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if($goals->count())
+                <div class="card">
+                    <div class="section-header" style="margin-bottom: 18px; display:flex; justify-content:space-between; align-items:center;">
+                        <p class="section-title" style="font-size:18px; margin:0;">🎯 Goals</p>
+                    </div>
+                    <div class="timeline">
+                        @foreach($goals as $goal)
+                            <div class="timeline-item" style="padding-left:0;">
+                                <p class="timeline-body" style="margin-top:0;">{{ $goal->goal_text }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+
+       <!-- ─── CERTIFICATIONS ─── -->
+@if($certifications->count())
+    <div class="section fade-in-section" id="certifications">
+        <h2 class="section-title">📜 Certifications</h2>
+        <p class="section-sub">Professional certifications that validate my expertise.</p>
+        <div class="card">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                @foreach($certifications as $certification)
+                    <div class="certification-item">
+                    @if(isset($certification->image) && $certification->image)
+                            <img src="{{ asset('storage/' . $certification->image) }}"
+                                 alt="{{ $certification->title }}"
+                                 class="certification-image">
+                        @else
+                            <span class="certification-badge">🎓</span>
                         @endif
-                        <div class="project-content">
-                            <h3 class="project-title">{{ $project->title }}</h3>
-                            @if($project->short_description)
-                                <p class="project-description">{{ $project->short_description }}</p>
+                        <div class="certification-info">
+                            <div class="certification-name">{{ $certification->title }}</div>
+                            <div class="certification-issuer">{{ $certification->organization }}</div>
+                            @if($certification->issue_date)
+                                <div class="certification-date">{{ \Carbon\Carbon::parse($certification->issue_date)->format('M Y') }}</div>
                             @endif
-                            @if($project->project_url)
-                                <a href="{{ $project->project_url }}" target="_blank" class="project-link">View Project →</a>
+                            @if($certification->description)
+                                <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">{{ $certification->description }}</p>
+                            @endif
+                            @if($certification->credential_url)
+                                <a href="{{ $certification->credential_url }}" target="_blank" class="project-link" style="font-size:12px;">Verify Credential →</a>
                             @endif
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
-    @endif
-
-    @if($hasGoals)
-        <div class="section fade-in-section" id="goals">
-            <h2 class="section-title">Goals</h2>
-            <p class="section-sub">What I'm currently learning and where I want to grow next.</p>
-            <ul class="goals-list">
-                @foreach($user->goals as $goal)
-                    <li>{{ $goal->goal_text }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <div class="footer" id="contact">
-        @if(isset($user->profile) && ($user->profile->contact_email || $user->profile->location))
-            <div>
-                @if($user->profile->contact_email)
-                    <p>📧 {{ $user->profile->contact_email }}</p>
-                @endif
-                @if($user->profile->location)
-                    <p>📍 {{ $user->profile->location }}</p>
-                @endif
-            </div>
-        @endif
-        @if(isset($user->profile) && (
-            $user->profile->social_facebook ||
-            $user->profile->social_linkedin ||
-            $user->profile->social_github   ||
-            $user->profile->social_instagram||
-            $user->profile->social_twitter
-        ))
-            <div class="social-links">
-                @if($user->profile->social_facebook)
-                    <a href="{{ $user->profile->social_facebook }}" target="_blank">Facebook</a>
-                @endif
-                @if($user->profile->social_linkedin)
-                    <a href="{{ $user->profile->social_linkedin }}" target="_blank">LinkedIn</a>
-                @endif
-                @if($user->profile->social_github)
-                    <a href="{{ $user->profile->social_github }}" target="_blank">GitHub</a>
-                @endif
-                @if($user->profile->social_instagram)
-                    <a href="{{ $user->profile->social_instagram }}" target="_blank">Instagram</a>
-                @endif
-                @if($user->profile->social_twitter)
-                    <a href="{{ $user->profile->social_twitter }}" target="_blank">Twitter</a>
-                @endif
-            </div>
-        @endif
     </div>
+@endif
+        <!-- ─── PROJECTS ─── -->
+        @if($projects->count())
+            <div class="section fade-in-section" id="projects">
+                <h2 class="section-title">🚀 Projects</h2>
+                <p class="section-sub">Selected work that reflects how I think about design, code, and impact.</p>
+                <div class="projects-container">
+                    @foreach($projects as $project)
+                        <div class="project-card">
+                            @if($project->project_image)
+                                <img src="{{ asset('storage/' . $project->project_image) }}" alt="{{ $project->title }}" class="project-image">
+                            @else
+                                <div style="background: var(--primary-soft); height:210px; display:flex; align-items:center; justify-content:center; color: var(--primary-dark); font-weight: 700; font-size: 48px;">
+                                    {{ strtoupper(substr($project->title, 0, 1)) }}
+                                </div>
+                            @endif
+                            <div class="project-content">
+                                <h3 class="project-title">{{ $project->title }}</h3>
+                                @if($project->short_description)
+                                    <p class="project-description">{{ $project->short_description }}</p>
+                                @endif
+                                @if($project->project_url)
+                                    <a href="{{ $project->project_url }}" target="_blank" class="project-link">View Project →</a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── SERVICES ─── -->
+        @if($services->count())
+            <div class="section fade-in-section" id="services">
+                <h2 class="section-title">💎 Services</h2>
+                <p class="section-sub">What I can help you with.</p>
+                <div class="grid-three">
+                    @foreach($services as $service)
+                        <div class="service-card">
+                            @if($service->icon)
+                                <div class="service-icon">{{ $service->icon }}</div>
+                            @endif
+                            <div class="service-title">{{ $service->title }}</div>
+                            @if($service->description)
+                                <div class="service-description">{{ $service->description }}</div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── ACHIEVEMENTS ─── -->
+        @if($achievements->count())
+            <div class="section fade-in-section" id="achievements">
+                <h2 class="section-title">🏆 Achievements</h2>
+                <p class="section-sub">Milestones and recognition I've earned.</p>
+                <div class="card">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        @foreach($achievements as $achievement)
+                            <div class="achievement-item">
+                                <div class="achievement-icon">🏆</div>
+                                <div class="achievement-content">
+                                    <div class="achievement-title">{{ $achievement->title }}</div>
+                                    @if($achievement->description)
+                                        <div class="achievement-description">{{ $achievement->description }}</div>
+                                    @endif
+                                    @if($achievement->achievement_date)
+                                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-top: 4px;">
+                                            {{ \Carbon\Carbon::parse($achievement->achievement_date)->format('M Y') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── VOLUNTEER ─── -->
+        @if($volunteers->count())
+            <div class="section fade-in-section" id="volunteer">
+                <h2 class="section-title">❤️ Volunteer Work</h2>
+                <p class="section-sub">Giving back to the community.</p>
+                <div class="card">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        @foreach($volunteers as $item)
+                            <div class="volunteer-item">
+                                <div class="volunteer-organization">{{ $item->organization ?? $item->organization_name }}</div>
+                                <div class="volunteer-role">{{ $item->role }}</div>
+                                @if($item->description)
+                                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">{{ $item->description }}</p>
+                                @endif
+                                <div class="volunteer-date">
+                                    @if($item->start_date)
+                                        {{ \Carbon\Carbon::parse($item->start_date)->format('M Y') }}
+                                    @endif
+                                    @if($item->end_date)
+                                        – {{ \Carbon\Carbon::parse($item->end_date)->format('M Y') }}
+                                    @elseif($item->currently_volunteering)
+                                        – Present
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── TESTIMONIALS ─── -->
+        @if($testimonials->count())
+            <div class="section fade-in-section" id="testimonials">
+                <h2 class="section-title">💬 Testimonials</h2>
+                <p class="section-sub">What people say about working with me.</p>
+                <div class="two-col">
+                    @foreach($testimonials as $testimonial)
+                        <div class="testimonial-card">
+                            @if($testimonial->message)
+                                <div class="testimonial-text">"{{ $testimonial->message }}"</div>
+                            @endif
+                            <div>
+                                <div class="testimonial-author">{{ $testimonial->name }}</div>
+                                @if($testimonial->role)
+                                    <div class="testimonial-role">{{ $testimonial->role }} @if($testimonial->company) • {{ $testimonial->company }} @endif</div>
+                                @endif
+                                @if($testimonial->rating)
+                                    <div class="testimonial-rating">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            {!! $i <= $testimonial->rating ? '★' : '☆' !!}
+                                        @endfor
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── GALLERY ─── -->
+        @if($gallery->count())
+            <div class="section fade-in-section" id="gallery">
+                <h2 class="section-title">📸 Gallery</h2>
+                <p class="section-sub">A visual glimpse into my world.</p>
+                <div class="grid-gallery">
+                    @foreach($gallery as $item)
+                        <div class="gallery-item">
+                            @if($item->image)
+                                <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title ?? 'Gallery image' }}" loading="lazy">
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- ─── CONNECT / FOOTER ─── -->
+        <div class="footer" id="contact">
+            <div class="section-header" style="max-width:1120px; margin:0 auto 24px; display:flex; justify-content:center;">
+                <p class="section-title" style="font-size:24px; color:#e5e7eb;">🤝 Connect</p>
+            </div>
+
+            @if($profile && ($profile->contact_email || $profile->contact_phone || $profile->location || $profile->live_link))
+                <div class="footer-contact">
+                    @if($profile->contact_email)
+                        <p>📧 {{ $profile->contact_email }}</p>
+                    @endif
+                    @if($profile->contact_phone)
+                        <p>📱 {{ $profile->contact_phone }}</p>
+                    @endif
+                    @if($profile->location)
+                        <p>📍 {{ $profile->location }}</p>
+                    @endif
+                    @if($profile->live_link)
+                        <p>🌐 <a href="{{ $profile->live_link }}" target="_blank" style="color: var(--primary); text-decoration: none;">{{ $profile->live_link }}</a></p>
+                    @endif
+                </div>
+            @endif
+
+            @if($profile && ($profile->social_facebook || $profile->social_linkedin || $profile->social_github || $profile->social_instagram || $profile->social_twitter))
+                <div class="social-links">
+                    @if($profile->social_facebook)
+                        <a href="{{ $profile->social_facebook }}" target="_blank">Facebook</a>
+                    @endif
+                    @if($profile->social_linkedin)
+                        <a href="{{ $profile->social_linkedin }}" target="_blank">LinkedIn</a>
+                    @endif
+                    @if($profile->social_github)
+                        <a href="{{ $profile->social_github }}" target="_blank">GitHub</a>
+                    @endif
+                    @if($profile->social_instagram)
+                        <a href="{{ $profile->social_instagram }}" target="_blank">Instagram</a>
+                    @endif
+                    @if($profile->social_twitter)
+                        <a href="{{ $profile->social_twitter }}" target="_blank">Twitter</a>
+                    @endif
+                </div>
+            @endif
+
+            <div class="footer-copy">
+                &copy; {{ date('Y') }} {{ $user->name }}. All rights reserved.
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1007,10 +1527,12 @@
                         entry.target.classList.add('visible');
 
                         // Animate skill bars when skills section appears
-                        if (entry.target.id === 'skills') {
+                        if (entry.target.id === 'skills-goals' || entry.target.closest('#skills-goals')) {
                             entry.target.querySelectorAll('.skill-level').forEach(bar => {
                                 const width = bar.getAttribute('data-skill-width');
-                                bar.style.width = width;
+                                setTimeout(() => {
+                                    bar.style.width = width;
+                                }, 200);
                             });
                         }
                     }
@@ -1020,8 +1542,17 @@
         );
 
         sections.forEach(section => observer.observe(section));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
-
-

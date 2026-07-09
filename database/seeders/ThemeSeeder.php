@@ -60,6 +60,13 @@ class ThemeSeeder extends Seeder
                 'preview_image' => null,
                 'is_active' => true,
             ],
+
+            [
+                'name' => 'Infographic',
+                'slug' => 'infographic',
+                'preview_image' => null,
+                'is_active' => true,
+            ],
         ];
 
         foreach ($themes as $theme) {

@@ -6,6 +6,10 @@
     @include('themes.partials.seo-meta')
 
     <link rel="icon" type="image/png" href="{{ asset(config('branding.logo')) }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg: #f5f5fb;
@@ -20,8 +24,10 @@
             --radius-lg: 22px;
             --radius-md: 18px;
             --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.12);
+            --shadow-hover: 0 24px 50px rgba(79, 70, 229, 0.18);
             --text-main: #111827;
             --text-muted: #6b7280;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -35,19 +41,25 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
             background:
                 radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.12), transparent 55%),
                 radial-gradient(circle at 100% 0, rgba(249, 115, 22, 0.12), transparent 55%),
                 linear-gradient(to bottom, #f9fafb, #e5e7f5);
             color: var(--text-main);
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         .page {
             max-width: 1240px;
             margin: 0 auto;
             padding: 24px 16px 60px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
         /* ============ LAYOUT ============ */
@@ -75,6 +87,11 @@
             border: 1px solid var(--card-border);
             box-shadow: var(--shadow-soft);
             padding: 20px 18px 18px;
+            transition: var(--transition);
+        }
+
+        .sidebar:hover {
+            box-shadow: var(--shadow-hover);
         }
 
         .sidebar-header {
@@ -96,6 +113,13 @@
             font-weight: 800;
             color: #111827;
             border: 2px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        .sidebar-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .sidebar-name {
@@ -148,7 +172,7 @@
             text-decoration: none;
             font-size: 13px;
             color: var(--text-muted);
-            transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+            transition: var(--transition);
         }
 
         .sidebar-nav a span.dot {
@@ -156,6 +180,7 @@
             height: 6px;
             border-radius: 999px;
             background: #e5e7eb;
+            transition: var(--transition);
         }
 
         .sidebar-nav a:hover {
@@ -189,6 +214,11 @@
             align-items: center;
             gap: 6px;
             color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .sidebar-contact-item:hover {
+            color: var(--primary);
         }
 
         .sidebar-contact-item a {
@@ -220,6 +250,12 @@
             color: #fff;
             box-shadow: 0 12px 26px rgba(79, 70, 229, 0.55);
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-sidebar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(79, 70, 229, 0.65);
         }
 
         .btn-sidebar span.icon {
@@ -250,6 +286,11 @@
             padding: 22px 22px 20px;
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .hero-card:hover {
+            box-shadow: var(--shadow-hover);
         }
 
         .hero-card::before {
@@ -260,6 +301,7 @@
                 radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.08), transparent 55%),
                 radial-gradient(circle at 100% 0, rgba(249, 115, 22, 0.12), transparent 55%);
             opacity: 1;
+            pointer-events: none;
         }
 
         .hero-inner {
@@ -352,6 +394,13 @@
             border: none;
             cursor: pointer;
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.4);
         }
 
         .btn-primary span.icon {
@@ -370,6 +419,13 @@
             font-size: 13px;
             cursor: pointer;
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
         }
 
         /* SECTION HEADERS */
@@ -380,6 +436,11 @@
             border: 1px solid var(--card-border);
             box-shadow: var(--shadow-soft);
             padding: 20px 18px 18px;
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-hover);
         }
 
         .section-header {
@@ -452,6 +513,13 @@
             border: 1px solid var(--card-border);
             background: #ffffff;
             padding: 14px 13px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
         }
 
         /* SKILLS */
@@ -481,6 +549,8 @@
             height: 100%;
             border-radius: inherit;
             background: linear-gradient(to right, #4f46e5, #f97316);
+            width: 0;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .skill-desc {
@@ -489,7 +559,7 @@
             margin-top: 6px;
         }
 
-        /* PROJECTS – GRID */
+        /* PROJECTS */
 
         .projects-strip {
             display: grid;
@@ -522,6 +592,13 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .project-slide:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
         }
 
         .project-title {
@@ -549,6 +626,13 @@
             font-size: 13px;
             color: var(--primary);
             text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .project-link:hover {
+            color: #4338ca;
+            gap: 10px;
         }
 
         .project-link span.icon {
@@ -588,6 +672,11 @@
             position: relative;
             padding-left: 10px;
             margin-bottom: 14px;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(4px);
         }
 
         .timeline-dot {
@@ -599,6 +688,12 @@
             border-radius: 999px;
             border: 2px solid var(--primary);
             background: #ffffff;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover .timeline-dot {
+            background: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
         }
 
         .timeline-role {
@@ -623,8 +718,185 @@
             margin-top: 6px;
         }
 
-        /* GOALS */
+        /* ─── CERTIFICATIONS ─── */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
 
+        .cert-item {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background: #ffffff;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .cert-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .cert-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .cert-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .cert-info { flex: 1; }
+        .cert-title { font-weight: 600; font-size: 14px; }
+        .cert-org { font-size: 12px; color: var(--text-muted); }
+        .cert-date { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; }
+        .cert-link { font-size: 12px; color: var(--primary); font-weight: 500; }
+
+        /* ─── SERVICES ─── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 640px) {
+            .services-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        .service-card {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background: #ffffff;
+            padding: 16px 14px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .service-icon { font-size: 2.2rem; margin-bottom: 8px; }
+        .service-title { font-weight: 600; font-size: 14px; }
+        .service-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        /* ─── ACHIEVEMENTS ─── */
+        .achievement-item {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background: #ffffff;
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .achievement-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .achievement-icon { font-size: 1.8rem; flex-shrink: 0; }
+        .achievement-title { font-weight: 600; font-size: 14px; }
+        .achievement-org { font-size: 12px; color: var(--text-muted); }
+        .achievement-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .achievement-date { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+        /* ─── VOLUNTEER ─── */
+        .volunteer-item {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background: #ffffff;
+            padding: 12px 14px;
+            transition: var(--transition);
+        }
+
+        .volunteer-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .volunteer-org { font-weight: 600; font-size: 14px; }
+        .volunteer-role { font-size: 13px; color: var(--text-muted); }
+        .volunteer-location { font-size: 12px; color: #9ca3af; }
+        .volunteer-date { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+        /* ─── TESTIMONIALS ─── */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        .testimonial-card {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background: #ffffff;
+            padding: 14px;
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .testimonial-text { font-style: italic; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+        .testimonial-author { font-weight: 600; font-size: 13px; }
+        .testimonial-role { font-size: 12px; color: var(--text-muted); }
+        .testimonial-rating { color: #fbbf24; font-size: 14px; margin-top: 4px; }
+
+        /* ─── GALLERY ─── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .gallery-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            aspect-ratio: 1;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ─── GOALS ─── */
         .goals-list {
             list-style: none;
             display: grid;
@@ -641,14 +913,20 @@
             display: flex;
             gap: 8px;
             align-items: flex-start;
+            transition: var(--transition);
+        }
+
+        .goal-item:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            transform: translateX(4px);
         }
 
         .goal-item span.icon {
             margin-top: 2px;
         }
 
-        /* CONTACT / FOOTER */
-
+        /* ─── CONTACT ─── */
         .contact-body {
             font-size: 13px;
             color: var(--text-muted);
@@ -674,6 +952,12 @@
             background: #f3f4ff;
             font-size: 12px;
             color: #374151;
+            transition: var(--transition);
+        }
+
+        .contact-pill:hover {
+            background: var(--primary-soft);
+            border-color: var(--primary);
         }
 
         .contact-pill a {
@@ -691,18 +975,60 @@
             color: #9ca3af;
             text-align: right;
         }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--card-border);
+        }
     </style>
+
 </head>
 <body>
 <div class="page">
+
+    @php
+        // ─── VARIABLES ───
+        $profile        = optional($user->profile);
+        $experiences    = $user->experiences ?? collect();
+        $educations     = $user->educations ?? collect();
+        $projects       = $user->projects ?? collect();
+        $skills         = $user->skills ?? collect();
+        $goals          = $user->goals ?? collect();
+        $certifications = $user->certifications ?? collect();
+        $gallery        = $user->gallery ?? collect();
+        $volunteers     = $user->volunteers ?? collect();
+        $achievements   = $user->achievements ?? collect();
+        $services       = $user->services ?? collect();
+        $testimonials   = $user->testimonials ?? collect();
+
+        // ─── FLAGS ───
+        $hasAbout    = $profile->about_short || $profile->about_long || $profile->about_title;
+        $hasSkills   = $skills->count() > 0;
+        $hasProjects = $projects->count() > 0;
+        $hasGoals    = $goals->count() > 0;
+        $hasCerts    = $certifications->count() > 0;
+        $hasGallery  = $gallery->count() > 0;
+        $hasServices = $services->count() > 0;
+        $hasAchievements = $achievements->count() > 0;
+        $hasVolunteers = $volunteers->count() > 0;
+        $hasTestimonials = $testimonials->count() > 0;
+        $hasContact  = $profile->contact_email || $profile->location || $profile->contact_phone;
+        $hasSocial   = $profile->social_facebook || $profile->social_linkedin || $profile->social_github
+                       || $profile->social_instagram || $profile->social_twitter;
+    @endphp
 
     <div class="layout">
         <!-- ========== SIDEBAR ========== -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-avatar">
-                    @if(isset($user->profile) && $user->profile->profile_image)
-                        <img src="{{ asset('storage/'.$user->profile->profile_image) }}" alt="{{ $user->name }}" style="width:100%;height:100%;object-fit:cover;">
+                    @if($profile && $profile->profile_image)
+                        <img src="{{ asset('storage/' . $profile->profile_image) }}" alt="{{ $user->name }}">
                     @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     @endif
@@ -710,73 +1036,103 @@
                 <div>
                     <div class="sidebar-name">{{ $user->name }}</div>
                     <div class="sidebar-role">
-                        {{ $user->profile->tagline ?? 'Creative Developer & Designer' }}
+                        {{ $profile->tagline ?? 'Creative Developer & Designer' }}
                     </div>
-                    @if(isset($user->profile) && $user->profile->location)
+                    @if($profile && $profile->location)
                         <div class="sidebar-location">
-                            <span>📍</span><span>{{ $user->profile->location }}</span>
+                            <span>📍</span><span>{{ $profile->location }}</span>
                         </div>
                     @endif
                 </div>
             </div>
 
             <div class="sidebar-tagline">
-                {{ $user->profile->about_short ?? 'Blending design, code, and product thinking to create clean, usable experiences.' }}
+                {{ $profile->about_short ?? 'Blending design, code, and product thinking to create clean, usable experiences.' }}
             </div>
 
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-nav-title">Navigate</div>
             <ul class="sidebar-nav">
-                @if(isset($user->profile) && ($user->profile->about_title || $user->profile->about_long || $user->profile->about_short))
+                @if($hasAbout)
                     <li><a href="#about"><span>About</span><span class="dot"></span></a></li>
                 @endif
-                @if(isset($user->skills) && $user->skills->count())
+                @if($hasSkills)
                     <li><a href="#skills"><span>Skills</span><span class="dot"></span></a></li>
                 @endif
-                @if(isset($user->projects) && $user->projects->count())
+                @if($hasProjects)
                     <li><a href="#projects"><span>Projects</span><span class="dot"></span></a></li>
                 @endif
-                @if(isset($user->experiences) && $user->experiences->count())
+                @if($experiences->count())
                     <li><a href="#experience"><span>Experience</span><span class="dot"></span></a></li>
                 @endif
-                @if(isset($user->educations) && $user->educations->count())
+                @if($educations->count())
                     <li><a href="#education"><span>Education</span><span class="dot"></span></a></li>
                 @endif
-                @if(isset($user->goals) && $user->goals->count())
+                @if($hasCerts)
+                    <li><a href="#certifications"><span>Certifications</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasServices)
+                    <li><a href="#services"><span>Services</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasAchievements)
+                    <li><a href="#achievements"><span>Achievements</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasVolunteers)
+                    <li><a href="#volunteer"><span>Volunteer</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasTestimonials)
+                    <li><a href="#testimonials"><span>Testimonials</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasGallery)
+                    <li><a href="#gallery"><span>Gallery</span><span class="dot"></span></a></li>
+                @endif
+                @if($hasGoals)
                     <li><a href="#goals"><span>Goals</span><span class="dot"></span></a></li>
                 @endif
                 <li><a href="#contact"><span>Contact</span><span class="dot"></span></a></li>
             </ul>
 
             <div class="sidebar-contact">
-                @if(isset($user->profile) && $user->profile->contact_email)
+                @if($profile && $profile->contact_email)
                     <div class="sidebar-contact-item">
                         <span>✉️</span>
-                        <a href="mailto:{{ $user->profile->contact_email }}">
-                            {{ $user->profile->contact_email }}
+                        <a href="mailto:{{ $profile->contact_email }}">
+                            {{ $profile->contact_email }}
                         </a>
                     </div>
                 @endif
-                @if(isset($user->profile) && $user->profile->social_github)
+                @if($profile && $profile->contact_phone)
                     <div class="sidebar-contact-item">
-                        <span>🐙</span>
-                        <a href="{{ $user->profile->social_github }}" target="_blank">GitHub</a>
+                        <span>📱</span>
+                        <span>{{ $profile->contact_phone }}</span>
                     </div>
                 @endif
-                @if(isset($user->profile) && $user->profile->social_linkedin)
+                @if($profile && $profile->social_github)
+                    <div class="sidebar-contact-item">
+                        <span>🐙</span>
+                        <a href="{{ $profile->social_github }}" target="_blank">GitHub</a>
+                    </div>
+                @endif
+                @if($profile && $profile->social_linkedin)
                     <div class="sidebar-contact-item">
                         <span>💼</span>
-                        <a href="{{ $user->profile->social_linkedin }}" target="_blank">LinkedIn</a>
+                        <a href="{{ $profile->social_linkedin }}" target="_blank">LinkedIn</a>
+                    </div>
+                @endif
+                @if($profile && $profile->social_twitter)
+                    <div class="sidebar-contact-item">
+                        <span>🐦</span>
+                        <a href="{{ $profile->social_twitter }}" target="_blank">Twitter</a>
                     </div>
                 @endif
             </div>
 
-            @if(isset($user->profile) && $user->profile->contact_email)
+            @if($profile && $profile->contact_email)
                 <div class="sidebar-button">
                     <a href="#contact" class="btn-sidebar">
                         <span class="icon">✨</span>
-                        <span>Let’s collaborate</span>
+                        <span>Let's collaborate</span>
                     </a>
                 </div>
             @endif
@@ -788,7 +1144,7 @@
 
         <!-- ========== MAIN CONTENT ========== -->
         <main class="main">
-            <!-- HERO -->
+            <!-- ─── HERO ─── -->
             <section class="hero-card" id="top">
                 <div class="hero-inner">
                     <div class="hero-pill-row">
@@ -796,10 +1152,16 @@
                             <span>🟢</span>
                             <span>Open to new opportunities</span>
                         </div>
-                        @if(isset($user->experiences) && $user->experiences->count())
+                        @if($experiences->count())
                             <div class="hero-pill">
                                 <span>💼</span>
-                                <span>{{ $user->experiences->count() }}+ roles</span>
+                                <span>{{ $experiences->count() }}+ roles</span>
+                            </div>
+                        @endif
+                        @if($projects->count())
+                            <div class="hero-pill">
+                                <span>🚀</span>
+                                <span>{{ $projects->count() }} projects</span>
                             </div>
                         @endif
                     </div>
@@ -809,7 +1171,7 @@
                     </h1>
 
                     <p class="hero-tagline">
-                        {{ $user->profile->about_short ?? 'From the first idea to a shipped product, I work across design and development to create interfaces that feel simple and intentional.' }}
+                        {{ $profile->about_short ?? 'From the first idea to a shipped product, I work across design and development to create interfaces that feel simple and intentional.' }}
                     </p>
 
                     <div class="hero-meta-row">
@@ -818,25 +1180,32 @@
                             <div class="hero-meta-value">{{ $user->name }}</div>
                         </div>
 
-                        @if(isset($user->skills) && $user->skills->count())
+                        @if($skills->count())
                             <div class="hero-meta-item">
                                 <div class="hero-meta-label">Core skills</div>
                                 <div class="hero-meta-value">
-                                    {{ $user->skills->take(3)->pluck('name')->implode(' · ') }}
+                                    {{ $skills->take(3)->pluck('name')->implode(' · ') }}
                                 </div>
+                            </div>
+                        @endif
+
+                        @if($profile && $profile->location)
+                            <div class="hero-meta-item">
+                                <div class="hero-meta-label">Location</div>
+                                <div class="hero-meta-value">{{ $profile->location }}</div>
                             </div>
                         @endif
                     </div>
 
                     <div class="hero-actions">
-                        @if(isset($user->profile) && $user->profile->contact_email)
+                        @if($profile && $profile->contact_email)
                             <a href="#contact" class="btn-primary">
                                 <span>Work with me</span>
                                 <span class="icon">→</span>
                             </a>
                         @endif
 
-                        @if(isset($user->projects) && $user->projects->count())
+                        @if($hasProjects)
                             <a href="#projects" class="btn-ghost">
                                 <span>See selected projects</span>
                             </a>
@@ -846,17 +1215,23 @@
                            class="btn-ghost" target="_blank">
                             <span>📄 Download CV</span>
                         </a>
+
+                        @if($profile && $profile->live_link)
+                            <a href="{{ $profile->live_link }}" target="_blank" class="btn-ghost">
+                                <span>🌐 Live Demo</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </section>
 
-            <!-- ABOUT -->
-            @if(isset($user->profile) && ($user->profile->about_title || $user->profile->about_long || $user->profile->about_short))
+            <!-- ─── ABOUT ─── -->
+            @if($hasAbout)
                 <section class="section" id="about">
                     <div class="section-header">
                         <div class="section-title-block">
                             <div class="section-kicker">About</div>
-                            <h2 class="section-title">{{ $user->profile->about_title ?? 'A bit about me' }}</h2>
+                            <h2 class="section-title">{{ $profile->about_title ?? 'A bit about me' }}</h2>
                         </div>
                         <div class="section-subtitle">
                             How I think, what I care about, and how I like to work.
@@ -864,13 +1239,17 @@
                     </div>
 
                     <div style="font-size: 13px; color: var(--text-muted); line-height: 1.7;">
-                        {{ $user->profile->about_long ?? $user->profile->about_short }}
+                        @if($profile->about_long)
+                            {{ $profile->about_long }}
+                        @else
+                            {{ $profile->about_short }}
+                        @endif
                     </div>
                 </section>
             @endif
 
-            <!-- SKILLS -->
-            @if(isset($user->skills) && $user->skills->count())
+            <!-- ─── SKILLS ─── -->
+            @if($hasSkills)
                 <section class="section" id="skills">
                     <div class="section-header">
                         <div class="section-title-block">
@@ -883,7 +1262,7 @@
                     </div>
 
                     <div class="grid">
-                        @foreach($user->skills as $skill)
+                        @foreach($skills as $skill)
                             @php
                                 $level = strtolower($skill->level ?? '');
                                 $percentage = 60;
@@ -897,7 +1276,7 @@
                                     <div class="skill-level">{{ strtoupper($skill->level) }}</div>
                                 @endif
                                 <div class="skill-bar">
-                                    <div class="skill-bar-fill" style="width: {{ $percentage }}%;"></div>
+                                    <div class="skill-bar-fill" data-width="{{ $percentage }}%"></div>
                                 </div>
                                 @if(!empty($skill->description))
                                     <div class="skill-desc">
@@ -910,8 +1289,45 @@
                 </section>
             @endif
 
-            <!-- PROJECTS (slider) -->
-            @if(isset($user->projects) && $user->projects->count())
+            <!-- ─── CERTIFICATIONS ─── -->
+            @if($hasCerts)
+                <section class="section" id="certifications">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Certifications</div>
+                            <h2 class="section-title">📜 Credentials</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            Professional certifications that validate my expertise.
+                        </div>
+                    </div>
+
+                    <div class="cert-grid">
+                        @foreach($certifications as $cert)
+                            <div class="cert-item">
+                                @if($cert->image)
+                                    <img src="{{ asset('storage/' . $cert->image) }}" alt="{{ $cert->title }}" class="cert-image">
+                                @else
+                                    <div class="cert-icon">🎓</div>
+                                @endif
+                                <div class="cert-info">
+                                    <div class="cert-title">{{ $cert->title }}</div>
+                                    <div class="cert-org">{{ $cert->organization }}</div>
+                                    @if($cert->issue_date)
+                                        <div class="cert-date">{{ \Carbon\Carbon::parse($cert->issue_date)->format('M Y') }}</div>
+                                    @endif
+                                    @if($cert->credential_url)
+                                        <a href="{{ $cert->credential_url }}" target="_blank" class="cert-link">Verify →</a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── PROJECTS ─── -->
+            @if($hasProjects)
                 <section class="section" id="projects">
                     <div class="section-header">
                         <div class="section-title-block">
@@ -919,12 +1335,12 @@
                             <h2 class="section-title">Selected work</h2>
                         </div>
                         <div class="section-subtitle">
-                            Scroll sideways to explore recent projects and collaborations.
+                            Recent projects and collaborations.
                         </div>
                     </div>
 
                     <div class="projects-strip">
-                        @foreach($user->projects as $project)
+                        @foreach($projects as $project)
                             <article class="project-slide">
                                 <div class="project-title">{{ $project->title }}</div>
 
@@ -958,13 +1374,42 @@
                 </section>
             @endif
 
-            <!-- EXPERIENCE -->
-            @if(isset($user->experiences) && $user->experiences->count())
+            <!-- ─── SERVICES ─── -->
+            @if($hasServices)
+                <section class="section" id="services">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Services</div>
+                            <h2 class="section-title">💎 What I offer</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            How I can help bring your ideas to life.
+                        </div>
+                    </div>
+
+                    <div class="services-grid">
+                        @foreach($services as $service)
+                            <div class="service-card">
+                                @if($service->icon)
+                                    <div class="service-icon">{{ $service->icon }}</div>
+                                @endif
+                                <div class="service-title">{{ $service->title }}</div>
+                                @if($service->description)
+                                    <div class="service-desc">{{ $service->description }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── EXPERIENCE ─── -->
+            @if($experiences->count())
                 <section class="section" id="experience">
                     <div class="section-header">
                         <div class="section-title-block">
                             <div class="section-kicker">Experience</div>
-                            <h2 class="section-title">Where I’ve contributed</h2>
+                            <h2 class="section-title">Where I've contributed</h2>
                         </div>
                         <div class="section-subtitle">
                             Roles that shaped how I approach product, design, and engineering.
@@ -972,22 +1417,23 @@
                     </div>
 
                     <div class="timeline">
-                        @foreach($user->experiences->sortByDesc('start_date') as $exp)
+                        @foreach($experiences->sortByDesc('start_date') as $exp)
                             <div class="timeline-item">
                                 <div class="timeline-dot"></div>
-                                <div class="timeline-role">{{ $exp->role_title }}</div>
+                                <div class="timeline-role">{{ $exp->role_title ?? $exp->title }}</div>
                                 <div class="timeline-place">
                                     {{ $exp->company }}
                                     @if($exp->location) · {{ $exp->location }} @endif
+                                    @if($exp->employment_type) · {{ $exp->employment_type }} @endif
                                 </div>
                                 <div class="timeline-date">
                                     @if($exp->start_date)
-                                        {{ \Illuminate\Support\Carbon::parse($exp->start_date)->format('M Y') }}
+                                        {{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }}
                                         –
                                         @if($exp->is_current)
                                             Present
                                         @elseif($exp->end_date)
-                                            {{ \Illuminate\Support\Carbon::parse($exp->end_date)->format('M Y') }}
+                                            {{ \Carbon\Carbon::parse($exp->end_date)->format('M Y') }}
                                         @else
                                             …
                                         @endif
@@ -1002,8 +1448,8 @@
                 </section>
             @endif
 
-            <!-- EDUCATION -->
-            @if(isset($user->educations) && $user->educations->count())
+            <!-- ─── EDUCATION ─── -->
+            @if($educations->count())
                 <section class="section" id="education">
                     <div class="section-header">
                         <div class="section-title-block">
@@ -1016,7 +1462,7 @@
                     </div>
 
                     <div class="timeline">
-                        @foreach($user->educations->sortByDesc('start_date') as $edu)
+                        @foreach($educations->sortByDesc('start_date') as $edu)
                             <div class="timeline-item">
                                 <div class="timeline-dot"></div>
                                 <div class="timeline-role">
@@ -1029,12 +1475,12 @@
                                 </div>
                                 <div class="timeline-date">
                                     @if($edu->start_date)
-                                        {{ \Illuminate\Support\Carbon::parse($edu->start_date)->format('Y') }}
+                                        {{ \Carbon\Carbon::parse($edu->start_date)->format('Y') }}
                                         –
                                         @if($edu->is_current)
                                             Present
                                         @elseif($edu->end_date)
-                                            {{ \Illuminate\Support\Carbon::parse($edu->end_date)->format('Y') }}
+                                            {{ \Carbon\Carbon::parse($edu->end_date)->format('Y') }}
                                         @else
                                             …
                                         @endif
@@ -1049,21 +1495,160 @@
                 </section>
             @endif
 
-            <!-- GOALS -->
-            @if(isset($user->goals) && $user->goals->count())
+            <!-- ─── ACHIEVEMENTS ─── -->
+            @if($hasAchievements)
+                <section class="section" id="achievements">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Achievements</div>
+                            <h2 class="section-title">🏆 Milestones</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            Recognition and accomplishments I'm proud of.
+                        </div>
+                    </div>
+
+                    <div style="display:grid; gap:10px;">
+                        @foreach($achievements as $achievement)
+                            <div class="achievement-item">
+                                <div class="achievement-icon">🏆</div>
+                                <div>
+                                    <div class="achievement-title">{{ $achievement->title }}</div>
+                                    @if($achievement->organization)
+                                        <div class="achievement-org">{{ $achievement->organization }}</div>
+                                    @endif
+                                    @if($achievement->description)
+                                        <div class="achievement-desc">{{ $achievement->description }}</div>
+                                    @endif
+                                    @if($achievement->achievement_date)
+                                        <div class="achievement-date">{{ \Carbon\Carbon::parse($achievement->achievement_date)->format('M Y') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── VOLUNTEER ─── -->
+            @if($hasVolunteers)
+                <section class="section" id="volunteer">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Volunteer</div>
+                            <h2 class="section-title">❤️ Giving Back</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            Community work and volunteer experiences.
+                        </div>
+                    </div>
+
+                    <div style="display:grid; gap:10px;">
+                        @foreach($volunteers as $item)
+                            <div class="volunteer-item">
+                                <div class="volunteer-org">{{ $item->organization_name }}</div>
+                                <div class="volunteer-role">{{ $item->role }}</div>
+                                @if($item->location)
+                                    <div class="volunteer-location">📍 {{ $item->location }}</div>
+                                @endif
+                                @if($item->description)
+                                    <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">{{ $item->description }}</div>
+                                @endif
+                                <div class="volunteer-date">
+                                    {{ optional($item->start_date)->format('M Y') }}
+                                    @if($item->end_date)
+                                        – {{ \Carbon\Carbon::parse($item->end_date)->format('M Y') }}
+                                    @elseif($item->currently_volunteering)
+                                        – Present
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── TESTIMONIALS ─── -->
+            @if($hasTestimonials)
+                <section class="section" id="testimonials">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Testimonials</div>
+                            <h2 class="section-title">💬 What People Say</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            Feedback from people I've worked with.
+                        </div>
+                    </div>
+
+                    <div class="testimonial-grid">
+                        @foreach($testimonials as $testimonial)
+                            <div class="testimonial-card">
+                                @if($testimonial->message)
+                                    <div class="testimonial-text">"{{ $testimonial->message }}"</div>
+                                @endif
+                                <div>
+                                    <div class="testimonial-author">{{ $testimonial->name }}</div>
+                                    @if($testimonial->role || $testimonial->company)
+                                        <div class="testimonial-role">
+                                            {{ $testimonial->role }}
+                                            @if($testimonial->company) • {{ $testimonial->company }} @endif
+                                        </div>
+                                    @endif
+                                    @if($testimonial->rating)
+                                        <div class="testimonial-rating">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                {!! $i <= $testimonial->rating ? '★' : '☆' !!}
+                                            @endfor
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── GALLERY ─── -->
+            @if($hasGallery)
+                <section class="section" id="gallery">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <div class="section-kicker">Gallery</div>
+                            <h2 class="section-title">📸 Visual Diary</h2>
+                        </div>
+                        <div class="section-subtitle">
+                            A glimpse into my creative world.
+                        </div>
+                    </div>
+
+                    <div class="gallery-grid">
+                        @foreach($gallery as $item)
+                            <div class="gallery-item">
+                                @if($item->image)
+                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title ?? 'Gallery' }}" loading="lazy">
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- ─── GOALS ─── -->
+            @if($hasGoals)
                 <section class="section" id="goals">
                     <div class="section-header">
                         <div class="section-title-block">
                             <div class="section-kicker">Goals</div>
-                            <h2 class="section-title">What’s next</h2>
+                            <h2 class="section-title">What's next</h2>
                         </div>
                         <div class="section-subtitle">
-                            Areas I want to grow in and problems I’m excited to solve.
+                            Areas I want to grow in and problems I'm excited to solve.
                         </div>
                     </div>
 
                     <ul class="goals-list">
-                        @foreach($user->goals as $goal)
+                        @foreach($goals as $goal)
                             <li class="goal-item">
                                 <span class="icon">🎯</span>
                                 <span>{{ $goal->goal_text }}</span>
@@ -1073,12 +1658,12 @@
                 </section>
             @endif
 
-            <!-- CONTACT -->
+            <!-- ─── CONTACT ─── -->
             <section class="section" id="contact">
                 <div class="section-header">
                     <div class="section-title-block">
                         <div class="section-kicker">Contact</div>
-                        <h2 class="section-title">Let’s build something</h2>
+                        <h2 class="section-title">Let's build something</h2>
                     </div>
                     <div class="section-subtitle">
                         A short message is enough to start a conversation.
@@ -1086,27 +1671,41 @@
                 </div>
 
                 <div class="contact-body">
-                    @if(isset($user->profile) && $user->profile->about_short)
-                        <p>{{ $user->profile->about_short }}</p>
+                    @if($profile && $profile->about_short)
+                        <p>{{ $profile->about_short }}</p>
                     @else
                         <p>
-                            Whether it’s a new product, a redesign, or help refining an existing experience,
-                            I’d love to hear what you’re working on and see how I can help.
+                            Whether it's a new product, a redesign, or help refining an existing experience,
+                            I'd love to hear what you're working on and see how I can help.
                         </p>
                     @endif
 
                     <div class="contact-pill-row">
-                        @if(isset($user->profile) && $user->profile->contact_email)
+                        @if($profile && $profile->contact_email)
                             <div class="contact-pill">
                                 <span>✉️</span>
-                                <a href="mailto:{{ $user->profile->contact_email }}">{{ $user->profile->contact_email }}</a>
+                                <a href="mailto:{{ $profile->contact_email }}">{{ $profile->contact_email }}</a>
                             </div>
                         @endif
 
-                        @if(isset($user->profile) && $user->profile->location)
+                        @if($profile && $profile->contact_phone)
+                            <div class="contact-pill">
+                                <span>📱</span>
+                                <span>{{ $profile->contact_phone }}</span>
+                            </div>
+                        @endif
+
+                        @if($profile && $profile->location)
                             <div class="contact-pill">
                                 <span>📍</span>
-                                <span>{{ $user->profile->location }}</span>
+                                <span>{{ $profile->location }}</span>
+                            </div>
+                        @endif
+
+                        @if($profile && $profile->live_link)
+                            <div class="contact-pill">
+                                <span>🌐</span>
+                                <a href="{{ $profile->live_link }}" target="_blank">{{ $profile->live_link }}</a>
                             </div>
                         @endif
                     </div>
@@ -1119,5 +1718,38 @@
         </main>
     </div>
 </div>
+
+<script>
+    // ─── ANIMATE SKILL BARS ON SCROLL ───
+    const skillSection = document.querySelector('#skills');
+    if (skillSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 200);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(skillSection);
+    }
+
+    // ─── SMOOTH SCROLL ───
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

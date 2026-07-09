@@ -19,6 +19,11 @@ class DatabaseSeeder extends Seeder
             ThemeSeeder::class,
             AdminUserSeeder::class,
             PlanDemoUsersSeeder::class,
+        ProfessionSeeder::class,
+        BlockSeeder::class,
+
+
         ]);
+
     }
 }

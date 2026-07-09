@@ -9,13 +9,20 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\OtpVerificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+Route::middleware('guest')->group(function () {
+
+    // Route::get('/theme', [RegisteredUserController::class, 'selectTheme'])->name('theme.select');
+Route::post('/theme', [RegisteredUserController::class, 'storeTheme'])->name('theme.store');
+
+// Route::get('/profession', [RegisteredUserController::class, 'selectProfession'])->name('profession.select');
+Route::post('/profession', [RegisteredUserController::class, 'storeProfession'])->name('profession.store');
+
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
@@ -33,6 +40,18 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+        Route::get('/verify-otp/{user}', [OtpVerificationController::class, 'create'])
+        ->name('otp.verify.form');
+        Route::post('/verify-otp/{user}', [OtpVerificationController::class, 'store'])
+        ->name('otp.verify');
+
+        Route::post('/otp/resend/{user}', [OtpVerificationController::class, 'resend'])
+    ->name('otp.resend');
+    Route::get('/otp/resend/{user}', [OtpVerificationController::class, 'resend'])
+    ->name('otp.resend');
+
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -56,4 +75,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+
 });
