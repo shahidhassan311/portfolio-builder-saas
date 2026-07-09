@@ -44,7 +44,13 @@ Route::get('/terms', [App\Http\Controllers\LegalController::class, 'terms'])->na
 
 Route::get('/portfolio/{id}/{username}/pdf', [PortfolioController::class, 'downloadPdf'])
     ->name('portfolio.pdf');
+// Blocks
+Route::put('/dashboard/blocks/{userBlock}/enable', [DashboardController::class, 'enableBlock'])
+    ->name('dashboard.blocks.enable');
 
+Route::put('/dashboard/blocks/{userBlock}/disable', [DashboardController::class, 'disableBlock'])
+    ->name('dashboard.blocks.disable');
+Route::post('/dashboard/blocks', [DashboardController::class, 'store'])->name('dashboard.blocks.store');
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'overview'])->name('dashboard');
@@ -55,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/upgrade', [DashboardController::class, 'upgrade'])->name('dashboard.upgrade');
     Route::post('/dashboard/waitlist', [DashboardController::class, 'joinWaitlist'])->name('dashboard.waitlist');
     Route::post('/dashboard/resume/import', [DashboardController::class, 'importResume'])->name('dashboard.resume.import');
+
+
 
     // Dashboard update routes
     Route::post('/dashboard/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.profile.update');
@@ -77,17 +85,88 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/goals/{id}', [DashboardController::class, 'updateGoal'])->name('dashboard.goals.update');
     Route::delete('/dashboard/goals/{id}', [DashboardController::class, 'deleteGoal'])->name('dashboard.goals.delete');
 
+    Route::post('/dashboard/achievement', [DashboardController::class, 'storeAchievement'])
+    ->name('dashboard.achievements.store');
+
+Route::put('/dashboard/achievement/{id}', [DashboardController::class, 'updateAchievement'])
+    ->name('dashboard.achievements.update');
+
+Route::post('/dashboard/achievement/reorder', [DashboardController::class, 'reorderAchievements'])
+    ->name('dashboard.achievements.reorder');
+
+Route::delete('/dashboard/achievement/{id}', [DashboardController::class, 'deleteAchievement'])
+    ->name('dashboard.achievements.delete');
+    Route::post('/dashboard/gallery', [DashboardController::class, 'storeGallery'])
+    ->name('dashboard.gallery.store');
+
+Route::put('/dashboard/gallery/{id}', [DashboardController::class, 'updateGallery'])
+    ->name('dashboard.gallery.update');
+
+Route::post('/dashboard/gallery/reorder', [DashboardController::class, 'reorderGalleries'])
+    ->name('dashboard.gallery.reorder');
+
+Route::delete('/dashboard/gallery/{id}', [DashboardController::class, 'deleteGallery'])
+    ->name('dashboard.gallery.delete');
+
+
+
+    Route::post('/dashboard/certifications', [DashboardController::class, 'storeCertification'])
+    ->name('dashboard.certifications.store');
+
+Route::put('/dashboard/certifications/{id}', [DashboardController::class, 'updateCertification'])
+    ->name('dashboard.certifications.update');
+
+Route::post('/dashboard/certifications/reorder', [DashboardController::class, 'reorderCertifications'])
+    ->name('dashboard.certifications.reorder');
+
+Route::delete('/dashboard/certifications/{id}', [DashboardController::class, 'deleteCertification'])
+    ->name('dashboard.certifications.delete');
 
     Route::post('/dashboard/education', [DashboardController::class, 'storeEducation'])->name('dashboard.education.store');
     Route::put('/dashboard/education/{id}', [DashboardController::class, 'updateEducation'])->name('dashboard.education.update');
     Route::post('/dashboard/education/reorder', [DashboardController::class, 'reorderEducations'])->name('dashboard.education.reorder');
     Route::delete('/dashboard/education/{id}', [DashboardController::class, 'deleteEducation'])->name('dashboard.education.delete');
 
+    Route::post('/dashboard/testimonial', [DashboardController::class, 'storeTestimonial'])
+    ->name('dashboard.testimonial.store');
+
+Route::put('/dashboard/testimonial/{id}', [DashboardController::class, 'updateTestimonial'])
+    ->name('dashboard.testimonial.update');
+
+Route::post('/dashboard/testimonial/reorder', [DashboardController::class, 'reorderTestimonials'])
+    ->name('dashboard.testimonial.reorder');
+
+Route::delete('/dashboard/testimonial/{id}', [DashboardController::class, 'deleteTestimonial'])
+    ->name('dashboard.testimonial.delete');
+
     Route::post('/dashboard/experience', [DashboardController::class, 'storeExperience'])->name('dashboard.experience.store');
     Route::put('/dashboard/experience/{id}', [DashboardController::class, 'updateExperience'])->name('dashboard.experience.update');
     Route::post('/dashboard/experience/reorder', [DashboardController::class, 'reorderExperiences'])->name('dashboard.experience.reorder');
     Route::delete('/dashboard/experience/{id}', [DashboardController::class, 'deleteExperience'])->name('dashboard.experience.delete');
 
+    Route::post('/dashboard/volunteers', [DashboardController::class, 'storeVolunteer'])
+    ->name('dashboard.volunteers.store');
+
+Route::put('/dashboard/volunteers/{id}', [DashboardController::class, 'updateVolunteer'])
+    ->name('dashboard.volunteers.update');
+
+Route::post('/dashboard/volunteers/reorder', [DashboardController::class, 'reorderVolunteers'])
+    ->name('dashboard.volunteers.reorder');
+
+Route::delete('/dashboard/volunteers/{id}', [DashboardController::class, 'deleteVolunteer'])
+    ->name('dashboard.volunteers.delete');
+
+    Route::post('/dashboard/service', [DashboardController::class, 'storeService'])
+    ->name('dashboard.service.store');
+
+Route::put('/dashboard/service/{id}', [DashboardController::class, 'updateService'])
+    ->name('dashboard.service.update');
+
+Route::post('/dashboard/service/reorder', [DashboardController::class, 'reorderServices'])
+    ->name('dashboard.service.reorder');
+
+Route::delete('/dashboard/service/{id}', [DashboardController::class, 'deleteService'])
+    ->name('dashboard.service.delete');
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

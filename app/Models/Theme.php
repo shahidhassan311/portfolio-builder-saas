@@ -24,4 +24,16 @@ class Theme extends Model
     {
         return $this->hasMany(User::class, 'active_theme_id');
     }
+
+
+    public function professions()
+{
+    return $this->belongsToMany(
+        Profession::class,
+        'profession_theme',
+        'theme_id',
+        'profession_id'
+    );
+}
+
 }

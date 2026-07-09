@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+
+    'poppler' => [
+        'path' => env('POPPLER_PATH', 'pdftotext'),
+    ],
+
 ];

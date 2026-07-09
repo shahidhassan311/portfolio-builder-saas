@@ -9,7 +9,7 @@
                 <div>
                     <p class="badge badge--highlight">
                         <x-marketing-icon name="spark" />
-                        Portfolio + PDF · No code required
+                        Portfolio + PDF · No code required  
                     </p>
                     <h1 class="hero-title">
                         The fastest way to ship a <em>hire-ready portfolio</em>
@@ -183,8 +183,8 @@
                             <article class="theme-card">
                                 <a href="{{ route('preview.theme', $theme->id) }}" target="_blank">
                                     <div class="theme-preview">
-                                        <img src="{{ $previewUrl }}" 
-                                             alt="{{ $theme->name }} - Professional portfolio template preview" 
+                                        <img src="{{ $previewUrl }}"
+                                             alt="{{ $theme->name }} - Professional portfolio template preview"
                                              loading="lazy"
                                              width="400"
                                              height="300">
