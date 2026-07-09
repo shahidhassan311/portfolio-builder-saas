@@ -26,10 +26,10 @@
             --gray-900: #171717;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -40,9 +40,9 @@
             overflow-x: hidden;
         }
 
-        a { 
-            color: inherit; 
-            text-decoration: none; 
+        a {
+            color: inherit;
+            text-decoration: none;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -52,8 +52,8 @@
             padding: 0 2rem;
         }
 
-        section { 
-            padding: 6rem 0; 
+        section {
+            padding: 6rem 0;
             position: relative;
         }
 
@@ -261,8 +261,8 @@
         }
 
         @media (max-width: 968px) {
-            .hero-inner { 
-                grid-template-columns: 1fr; 
+            .hero-inner {
+                grid-template-columns: 1fr;
                 gap: 3rem;
                 text-align: center;
             }
@@ -622,8 +622,8 @@
         }
 
         @media (max-width: 968px) {
-            .two-col { 
-                grid-template-columns: 1fr; 
+            .two-col {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -634,8 +634,8 @@
             line-height: 1.9;
         }
 
-        .about-text p + p { 
-            margin-top: 1.5rem; 
+        .about-text p + p {
+            margin-top: 1.5rem;
         }
 
         .stat-card {
@@ -653,18 +653,18 @@
             box-shadow: 0 12px 35px rgba(220, 38, 38, 0.2);
         }
 
-        .stat-label { 
-            font-size: 0.85rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.15em; 
-            color: var(--red-primary); 
-            margin-bottom: 0.75rem; 
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--red-primary);
+            margin-bottom: 0.75rem;
             font-weight: 700;
         }
 
-        .stat-value { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
             color: var(--gray-900);
         }
 
@@ -695,14 +695,14 @@
             margin-bottom: 0.75rem;
         }
 
-        .skill-name { 
-            font-size: 1.1rem; 
-            font-weight: 600; 
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--gray-900);
         }
 
-        .skill-level { 
-            font-size: 0.9rem; 
+        .skill-level {
+            font-size: 0.9rem;
             color: var(--red-primary);
             font-weight: 600;
         }
@@ -785,28 +785,28 @@
             height: 100%;
         }
 
-        .timeline-role { 
-            font-weight: 700; 
-            font-size: 1.2rem; 
+        .timeline-role {
+            font-weight: 700;
+            font-size: 1.2rem;
             color: var(--gray-900);
             margin-bottom: 0.5rem;
         }
 
-        .timeline-place { 
-            font-size: 1rem; 
+        .timeline-place {
+            font-size: 1rem;
             color: var(--red-primary);
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
 
-        .timeline-meta { 
-            font-size: 0.9rem; 
-            color: var(--gray-600); 
+        .timeline-meta {
+            font-size: 0.9rem;
+            color: var(--gray-600);
             margin-bottom: 1rem;
         }
 
-        .timeline-desc { 
-            font-size: 1rem; 
+        .timeline-desc {
+            font-size: 1rem;
             color: var(--gray-700);
             line-height: 1.8;
         }
@@ -873,21 +873,21 @@
             font-size: 1.05rem;
         }
 
-        .project-title { 
-            font-weight: 700; 
+        .project-title {
+            font-weight: 700;
             font-size: 1.4rem;
             margin-bottom: 1rem;
             color: var(--gray-900);
         }
 
-        .project-desc { 
-            color: var(--gray-600); 
+        .project-desc {
+            color: var(--gray-600);
             margin-bottom: 1.5rem;
             line-height: 1.8;
         }
 
-        .project-link { 
-            font-size: 1rem; 
+        .project-link {
+            font-size: 1rem;
             color: var(--red-primary);
             font-weight: 600;
             display: inline-flex;
@@ -896,14 +896,14 @@
             transition: all 0.3s ease;
         }
 
-        .project-link:hover { 
+        .project-link:hover {
             gap: 0.75rem;
             transform: translateX(5px);
         }
 
         @media (max-width: 968px) {
-            .project-card { 
-                grid-template-columns: 1fr; 
+            .project-card {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -920,14 +920,14 @@
         }
 
         @media (max-width: 968px) {
-            .contact-card { 
-                grid-template-columns: 1fr; 
+            .contact-card {
+                grid-template-columns: 1fr;
                 padding: 2.5rem;
             }
         }
 
-        .contact-line { 
-            margin-bottom: 1rem; 
+        .contact-line {
+            margin-bottom: 1rem;
             color: var(--gray-700);
             font-size: 1.05rem;
         }
@@ -956,9 +956,9 @@
             box-shadow: 0 0 0 4px var(--red-accent);
         }
 
-        .contact-form textarea { 
-            resize: vertical; 
-            min-height: 140px; 
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 140px;
         }
 
         .contact-form button {

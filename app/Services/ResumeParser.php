@@ -4,14 +4,33 @@ namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
 use Smalot\PdfParser\Parser as PdfParser;
+use Illuminate\Support\Facades\Log;
+use Spatie\PdfToText\Pdf;
+
 
 class ResumeParser
 {
     private const SECTION_HEADERS = [
-        'experience' => '/^(?:work\s+)?experience$|^employment$|^professional\s+experience$|^career$|^work\s+history$/i',
-        'education' => '/^education$|^academic$|^qualifications$/i',
-        'skills' => '/^(?:technical\s+)?skills$|^core\s+competencies$|^technologies$|^expertise$/i',
-        'summary' => '/^(?:professional\s+)?summary$|^profile$|^about\s+me$|^objective$/i',
+        'summary' =>
+'/^(summary|career\s+summary|professional\s+summary|profile|about\s+me|objective)$/i',
+
+        'skills' =>
+            '/^(?:technical\s+)?skills$|^core\s+competencies$|^technologies$|^expertise$/i',
+
+        'experience' =>
+'/^(work\s+experience|professional\s+experience|employment|career|work\s+history)$/i',
+
+        'education' =>
+            '/^education$|^academic$|^qualifications$/i',
+
+        'projects' =>
+            '/^(projects?|portfolio|case studies?)$/i',
+
+        'certifications' =>
+            '/^(certifications?|certificates?|licenses?)$/i',
+
+        'services' =>
+            '/^(?:services|what i offer|offerings|my services)$/i',
     ];
 
     private const SKILL_KEYWORDS = [
@@ -25,21 +44,50 @@ class ResumeParser
 
     private const INSTITUTION_PATTERN = '/\b(university|college|institute|school|academy|polytechnic)\b/i';
 
-    public function extractText(UploadedFile $file): string
+    /**
+     * Extract raw text from a PDF, preserving column layout where possible.
+     * Uses the `pdftotext` binary configured via POPPLER_PATH env var,
+     * falling back to Smalot\PdfParser if the binary call fails.
+     */
+    public function extractText(string $pdfPath): string
     {
-        $extension = strtolower($file->getClientOriginalExtension());
+        $binary = config('services.poppler.path', env('POPPLER_PATH', 'pdftotext'));
 
-        return match ($extension) {
-            'pdf' => $this->extractFromPdf($file->getRealPath()),
-            'txt' => trim(file_get_contents($file->getRealPath()) ?: ''),
-            default => throw new \InvalidArgumentException('Unsupported file type. Please upload PDF or TXT.'),
-        };
+        try {
+            // '-layout' preserves left/right column structure instead of
+            // interleaving lines from separate columns.
+            $text = Pdf::getText($pdfPath, $binary, ['layout']);
+
+            if (trim($text) === '') {
+                throw new \RuntimeException('pdftotext returned empty text');
+            }
+
+            return $text;
+        } catch (\Throwable $e) {
+            Log::warning('pdftotext extraction failed, falling back to Smalot', [
+                'error' => $e->getMessage(),
+                'path'  => $pdfPath,
+            ]);
+
+            $parser = new PdfParser();
+
+            return $parser->parseFile($pdfPath)->getText();
+        }
     }
 
     public function parse(string $text): array
     {
         $text = $this->normalizeText($text);
-        $lines = array_values(array_filter(array_map('trim', explode("\n", $text))));
+        logger()->info('experiences', ['data' => $text]);
+        $lines = array_values(
+            array_filter(
+                array_map('trim', explode("\n", $text))
+            )
+        );
+
+        // foreach ($lines as $i => $line) {
+        //     logger()->info("LINE {$i}: {$line}");
+        // }
 
         $sections = $this->splitSections($lines);
 
@@ -52,16 +100,12 @@ class ResumeParser
             'about_short' => $this->extractSummary($sections, $lines),
             'skills' => $this->extractSkills($sections, $text),
             'experiences' => $this->extractExperiences($sections),
+            'certifications' => $this->extractCertifications($sections),
+            'services' => $this->extractServices($sections),
             'educations' => $this->extractEducations($sections),
         ];
-    }
 
-    private function extractFromPdf(string $path): string
-    {
-        $parser = new PdfParser();
-        $pdf = $parser->parseFile($path);
 
-        return trim($pdf->getText());
     }
 
     private function normalizeText(string $text): string
@@ -72,30 +116,217 @@ class ResumeParser
         // Fix PDF bullets glued to text
         $text = preg_replace('/([a-zA-Z0-9])•/', "$1\n•", $text) ?? $text;
         $text = preg_replace('/•\s*/', "\n• ", $text) ?? $text;
+        $text = preg_replace('/([a-z])([A-Z]{3,})/', "$1\n$2", $text);
+        $text = preg_replace('/(SKILLS|EXPERIENCE|EDUCATION|PROJECTS|CERTIFICATIONS)/i', "\n$1\n", $text);
+
+        $text = preg_replace('/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u', '', $text);
+        $text = str_replace("\xC2\xA0", ' ', $text);
 
         return trim($text);
     }
 
     private function splitSections(array $lines): array
     {
-        $sections = ['summary' => [], 'skills' => [], 'experience' => [], 'education' => [], 'other' => []];
-        $current = 'other';
+        logger()->info('LINES RECEIVED', $lines);
 
-        foreach ($lines as $line) {
-            $matched = false;
-            foreach (self::SECTION_HEADERS as $key => $pattern) {
-                if (preg_match($pattern, $line) && strlen($line) < 60) {
-                    $current = $key;
-                    $matched = true;
-                    break;
-                }
+        $sections = [
+            'summary'        => [],
+            'skills'         => [],
+            'experience'     => [],
+            'education'      => [],
+            'projects'       => [],
+            'certifications' => [],
+            'services'       => [],
+        ];
+
+        $knownHeaders = [
+            'SUMMARY'                  => 'summary',
+            'PROFILE'                  => 'summary',
+            'ABOUT ME'                 => 'summary',
+            'OBJECTIVE'                => 'summary',
+
+            'SKILLS'                   => 'skills',
+            'TECHNICAL SKILLS'         => 'skills',
+
+            'WORK EXPERIENCE' => 'experience',
+'PROFESSIONAL EXPERIENCE' => 'experience',
+'EMPLOYMENT' => 'experience',
+'WORK HISTORY' => 'experience',
+
+            'EDUCATION'                => 'education',
+            'ACADEMIC'                 => 'education',
+
+            'PROJECTS'                 => 'projects',
+            'PORTFOLIO'                => 'projects',
+
+            'CERTIFICATIONS'           => 'certifications',
+            'CERTIFICATES'             => 'certifications',
+
+            'SERVICES'                 => 'services',
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Merge split headers (WORK + EXPERIENCE => WORK EXPERIENCE)
+        |--------------------------------------------------------------------------
+        */
+        $fixedLines = [];
+
+        for ($i = 0; $i < count($lines); $i++) {
+
+            if (
+                strtoupper(trim($lines[$i])) === 'WORK' &&
+                isset($lines[$i + 1]) &&
+                strtoupper(trim($lines[$i + 1])) === 'EXPERIENCE'
+            ) {
+                $fixedLines[] = 'WORK EXPERIENCE';
+                $i++;
+                continue;
             }
-            if (!$matched) {
-                $sections[$current][] = $line;
+
+            $fixedLines[] = $lines[$i];
+        }
+
+        $lines = $fixedLines;
+
+        $headers = [];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Detect Headers
+        |--------------------------------------------------------------------------
+        */
+        foreach ($lines as $i => $line) {
+
+            $line = preg_replace(
+                '/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u',
+                '',
+                $line
+            );
+
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            $normalizedLine = strtoupper($line);
+
+            // Exact Header Match
+            if (isset($knownHeaders[$normalizedLine])) {
+
+                $headers[] = [
+                    'section' => $knownHeaders[$normalizedLine],
+                    'index'   => $i,
+                    'line'    => $line,
+                ];
+
+                continue;
+            }
+
+            // Guard: a single common word (e.g. a stray "experience" from a
+            // wrapped sentence like "...with experience in...") should never
+            // be treated as a section header on its own. Only multi-word
+            // known headers or lines that are clearly full header phrases
+            // are eligible for the regex match below.
+            if (str_word_count($normalizedLine) === 1 && !isset($knownHeaders[$normalizedLine])) {
+                continue;
+            }
+
+            // Regex Header Match
+            foreach (self::SECTION_HEADERS as $section => $pattern) {
+
+                if (preg_match($pattern, $normalizedLine)) {
+
+                    logger()->info('HEADER FOUND', [
+                        'section' => $section,
+                        'index'   => $i,
+                        'line'    => $line,
+                    ]);
+
+                    $headers[] = [
+                        'section' => $section,
+                        'index'   => $i,
+                        'line'    => $line,
+                    ];
+
+                    continue 2;
+                }
             }
         }
 
+        if (empty($headers)) {
+            return $sections;
+        }
+
+        usort($headers, function ($a, $b) {
+            return $a['index'] <=> $b['index'];
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Split Content Between Headers
+        |--------------------------------------------------------------------------
+        */
+        foreach ($headers as $idx => $header) {
+
+            $section = $header['section'];
+            $start   = $header['index'] + 1;
+            $end     = $headers[$idx + 1]['index'] ?? count($lines);
+
+            $content = [];
+
+            for ($j = $start; $j < $end; $j++) {
+
+                $line = trim($lines[$j]);
+
+                if ($line === '') {
+                    continue;
+                }
+
+                $content[] = $line;
+            }
+
+            $sections[$section] = array_merge(
+                $sections[$section] ?? [],
+                $content
+            );
+        }
+
+        logger()->info('HEADERS FOUND', [
+            'headers' => $headers,
+        ]);
+
+        logger()->info('ALL SECTIONS', $sections);
+
         return $sections;
+    }
+
+    private function extractServices(array $sections): array
+    {
+        if (empty($sections['services'])) {
+            return [];
+        }
+
+        $services = [];
+
+        foreach ($sections['services'] as $line) {
+
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            $services[] = [
+                'title' => $line,
+                'icon' => null,
+                'description' => null,
+                'sort_order' => 0,
+            ];
+        }
+
+        return array_slice($services, 0, 10);
     }
 
     private function extractName(array $lines): ?string
@@ -116,6 +347,39 @@ class ResumeParser
         }
 
         return null;
+    }
+
+    private function extractCertifications(array $sections): array
+    {
+        $lines = $sections['certifications'] ?? [];
+
+        $certifications = [];
+
+        foreach ($lines as $line) {
+
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            if (!mb_check_encoding($line, 'UTF-8')) {
+                $line = mb_convert_encoding($line, 'UTF-8', 'auto');
+            }
+
+            $line = str_replace("\xC2\xA0", ' ', $line);
+            $line = preg_replace('/\s+/u', ' ', $line);
+
+            $certifications[] = [
+                'title' => $line,
+                'organization' => null,
+                'issue_date' => null,
+                'credential_url' => null,
+                'description' => null,
+            ];
+        }
+
+        return $certifications;
     }
 
     private function extractEmail(string $text): ?string
@@ -180,22 +444,34 @@ class ResumeParser
         $seen = [];
 
         $skillLines = $sections['skills'];
+
         if (!empty($skillLines)) {
             $blob = implode(' ', $skillLines);
-            $parts = preg_split('/[,|•·\|\/]/', $blob) ?: [];
-            foreach ($parts as $part) {
-                $name = trim($part);
-                if (strlen($name) >= 2 && strlen($name) <= 40 && !isset($seen[strtolower($name)])) {
-                    $seen[strtolower($name)] = true;
-                    $skills[] = ['name' => $name, 'level' => $this->guessSkillLevel($name)];
-                }
-            }
-        }
 
-        foreach (self::SKILL_KEYWORDS as $keyword) {
-            if (stripos($text, $keyword) !== false && !isset($seen[strtolower($keyword)])) {
-                $seen[strtolower($keyword)] = true;
-                $skills[] = ['name' => $keyword, 'level' => 'Intermediate'];
+            $parts = preg_split('/[,|•·\|\/]/u', $blob) ?: [];
+
+            foreach ($parts as $part) {
+
+                $name = iconv('UTF-8', 'UTF-8//IGNORE', $part);
+                $name = str_replace("\xEF\xBF\xBD", '', $name);
+                $name = str_replace("\xC2\xA0", ' ', $name);
+                $name = preg_replace('/[\x00-\x1F\x7F]/u', '', $name);
+                $name = preg_replace('/\s+/u', ' ', $name);
+                $name = trim($name);
+
+                if (
+                    $name !== '' &&
+                    mb_strlen($name) >= 2 &&
+                    mb_strlen($name) <= 40 &&
+                    !isset($seen[mb_strtolower($name)])
+                ) {
+                    $seen[mb_strtolower($name)] = true;
+
+                    $skills[] = [
+                        'name'  => $name,
+                        'level' => $this->guessSkillLevel($name),
+                    ];
+                }
             }
         }
 
@@ -216,14 +492,33 @@ class ResumeParser
 
     private function extractExperiences(array $sections): array
     {
-        $lines = $sections['experience'];
+        $lines = $sections['experience'] ?? [];
+
         if (empty($lines)) {
             return [];
         }
 
+        $lines = array_values(array_filter(array_map(function ($line) {
+
+            if (! is_string($line)) {
+                return '';
+            }
+
+            $line = preg_replace('/\x{200B}|\x{200C}|\x{200D}|\x{FEFF}/u', '', $line);
+            $line = mb_convert_encoding($line, 'UTF-8', 'UTF-8');
+
+            return trim($line);
+
+        }, $lines)));
+
         $experiences = [];
-        foreach ($this->splitEntryBlocks($lines, 'experience') as $block) {
+
+        $blocks = $this->splitEntryBlocks($lines, 'experience');
+
+        foreach ($blocks as $index => $block) {
+
             $parsed = $this->parseExperienceBlock($block);
+
             if ($parsed && $this->isValidExperience($parsed)) {
                 $experiences[] = $parsed;
             }
@@ -283,7 +578,6 @@ class ResumeParser
             $blocks[] = $current;
         }
 
-        // Merge orphan bullets or date-only lines into previous block
         $merged = [];
         foreach ($blocks as $block) {
             if (!empty($merged)) {
@@ -412,7 +706,6 @@ class ResumeParser
             }
         }
 
-        // Two-line header: role then company (or reverse)
         if ((!$role || !$company) && count($headerLines) >= 2) {
             $a = $headerLines[0];
             $b = $headerLines[1];
@@ -513,7 +806,6 @@ class ResumeParser
             }
         }
 
-        // Assign remaining lines
         foreach ($contentLines as $line) {
             if ($this->isPrimarilyLocationLine($line)) {
                 continue;
@@ -587,33 +879,81 @@ class ResumeParser
         if (preg_match('/^(.+?)\s+@\s+(.+)$/i', $line, $m)) {
             $left = trim($m[1]);
             $right = trim($m[2]);
+
+            $right = $this->removeDateFromText($right);
+
             if ($this->isPrimarilyDateLine($left)) {
                 return ['role' => null, 'company' => null];
             }
+
             if ($this->isPrimarilyLocationLine($right)) {
                 return ['role' => $left, 'company' => null];
             }
 
-            return ['role' => $left, 'company' => $right];
+            return [
+                'role' => $left,
+                'company' => $right,
+            ];
         }
 
         foreach ([' at ', ' @ ', ' | '] as $sep) {
             if (str_contains($line, $sep)) {
+
                 [$role, $company] = array_map('trim', explode($sep, $line, 2));
 
-                return ['role' => $role, 'company' => $company];
+                $company = $this->removeDateFromText($company);
+
+                return [
+                    'role' => $role,
+                    'company' => $company,
+                ];
             }
         }
 
-        if (preg_match('/^(.+?)\s*[-–—]\s*(.+)$/', $line, $m) && !$this->isPrimarilyDateLine($line)) {
+        if (
+            preg_match('/^(.+?)\s*[-–—]\s*(.+)$/', $line, $m)
+            && !$this->isPrimarilyDateLine($line)
+        ) {
             $left = trim($m[1]);
             $right = trim($m[2]);
+
+            $right = $this->removeDateFromText($right);
+
             if (!$this->hasDateRange($right) && strlen($right) < 80) {
-                return ['role' => $left, 'company' => $right];
+                return [
+                    'role' => $left,
+                    'company' => $right,
+                ];
             }
         }
 
-        return ['role' => $line, 'company' => null];
+        return [
+            'role' => $line,
+            'company' => null,
+        ];
+    }
+
+    private function removeDateFromText(string $text): string
+    {
+        $text = preg_replace(
+            '/(\d{1,2})\/(\d{4})\s*[-–—]\s*(?:(\d{1,2})\/(\d{4})|(present|current))/i',
+            '',
+            $text
+        );
+
+        $text = preg_replace(
+            '/((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{4})\s*[-–—]\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{4}|present|current)/i',
+            '',
+            $text
+        );
+
+        $text = preg_replace(
+            '/\b((?:19|20)\d{2})\b\s*[-–—]\s*\b((?:19|20)\d{2}|present|current)\b/i',
+            '',
+            $text
+        );
+
+        return trim($text, " ,-|–—");
     }
 
     private function parseDateLine(string $line): array
@@ -635,7 +975,6 @@ class ResumeParser
         $end = null;
         $current = (bool) preg_match('/\b(present|current|now)\b/i', $text);
 
-        // MM/YYYY - MM/YYYY or Present
         if (preg_match(
             '/(\d{1,2})\/(\d{4})\s*[-–—]\s*(?:(\d{1,2})\/(\d{4})|(present|current))/i',
             $text,
@@ -651,7 +990,6 @@ class ResumeParser
             return ['start' => $start, 'end' => $current ? null : $end, 'current' => $current];
         }
 
-        // Jan 2023 - Dec 2024 / Present
         if (preg_match(
             '/((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{4})\s*[-–—]\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{4}|present|current)/i',
             $text,
@@ -667,7 +1005,6 @@ class ResumeParser
             return ['start' => $start, 'end' => $current ? null : $end, 'current' => $current];
         }
 
-        // 2012 – 2016 or 2012 - Present
         if (preg_match('/\b((?:19|20)\d{2})\b\s*[-–—]\s*\b((?:19|20)\d{2}|present|current)\b/i', $text, $m)) {
             $start = $m[1] . '-01-01';
             if (preg_match('/present|current/i', $m[2])) {
@@ -747,7 +1084,6 @@ class ResumeParser
             return true;
         }
 
-        // Line is mostly years/dates
         $withoutDates = preg_replace('/\b((?:19|20)\d{2}|present|current|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b\.?/i', '', $stripped) ?? '';
         $withoutDates = preg_replace('/[\/\-\–—,\s@]/', '', $withoutDates) ?? '';
 

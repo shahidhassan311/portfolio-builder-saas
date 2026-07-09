@@ -33,12 +33,13 @@
             --shadow-lg: 0 10px 30px rgba(102, 126, 234, 0.2);
             --shadow-xl: 0 20px 50px rgba(102, 126, 234, 0.25);
             --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.4);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -49,10 +50,10 @@
             overflow-x: hidden;
         }
 
-        a { 
-            color: inherit; 
-            text-decoration: none; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition);
         }
 
         .container {
@@ -61,11 +62,11 @@
             padding: 0 2rem;
         }
 
-        section { 
-            padding: 6rem 0; 
+        section {
+            padding: 6rem 0;
         }
 
-        /******** NAVIGATION ********/
+        /* ─── NAVIGATION ─── */
         .nav {
             position: fixed;
             top: 0;
@@ -76,7 +77,7 @@
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(102, 126, 234, 0.1);
             box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .nav.scrolled {
@@ -86,10 +87,12 @@
         .nav-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1.3rem 2rem;
+            padding: 1rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .nav-logo {
@@ -103,6 +106,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
+            flex-shrink: 0;
         }
 
         .nav-logo-mark {
@@ -117,7 +121,8 @@
             justify-content: center;
             box-shadow: var(--shadow-glow);
             font-size: 1.2rem;
-            transition: transform 0.3s ease;
+            transition: var(--transition);
+            flex-shrink: 0;
         }
 
         .nav-logo:hover .nav-logo-mark {
@@ -127,15 +132,17 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2.5rem;
-            font-size: 0.95rem;
+            gap: 1.8rem;
+            font-size: 0.9rem;
             font-weight: 500;
+            flex-wrap: wrap;
         }
 
         .nav-link {
             color: var(--gray-700);
             position: relative;
             padding: 0.5rem 0;
+            white-space: nowrap;
         }
 
         .nav-link::after {
@@ -146,7 +153,7 @@
             width: 0;
             height: 3px;
             background: var(--primary-gradient);
-            transition: width 0.3s ease;
+            transition: var(--transition);
             border-radius: 2px;
         }
 
@@ -161,14 +168,15 @@
         }
 
         .nav-cta {
-            padding: 0.75rem 1.8rem;
+            padding: 0.6rem 1.5rem;
             border-radius: 12px;
             background: var(--primary-gradient);
             color: var(--white);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            white-space: nowrap;
         }
 
         .nav-cta:hover {
@@ -176,12 +184,63 @@
             box-shadow: var(--shadow-xl);
         }
 
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .nav-inner { padding: 1rem 1.5rem; }
+        @media (max-width: 992px) {
+            .nav-links {
+                gap: 1.2rem;
+                font-size: 0.85rem;
+            }
         }
 
-        /******** HERO SECTION ********/
+        @media (max-width: 768px) {
+            .nav-inner {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0.8rem 1.5rem;
+                gap: 0.8rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 0.8rem 1rem;
+                font-size: 0.8rem;
+                padding-top: 0.3rem;
+                border-top: 1px solid rgba(102, 126, 234, 0.1);
+            }
+
+            .nav-link {
+                padding: 0.3rem 0;
+            }
+
+            .nav-cta {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 0.5rem 0.7rem;
+                font-size: 0.7rem;
+                flex-wrap: wrap;
+            }
+
+            .nav-cta {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.7rem;
+            }
+
+            .nav-logo {
+                font-size: 1rem;
+            }
+
+            .nav-logo-mark {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ─── HERO SECTION ─── */
         .hero {
             padding-top: 9rem;
             padding-bottom: 7rem;
@@ -229,8 +288,8 @@
         }
 
         @media (max-width: 968px) {
-            .hero-inner { 
-                grid-template-columns: 1fr; 
+            .hero-inner {
+                grid-template-columns: 1fr;
                 gap: 3rem;
                 text-align: center;
             }
@@ -300,6 +359,10 @@
             flex-wrap: wrap;
         }
 
+        @media (max-width: 968px) {
+            .hero-actions { justify-content: center; }
+        }
+
         .btn-primary {
             padding: 1rem 2rem;
             border-radius: 12px;
@@ -308,7 +371,7 @@
             font-weight: 600;
             font-size: 1rem;
             box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -327,7 +390,7 @@
             font-weight: 600;
             font-size: 1rem;
             background: transparent;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -345,6 +408,10 @@
             gap: 2rem;
             margin-top: 2rem;
             flex-wrap: wrap;
+        }
+
+        @media (max-width: 968px) {
+            .hero-meta { justify-content: center; }
         }
 
         .hero-meta-item {
@@ -379,6 +446,12 @@
             border: 1px solid rgba(102, 126, 234, 0.1);
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .hero-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
         }
 
         .hero-card::before {
@@ -445,11 +518,7 @@
             border-radius: 2px;
         }
 
-        /******** ABOUT SECTION ********/
-        .about {
-            background: var(--white);
-        }
-
+        /* ─── SECTION HEADER ─── */
         .section-header {
             text-align: center;
             margin-bottom: 4rem;
@@ -480,6 +549,11 @@
             color: var(--gray-600);
             max-width: 600px;
             margin: 0 auto;
+        }
+
+        /* ─── ABOUT SECTION ─── */
+        .about {
+            background: var(--white);
         }
 
         .about-content {
@@ -517,6 +591,12 @@
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
             border-radius: 16px;
             border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-number {
@@ -535,7 +615,7 @@
             font-weight: 500;
         }
 
-        /******** EXPERIENCE SECTION ********/
+        /* ─── EXPERIENCE SECTION ─── */
         .experience {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
@@ -573,6 +653,12 @@
             background: var(--primary-gradient);
             border: 3px solid var(--white);
             box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover::before {
+            transform: scale(1.2);
+            box-shadow: var(--shadow-glow);
         }
 
         .timeline-header {
@@ -611,7 +697,7 @@
             margin-top: 0.5rem;
         }
 
-        /******** SKILLS SECTION ********/
+        /* ─── SKILLS SECTION ─── */
         .skills {
             background: var(--white);
         }
@@ -627,7 +713,8 @@
             padding: 2rem;
             border-radius: 16px;
             border: 1px solid rgba(102, 126, 234, 0.1);
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            text-align: center;
         }
 
         .skill-card:hover {
@@ -649,7 +736,220 @@
             font-weight: 600;
         }
 
-        /******** PROJECTS SECTION ********/
+        /* ─── CERTIFICATIONS ─── */
+        .certifications {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cert-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: var(--transition);
+        }
+
+        .cert-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple-primary);
+        }
+
+        .cert-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .cert-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .cert-info { flex: 1; }
+        .cert-title { font-weight: 700; font-size: 1rem; }
+        .cert-org { font-size: 0.9rem; color: var(--gray-600); }
+        .cert-date { font-size: 0.8rem; color: var(--gray-600); }
+        .cert-link { font-size: 0.85rem; color: var(--purple-primary); font-weight: 600; }
+
+        /* ─── SERVICES ─── */
+        .services {
+            background: var(--white);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .services-grid { grid-template-columns: 1fr; }
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple-primary);
+        }
+
+        .service-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .service-title { font-weight: 700; font-size: 1.2rem; }
+        .service-desc { font-size: 0.95rem; color: var(--gray-600); margin-top: 0.5rem; }
+
+        /* ─── ACHIEVEMENTS ─── */
+        .achievements {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .achievement-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-item:hover {
+            transform: translateX(6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--purple-primary);
+        }
+
+        .achievement-icon { font-size: 2.2rem; flex-shrink: 0; }
+        .achievement-title { font-weight: 700; font-size: 1.05rem; }
+        .achievement-org { font-size: 0.9rem; color: var(--gray-600); }
+        .achievement-desc { font-size: 0.95rem; color: var(--gray-700); margin-top: 0.25rem; }
+        .achievement-date { font-size: 0.8rem; color: var(--gray-600); }
+
+        /* ─── VOLUNTEER ─── */
+        .volunteer {
+            background: var(--white);
+        }
+
+        .volunteer-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .volunteer-item:hover {
+            transform: translateX(6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--purple-primary);
+        }
+
+        .volunteer-org { font-weight: 700; font-size: 1.1rem; }
+        .volunteer-role { font-size: 0.95rem; color: var(--gray-600); }
+        .volunteer-location { font-size: 0.9rem; color: var(--gray-600); }
+        .volunteer-date { font-size: 0.8rem; color: var(--gray-600); margin-top: 0.25rem; }
+
+        /* ─── TESTIMONIALS ─── */
+        .testimonials {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-grid { grid-template-columns: 1fr; }
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple-primary);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--gray-700);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .testimonial-author { font-weight: 700; font-size: 1.05rem; }
+        .testimonial-role { font-size: 0.9rem; color: var(--gray-600); }
+        .testimonial-rating { color: #fbbf24; font-size: 1.2rem; margin-top: 0.5rem; }
+
+        /* ─── GALLERY ─── */
+        .gallery {
+            background: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            aspect-ratio: 1;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple-primary);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ─── PROJECTS SECTION ─── */
         .projects {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
@@ -671,13 +971,14 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
         .project-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
+            border-color: var(--purple-primary);
         }
 
         .project-image {
@@ -712,13 +1013,43 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            transition: var(--transition);
         }
 
         .project-link:hover {
             gap: 0.75rem;
+            color: var(--purple-dark);
         }
 
-        /******** CONTACT SECTION ********/
+        /* ─── GOALS ─── */
+        .goals {
+            background: var(--white);
+        }
+
+        .goals-list {
+            list-style: none;
+            display: grid;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .goal-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--purple-primary);
+            font-size: 1rem;
+            color: var(--gray-700);
+            transition: var(--transition);
+        }
+
+        .goal-item:hover {
+            transform: translateX(6px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ─── CONTACT SECTION ─── */
         .contact {
             background: var(--white);
         }
@@ -732,6 +1063,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
+            transition: var(--transition);
+        }
+
+        .contact-card:hover {
+            border-color: var(--purple-primary);
         }
 
         @media (max-width: 968px) {
@@ -766,6 +1102,14 @@
             min-width: 100px;
         }
 
+        .contact-line a {
+            color: var(--purple-primary);
+        }
+
+        .contact-line a:hover {
+            text-decoration: underline;
+        }
+
         .contact-form input,
         .contact-form textarea {
             width: 100%;
@@ -775,7 +1119,7 @@
             font-size: 1rem;
             margin-bottom: 1.25rem;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .contact-form input:focus,
@@ -801,7 +1145,7 @@
             border: none;
             cursor: pointer;
             box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .contact-form button:hover {
@@ -809,48 +1153,97 @@
             box-shadow: var(--shadow-xl);
         }
 
-        /******** FOOTER ********/
+        /* ─── FOOTER ─── */
         .footer {
             padding: 3rem 2rem;
             font-size: 0.9rem;
-            color: var(--gray-600);
-            text-align: center;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: var(--white);
+            text-align: center;
+            background: var(--dark-gradient);
         }
 
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
-        /* Scroll animations */
-        @media (prefers-reduced-motion: no-preference) {
-            .fade-in {
-                opacity: 0;
-                transform: translateY(30px);
-                transition: opacity 0.6s ease, transform 0.6s ease;
-            }
-            .fade-in.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .footer-social a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* ─── SCROLL ANIMATIONS ─── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            color: var(--gray-600);
+            padding: 2rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            border: 2px dashed rgba(102, 126, 234, 0.2);
         }
     </style>
 </head>
 <body>
 
 @php
-    $profile     = optional($user->profile);
+    // ─── VARIABLES ───
+    $profile        = optional($user->profile);
+    $experiences    = $user->experiences ?? collect();
+    $educations     = $user->educations ?? collect();
+    $projects       = $user->projects ?? collect();
+    $skills         = $user->skills ?? collect();
+    $goals          = $user->goals ?? collect();
+    $certifications = $user->certifications ?? collect();
+    $gallery        = $user->gallery ?? collect();
+    $volunteers     = $user->volunteers ?? collect();
+    $achievements   = $user->achievements ?? collect();
+    $services       = $user->services ?? collect();
+    $testimonials   = $user->testimonials ?? collect();
+
+    // ─── FLAGS ───
     $hasAbout    = $profile->about_short || $profile->about_long || $profile->about_title;
-    $hasSkills   = $user->skills->count() ?? 0;
-    $hasProjects = $user->projects->count() ?? 0;
-    $hasGoals    = $user->goals->count() ?? 0;
-    $hasExp      = method_exists($user, 'experiences') && $user->experiences->count();
-    $hasEdu      = method_exists($user, 'educations') && $user->educations->count();
-    $hasContact  = $profile->contact_email || $profile->location;
+    $hasSkills   = $skills->count() > 0;
+    $hasProjects = $projects->count() > 0;
+    $hasGoals    = $goals->count() > 0;
+    $hasCerts    = $certifications->count() > 0;
+    $hasGallery  = $gallery->count() > 0;
+    $hasServices = $services->count() > 0;
+    $hasAchievements = $achievements->count() > 0;
+    $hasVolunteers = $volunteers->count() > 0;
+    $hasTestimonials = $testimonials->count() > 0;
+    $hasExp      = $experiences->count() > 0;
+    $hasEdu      = $educations->count() > 0;
+    $hasContact  = $profile->contact_email || $profile->location || $profile->contact_phone;
     $hasSocial   = $profile->social_facebook || $profile->social_linkedin || $profile->social_github
                    || $profile->social_instagram || $profile->social_twitter;
+
+    // ─── STATS ───
+    $stats = [
+        ['number' => $projects->count(), 'label' => 'Projects'],
+        ['number' => $skills->count(), 'label' => 'Skills'],
+        ['number' => $experiences->count(), 'label' => 'Experiences'],
+        ['number' => $educations->count(), 'label' => 'Education'],
+    ];
 @endphp
 
 <header class="nav" id="navbar">
@@ -867,7 +1260,14 @@
             @if($hasAbout)<a href="#about" class="nav-link">About</a>@endif
             @if($hasExp || $hasEdu)<a href="#experience" class="nav-link">Experience</a>@endif
             @if($hasSkills)<a href="#skills" class="nav-link">Skills</a>@endif
+            @if($hasCerts)<a href="#certifications" class="nav-link">Certifications</a>@endif
             @if($hasProjects)<a href="#projects" class="nav-link">Projects</a>@endif
+            @if($hasServices)<a href="#services" class="nav-link">Services</a>@endif
+            @if($hasAchievements)<a href="#achievements" class="nav-link">Achievements</a>@endif
+            @if($hasVolunteers)<a href="#volunteer" class="nav-link">Volunteer</a>@endif
+            @if($hasTestimonials)<a href="#testimonials" class="nav-link">Testimonials</a>@endif
+            @if($hasGallery)<a href="#gallery" class="nav-link">Gallery</a>@endif
+            @if($hasGoals)<a href="#goals" class="nav-link">Goals</a>@endif
             @if($hasContact)
                 <a href="#contact" class="nav-cta">Contact</a>
             @endif
@@ -876,12 +1276,12 @@
 </header>
 
 <main>
-    <!-- HERO -->
+    <!-- ─── HERO ─── -->
     <section id="hero" class="hero">
         <div class="container">
             <div class="hero-inner">
                 <div class="hero-left">
-                    <div class="hero-eyebrow">Welcome to My Portfolio</div>
+                    <div class="hero-eyebrow">✨ Welcome to My Portfolio</div>
                     <h1 class="hero-name">
                         I'm <span class="accent">{{ $user->name }}</span>
                     </h1>
@@ -901,11 +1301,16 @@
                             </a>
                         @endif
 
-                        {{-- CV / PDF BUTTON --}}
                         <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}"
                            class="btn-outline" target="_blank">
                             📄 Download CV
                         </a>
+
+                        @if($profile->live_link)
+                            <a href="{{ $profile->live_link }}" target="_blank" class="btn-outline">
+                                🌐 Live Demo
+                            </a>
+                        @endif
                     </div>
 
                     <div class="hero-meta">
@@ -917,6 +1322,11 @@
                         @if($profile->contact_email)
                             <div class="hero-meta-item">
                                 <span>✉️</span><span>{{ $profile->contact_email }}</span>
+                            </div>
+                        @endif
+                        @if($profile->contact_phone)
+                            <div class="hero-meta-item">
+                                <span>📱</span><span>{{ $profile->contact_phone }}</span>
                             </div>
                         @endif
                     </div>
@@ -944,13 +1354,19 @@
                         @if($hasSocial)
                             <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                                 @if($profile->social_linkedin)
-                                    <a href="{{ $profile->social_linkedin }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem;">🔗</a>
+                                    <a href="{{ $profile->social_linkedin }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🔗</a>
                                 @endif
                                 @if($profile->social_github)
-                                    <a href="{{ $profile->social_github }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem;">💻</a>
+                                    <a href="{{ $profile->social_github }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">💻</a>
                                 @endif
                                 @if($profile->social_twitter)
-                                    <a href="{{ $profile->social_twitter }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem;">🐦</a>
+                                    <a href="{{ $profile->social_twitter }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🐦</a>
+                                @endif
+                                @if($profile->social_instagram)
+                                    <a href="{{ $profile->social_instagram }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">📸</a>
+                                @endif
+                                @if($profile->social_facebook)
+                                    <a href="{{ $profile->social_facebook }}" target="_blank" style="color: var(--purple-primary); font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">📘</a>
                                 @endif
                             </div>
                         @endif
@@ -960,7 +1376,7 @@
         </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ─── ABOUT ─── -->
     @if($hasAbout)
         <section id="about" class="about fade-in">
             <div class="container">
@@ -981,37 +1397,21 @@
                     </div>
 
                     <div class="about-stats">
-                        @if($hasProjects)
-                            <div class="stat-item">
-                                <div class="stat-number">{{ $user->projects->count() }}+</div>
-                                <div class="stat-label">Projects</div>
-                            </div>
-                        @endif
-                        @if($hasSkills)
-                            <div class="stat-item">
-                                <div class="stat-number">{{ $user->skills->count() }}+</div>
-                                <div class="stat-label">Skills</div>
-                            </div>
-                        @endif
-                        @if($hasExp)
-                            <div class="stat-item">
-                                <div class="stat-number">{{ $user->experiences->count() }}+</div>
-                                <div class="stat-label">Experiences</div>
-                            </div>
-                        @endif
-                        @if($hasEdu)
-                            <div class="stat-item">
-                                <div class="stat-number">{{ $user->educations->count() }}+</div>
-                                <div class="stat-label">Education</div>
-                            </div>
-                        @endif
+                        @foreach($stats as $stat)
+                            @if($stat['number'] > 0)
+                                <div class="stat-item">
+                                    <div class="stat-number">{{ $stat['number'] }}+</div>
+                                    <div class="stat-label">{{ $stat['label'] }}</div>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
         </section>
     @endif
 
-    <!-- EXPERIENCE & EDUCATION -->
+    <!-- ─── EXPERIENCE & EDUCATION ─── -->
     @if($hasExp || $hasEdu)
         <section id="experience" class="experience fade-in">
             <div class="container">
@@ -1023,15 +1423,19 @@
 
                 <div class="timeline">
                     @if($hasExp)
-                        @foreach($user->experiences as $exp)
+                        @foreach($experiences->sortByDesc('start_date') as $exp)
                             <div class="timeline-item">
                                 <div class="timeline-header">
                                     <div>
-                                        <div class="timeline-title">{{ $exp->title }}</div>
+                                        <div class="timeline-title">{{ $exp->role_title ?? $exp->title }}</div>
                                         <div class="timeline-company">{{ $exp->company }}</div>
                                     </div>
                                     <div class="timeline-date">
-                                        {{ $exp->start_date }} – {{ $exp->end_date ?? 'Present' }}
+                                        @if($exp->start_date)
+                                            {{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }}
+                                            –
+                                            {{ $exp->is_current ? 'Present' : ($exp->end_date ? \Carbon\Carbon::parse($exp->end_date)->format('M Y') : '') }}
+                                        @endif
                                     </div>
                                 </div>
                                 @if($exp->description)
@@ -1042,7 +1446,7 @@
                     @endif
 
                     @if($hasEdu)
-                        @foreach($user->educations as $edu)
+                        @foreach($educations->sortByDesc('start_date') as $edu)
                             <div class="timeline-item">
                                 <div class="timeline-header">
                                     <div>
@@ -1050,7 +1454,11 @@
                                         <div class="timeline-company">{{ $edu->institution }}</div>
                                     </div>
                                     <div class="timeline-date">
-                                        {{ $edu->start_year }} – {{ $edu->end_year ?? 'Present' }}
+                                        @if($edu->start_date)
+                                            {{ \Carbon\Carbon::parse($edu->start_date)->format('Y') }}
+                                            –
+                                            {{ $edu->is_current ? 'Present' : ($edu->end_date ? \Carbon\Carbon::parse($edu->end_date)->format('Y') : '') }}
+                                        @endif
                                     </div>
                                 </div>
                                 @if($edu->description)
@@ -1064,7 +1472,7 @@
         </section>
     @endif
 
-    <!-- SKILLS -->
+    <!-- ─── SKILLS ─── -->
     @if($hasSkills)
         <section id="skills" class="skills fade-in">
             <div class="container">
@@ -1075,7 +1483,7 @@
                 </div>
 
                 <div class="skills-grid">
-                    @foreach($user->skills as $skill)
+                    @foreach($skills as $skill)
                         <div class="skill-card">
                             <div class="skill-name">{{ $skill->name }}</div>
                             @if($skill->level)
@@ -1088,7 +1496,69 @@
         </section>
     @endif
 
-    <!-- PROJECTS -->
+    <!-- ─── CERTIFICATIONS ─── -->
+    @if($hasCerts)
+        <section id="certifications" class="certifications fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Credentials</div>
+                    <h2 class="section-title">📜 Certifications</h2>
+                    <p class="section-subtitle">Professional certifications that validate my expertise</p>
+                </div>
+
+                <div class="cert-grid">
+                    @foreach($certifications as $cert)
+                        <div class="cert-item">
+                            @if($cert->image)
+                                <img src="{{ asset('storage/' . $cert->image) }}" alt="{{ $cert->title }}" class="cert-image">
+                            @else
+                                <div class="cert-icon">🎓</div>
+                            @endif
+                            <div class="cert-info">
+                                <div class="cert-title">{{ $cert->title }}</div>
+                                <div class="cert-org">{{ $cert->organization }}</div>
+                                @if($cert->issue_date)
+                                    <div class="cert-date">{{ \Carbon\Carbon::parse($cert->issue_date)->format('M Y') }}</div>
+                                @endif
+                                @if($cert->credential_url)
+                                    <a href="{{ $cert->credential_url }}" target="_blank" class="cert-link">Verify →</a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── SERVICES ─── -->
+    @if($hasServices)
+        <section id="services" class="services fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Offerings</div>
+                    <h2 class="section-title">💎 Services</h2>
+                    <p class="section-subtitle">How I can help bring your ideas to life</p>
+                </div>
+
+                <div class="services-grid">
+                    @foreach($services as $service)
+                        <div class="service-card">
+                            @if($service->icon)
+                                <div class="service-icon">{{ $service->icon }}</div>
+                            @endif
+                            <div class="service-title">{{ $service->title }}</div>
+                            @if($service->description)
+                                <div class="service-desc">{{ $service->description }}</div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── PROJECTS ─── -->
     @if($hasProjects)
         <section id="projects" class="projects fade-in">
             <div class="container">
@@ -1099,11 +1569,11 @@
                 </div>
 
                 <div class="projects-grid">
-                    @foreach($user->projects as $project)
+                    @foreach($projects as $project)
                         <div class="project-card">
                             @if($project->project_image)
-                                <img src="{{ asset('storage/' . $project->project_image) }}" 
-                                     alt="{{ $project->title }}" 
+                                <img src="{{ asset('storage/' . $project->project_image) }}"
+                                     alt="{{ $project->title }}"
                                      class="project-image">
                             @else
                                 <div class="project-image" style="display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 900;">
@@ -1128,7 +1598,157 @@
         </section>
     @endif
 
-    <!-- CONTACT -->
+    <!-- ─── ACHIEVEMENTS ─── -->
+    @if($hasAchievements)
+        <section id="achievements" class="achievements fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Recognition</div>
+                    <h2 class="section-title">🏆 Achievements</h2>
+                    <p class="section-subtitle">Milestones and recognition I'm proud of</p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    @foreach($achievements as $achievement)
+                        <div class="achievement-item">
+                            <div class="achievement-icon">🏆</div>
+                            <div>
+                                <div class="achievement-title">{{ $achievement->title }}</div>
+                                @if($achievement->organization)
+                                    <div class="achievement-org">{{ $achievement->organization }}</div>
+                                @endif
+                                @if($achievement->description)
+                                    <div class="achievement-desc">{{ $achievement->description }}</div>
+                                @endif
+                                @if($achievement->achievement_date)
+                                    <div class="achievement-date">{{ \Carbon\Carbon::parse($achievement->achievement_date)->format('M Y') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── VOLUNTEER ─── -->
+    @if($hasVolunteers)
+        <section id="volunteer" class="volunteer fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Community</div>
+                    <h2 class="section-title">❤️ Volunteer Work</h2>
+                    <p class="section-subtitle">Giving back to the community</p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    @foreach($volunteers as $item)
+                        <div class="volunteer-item">
+                            <div class="volunteer-org">{{ $item->organization_name }}</div>
+                            <div class="volunteer-role">{{ $item->role }}</div>
+                            @if($item->location)
+                                <div class="volunteer-location">📍 {{ $item->location }}</div>
+                            @endif
+                            @if($item->description)
+                                <div style="font-size: 0.95rem; color: var(--gray-700); margin-top: 0.5rem;">{{ $item->description }}</div>
+                            @endif
+                            <div class="volunteer-date">
+                                {{ optional($item->start_date)->format('M Y') }}
+                                @if($item->end_date)
+                                    – {{ \Carbon\Carbon::parse($item->end_date)->format('M Y') }}
+                                @elseif($item->currently_volunteering)
+                                    – Present
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── TESTIMONIALS ─── -->
+    @if($hasTestimonials)
+        <section id="testimonials" class="testimonials fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Feedback</div>
+                    <h2 class="section-title">💬 Testimonials</h2>
+                    <p class="section-subtitle">What people say about working with me</p>
+                </div>
+
+                <div class="testimonial-grid">
+                    @foreach($testimonials as $testimonial)
+                        <div class="testimonial-card">
+                            @if($testimonial->message)
+                                <div class="testimonial-text">"{{ $testimonial->message }}"</div>
+                            @endif
+                            <div>
+                                <div class="testimonial-author">{{ $testimonial->name }}</div>
+                                @if($testimonial->role || $testimonial->company)
+                                    <div class="testimonial-role">
+                                        {{ $testimonial->role }}
+                                        @if($testimonial->company) • {{ $testimonial->company }} @endif
+                                    </div>
+                                @endif
+                                @if($testimonial->rating)
+                                    <div class="testimonial-rating">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            {!! $i <= $testimonial->rating ? '★' : '☆' !!}
+                                        @endfor
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── GALLERY ─── -->
+    @if($hasGallery)
+        <section id="gallery" class="gallery fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Visuals</div>
+                    <h2 class="section-title">📸 Gallery</h2>
+                    <p class="section-subtitle">A glimpse into my creative world</p>
+                </div>
+
+                <div class="gallery-grid">
+                    @foreach($gallery as $item)
+                        <div class="gallery-item">
+                            @if($item->image)
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title ?? 'Gallery' }}" loading="lazy">
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── GOALS ─── -->
+    @if($hasGoals)
+        <section id="goals" class="goals fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-eyebrow">Forward</div>
+                    <h2 class="section-title">🎯 Goals</h2>
+                    <p class="section-subtitle">What I'm working toward next</p>
+                </div>
+
+                <ul class="goals-list">
+                    @foreach($goals as $goal)
+                        <li class="goal-item">{{ $goal->goal_text }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </section>
+    @endif
+
+    <!-- ─── CONTACT ─── -->
     @if($hasContact)
         <section id="contact" class="contact fade-in">
             <div class="container">
@@ -1144,7 +1764,7 @@
                         @if($profile->contact_email)
                             <div class="contact-line">
                                 <strong>Email:</strong>
-                                <span>{{ $profile->contact_email }}</span>
+                                <a href="mailto:{{ $profile->contact_email }}">{{ $profile->contact_email }}</a>
                             </div>
                         @endif
                         @if($profile->contact_phone)
@@ -1159,18 +1779,24 @@
                                 <span>{{ $profile->location }}</span>
                             </div>
                         @endif
+                        @if($profile->live_link)
+                            <div class="contact-line">
+                                <strong>Website:</strong>
+                                <a href="{{ $profile->live_link }}" target="_blank">{{ $profile->live_link }}</a>
+                            </div>
+                        @endif
                         @if($hasSocial)
                             <div style="margin-top: 2rem;">
                                 @if($profile->social_linkedin)
                                     <div class="contact-line">
                                         <strong>LinkedIn:</strong>
-                                        <a href="{{ $profile->social_linkedin }}" target="_blank">{{ $profile->social_linkedin }}</a>
+                                        <a href="{{ $profile->social_linkedin }}" target="_blank">LinkedIn Profile</a>
                                     </div>
                                 @endif
                                 @if($profile->social_github)
                                     <div class="contact-line">
                                         <strong>GitHub:</strong>
-                                        <a href="{{ $profile->social_github }}" target="_blank">{{ $profile->social_github }}</a>
+                                        <a href="{{ $profile->social_github }}" target="_blank">GitHub Profile</a>
                                     </div>
                                 @endif
                             </div>
@@ -1179,11 +1805,11 @@
 
                     <div class="contact-form">
                         <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Send a Message</h3>
-                        <form>
+                        <form onsubmit="return false;">
                             <input type="text" placeholder="Your Name" required>
                             <input type="email" placeholder="Your Email" required>
                             <textarea placeholder="Your Message" required></textarea>
-                            <button type="submit">Send Message</button>
+                            <button type="submit">Send Message →</button>
                         </form>
                     </div>
                 </div>
@@ -1192,14 +1818,34 @@
     @endif
 </main>
 
+<!-- ─── FOOTER ─── -->
 <footer class="footer">
     <div class="container">
-        <p>&copy; {{ date('Y') }} {{ $user->name }}. All rights reserved.</p>
+        @if($hasSocial)
+            <div class="footer-social">
+                @if($profile->social_github)
+                    <a href="{{ $profile->social_github }}" target="_blank">GitHub</a>
+                @endif
+                @if($profile->social_linkedin)
+                    <a href="{{ $profile->social_linkedin }}" target="_blank">LinkedIn</a>
+                @endif
+                @if($profile->social_twitter)
+                    <a href="{{ $profile->social_twitter }}" target="_blank">Twitter</a>
+                @endif
+                @if($profile->social_instagram)
+                    <a href="{{ $profile->social_instagram }}" target="_blank">Instagram</a>
+                @endif
+                @if($profile->social_facebook)
+                    <a href="{{ $profile->social_facebook }}" target="_blank">Facebook</a>
+                @endif
+            </div>
+        @endif
+        <p>&copy; {{ date('Y') }} {{ $user->name }}. All rights reserved. Built with ❤️</p>
     </div>
 </footer>
 
 <script>
-    // Navbar scroll effect
+    // ─── NAVBAR SCROLL EFFECT ───
     window.addEventListener('scroll', function() {
         const navbar = document.getElementById('navbar');
         if (window.scrollY > 50) {
@@ -1209,7 +1855,7 @@
         }
     });
 
-    // Active nav link on scroll
+    // ─── ACTIVE NAV LINK ON SCROLL ───
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -1231,7 +1877,7 @@
         });
     });
 
-    // Fade in on scroll
+    // ─── FADE IN ON SCROLL ───
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -100px 0px'
@@ -1248,8 +1894,18 @@
     document.querySelectorAll('.fade-in').forEach(el => {
         observer.observe(el);
     });
+
+    // ─── SMOOTH SCROLL ───
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
 </script>
 
 </body>
 </html>
-

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resumeDropzone = document.getElementById('resume-dropzone');
     const resumeFileInput = document.getElementById('resume-file');
     const importUrl = @json(route('dashboard.resume.import'));
+    console.log(importUrl)
 
     function uploadResume(file) {
         if (!file) return;
