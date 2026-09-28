@@ -24,6 +24,12 @@ class User extends Authenticatable
         'password',
         'active_theme_id',
         'is_admin',
+        'plan',
+        'custom_domain',
+        'remove_branding',
+        'organization_name',
+        'email_verified_at',
+        'is_verified',
     ];
 
     /**
@@ -47,7 +53,35 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'remove_branding' => 'boolean',
         ];
+    }
+
+    public function planKey(): string
+    {
+        $plan = $this->plan ?? 'free';
+
+        return array_key_exists($plan, config('plans', [])) ? $plan : 'free';
+    }
+
+    public function planConfig(): array
+    {
+        return config('plans.' . $this->planKey(), config('plans.free'));
+    }
+
+    public function isFreePlan(): bool
+    {
+        return $this->planKey() === 'free';
+    }
+
+    public function isProPlan(): bool
+    {
+        return $this->planKey() === 'pro';
+    }
+
+    public function isTeamsPlan(): bool
+    {
+        return $this->planKey() === 'teams';
     }
 
     public function activeTheme()
@@ -75,7 +109,61 @@ class User extends Authenticatable
         return $this->hasMany(UserGoal::class)->orderBy('sort_order');
     }
 
-    public function educations() { return $this->hasMany(Education::class); }
-    public function experiences() { return $this->hasMany(Experience::class); }
+    public function educations()
+    {
+        return $this->hasMany(Education::class)->orderBy('sort_order')->orderByDesc('start_date');
+    }
 
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class)->orderBy('sort_order')->orderByDesc('start_date');
+    }
+
+
+
+
+    public function galleries()
+{
+    return $this->hasMany(Gallery::class)->orderBy('sort_order');
+}
+public function certifications()
+{
+    return $this->hasMany(Certification::class);
+}
+
+
+    public function userBlocks()
+    {
+        return $this->hasMany(UserBlock::class);
+    }
+    public function professions()
+    {
+        return $this->belongsToMany(Profession::class, 'user_profession');
+    }
+
+    public function testimonials()
+{
+    return $this->hasMany(Testimonial::class)->orderBy('sort_order');
+}
+
+public function volunteers()
+{
+    return $this->hasMany(Volunteer::class)
+        ->orderBy('sort_order');
+}
+
+public function services()
+{
+    return $this->hasMany(Service::class)->orderBy('sort_order');
+}
+public function achievements()
+{
+    return $this->hasMany(Achievement::class)
+                ->orderBy('sort_order');
+}
+
+public function themes()
+{
+    return $this->belongsToMany(Theme::class);
+}
 }

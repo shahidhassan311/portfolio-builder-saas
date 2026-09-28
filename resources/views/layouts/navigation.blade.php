@@ -1,61 +1,12 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-<style>
-    brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .brand-orb {
-        width: 38px;
-        height: 38px;
-        border-radius: 999px;
-        background:
-            conic-gradient(from 180deg, #22d3ee, #6366f1, #a855f7, #ec4899, #22d3ee);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 22px rgba(56,189,248,0.8);
-    }
-
-    .brand-orb-inner {
-        width: 28px;
-        height: 28px;
-        border-radius: inherit;
-        background: radial-gradient(circle at 30% 20%, #e5e7eb, #020617);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #e5e7eb;
-        font-size: 14px;
-        font-weight: 800;
-    }
-
-</style>
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 app-nav">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-{{--                    <a href="{{ route('dashboard') }}">--}}
-{{--                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />--}}
-{{--                    </a>--}}
-                    <div class="brand">
-                        <div class="brand-orb">
-                            <div class="brand-orb-inner">PB</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-{{--                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">--}}
-{{--                        {{ __('My Portfolio Details') }}--}}
-{{--                    </x-nav-link>--}}
-
-                    <x-nav-link :href="route('profile.edit')">
-                        {{ __('Profile Details') }}
-                    </x-nav-link>
+                    <a href="{{ url('/') }}">
+                        <x-brand-logo />
+                    </a>
                 </div>
 {{--                <x-dropdown-link :href="route('profile.edit')">--}}
 {{--                    {{ __('Profile') }}--}}
@@ -74,12 +25,13 @@
                 @endauth
 
 
-                <!-- Navigation Links -->
+                @auth
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('My Portfolio Details') }}
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard*')">
+                        {{ __('Portfolio builder') }}
                     </x-nav-link>
                 </div>
+                @endauth
 
 
                 @auth
@@ -127,6 +79,9 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -173,6 +128,9 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>

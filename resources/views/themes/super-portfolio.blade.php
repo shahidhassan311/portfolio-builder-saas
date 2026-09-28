@@ -1,1266 +1,1467 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $user->name }} – Portfolio</title>
-
-    <style>
-        :root {
-            --bg-gradient: radial-gradient(circle at top left, #4f46e5, #a855f7, #ec4899);
-            --card-bg: rgba(17, 24, 39, 0.8);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --accent: #a855f7;
-            --accent-soft: rgba(168, 85, 247, 0.2);
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.7);
-            --radius-lg: 24px;
-            --radius-md: 18px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
-            color: var(--text-main);
-            background: #020617;
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(248, 113, 113, 0.15) 0, transparent 50%),
-                radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.18) 0, transparent 55%),
-                radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.2) 0, transparent 55%);
-            min-height: 100vh;
-        }
-
-        /* Floating gradient glow behind everything */
-        .page-glow {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at top, rgba(129, 140, 248, 0.18), transparent 60%);
-            mix-blend-mode: screen;
-            opacity: 0.9;
-            pointer-events: none;
-            z-index: -2;
-        }
-
-        .noise-overlay {
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E");
-            mix-blend-mode: soft-light;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .page {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px 16px 80px;
-        }
-
-        /* ================= NAVBAR ================= */
-
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            backdrop-filter: blur(18px);
-            background: linear-gradient(to right, rgba(15,23,42,0.90), rgba(15,23,42,0.75));
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            border-radius: 999px;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 32px;
-            box-shadow: 0 15px 40px rgba(15,23,42,0.7);
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 999px;
-            border: 2px solid rgba(248, 250, 252, 0.6);
-            overflow: hidden;
-            background: radial-gradient(circle at 30% 0, #e5e7eb, #4b5563);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .nav-name {
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .nav-role {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            font-size: 14px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            position: relative;
-            padding-bottom: 4px;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(to right, #a855f7, #ec4899);
-            border-radius: 999px;
-            transition: width 0.25s ease;
-        }
-
-        .nav-links a:hover {
-            color: #e5e7eb;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: linear-gradient(to right, #6366f1, #ec4899);
-            border-radius: 999px;
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(129, 140, 248, 0.45);
-            transform: translateY(0);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 12px 32px rgba(129, 140, 248, 0.7);
-        }
-
-        .nav-cta span {
-            font-size: 18px;
-        }
-
-        /* ================= HERO ================= */
-
-        .hero {
-            display: grid;
-            grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
-            gap: 32px;
-            margin-bottom: 40px;
-        }
-
-        .hero-card {
-            background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.45), rgba(15, 23, 42, 0.95));
-            border-radius: var(--radius-lg);
-            padding: 32px 28px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            box-shadow: var(--shadow-soft);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-card::before {
-            content: "";
-            position: absolute;
-            inset: -120px;
-            background: conic-gradient(from 210deg, rgba(129, 140, 248, 0.35), transparent, rgba(244, 114, 182, 0.4), transparent);
-            opacity: 0.4;
-            mix-blend-mode: screen;
-        }
-
-        .hero-inner {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-pill-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .hero-pill {
-            font-size: 12px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            background: rgba(15, 23, 42, 0.7);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-        }
-
-        .hero-heading {
-            font-size: 34px;
-            line-height: 1.15;
-            font-weight: 800;
-            letter-spacing: 0.01em;
-            margin-bottom: 16px;
-        }
-
-        .hero-heading span {
-            background: linear-gradient(to right, #e879f9, #38bdf8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .hero-tagline {
-            font-size: 16px;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .hero-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 28px;
-            margin-bottom: 28px;
-        }
-
-        .hero-meta-item {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .hero-meta-label {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 11px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .hero-meta-value {
-            font-size: 14px;
-            color: #e5e7eb;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 999px;
-            border: none;
-            background: linear-gradient(to right, #6366f1, #ec4899);
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.6);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 16px 36px rgba(79, 70, 229, 0.9);
-        }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            background: rgba(15, 23, 42, 0.85);
-            color: #e5e7eb;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.15s ease, border-color 0.15s ease;
-        }
-
-        .btn-ghost:hover {
-            background: rgba(15, 23, 42, 1);
-            border-color: rgba(209, 213, 219, 0.9);
-        }
-
-        .hero-aside {
-            background: rgba(15, 23, 42, 0.92);
-            border-radius: var(--radius-lg);
-            padding: 24px 22px;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            box-shadow: var(--shadow-soft);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .hero-profile {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .hero-avatar-lg {
-            width: 82px;
-            height: 82px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid rgba(248, 250, 252, 0.7);
-            background: radial-gradient(circle at 20% 0, #e5e7eb, #111827);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 800;
-        }
-
-        .hero-profile-text {
-            flex: 1;
-        }
-
-        .hero-profile-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .hero-profile-role {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .hero-profile-location {
-            font-size: 12px;
-            color: #9ca3af;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 16px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .hero-stat {
-            flex: 1;
-            min-width: 110px;
-            padding: 10px 12px;
-            border-radius: 16px;
-            background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.2), rgba(15, 23, 42, 0.95));
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            font-size: 12px;
-        }
-
-        .hero-stat-number {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .hero-stat-label {
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .hero-social {
-            border-radius: 18px;
-            padding: 14px 12px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px dashed rgba(148, 163, 184, 0.6);
-            font-size: 13px;
-        }
-
-        .hero-social-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #6b7280;
-            margin-bottom: 8px;
-        }
-
-        .hero-social-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .hero-social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px 11px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            color: #e5e7eb;
-            font-size: 12px;
-            text-decoration: none;
-            gap: 6px;
-        }
-
-        .hero-social-links a span.emoji {
-            font-size: 14px;
-        }
-
-        .hero-social-links a:hover {
-            border-color: rgba(249, 250, 251, 0.9);
-            background: rgba(15, 23, 42, 1);
-        }
-
-        /* ================= SECTIONS ================= */
-
-        .section {
-            margin-top: 40px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .section-kicker {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: #9ca3af;
-            margin-bottom: 4px;
-        }
-
-        .section-title {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* Cards grid (skills, projects) */
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .grid-1 {
-            grid-template-columns: minmax(0, 1fr);
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--card-border);
-            padding: 18px 16px;
-            box-shadow: 0 16px 40px rgba(15,23,42,0.75);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: -40px;
-            background: radial-gradient(circle at top, rgba(129, 140, 248, 0.18), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.18s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 24px 60px rgba(15,23,42,0.95);
-            border-color: rgba(209, 213, 219, 0.9);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        /* Skills */
-
-        .skill-title {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .skill-level {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .skill-bar {
-            position: relative;
-            height: 8px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.9);
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-
-        .skill-bar-fill {
-            height: 100%;
-            border-radius: inherit;
-            background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
-            transform-origin: left;
-            transform: scaleX(1);
-        }
-
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        .skill-tag {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            color: var(--text-muted);
-        }
-
-        /* Projects */
-
-        .project-card {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .project-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .project-description {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .project-meta {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-top: 4px;
-        }
-
-        .project-link {
-            margin-top: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: #e5e7eb;
-            text-decoration: none;
-        }
-
-        .project-link span {
-            font-size: 16px;
-            transform: translateY(1px);
-        }
-
-        .project-image-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: 11px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.7);
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        /* Timeline (experience / education) */
-
-        .timeline {
-            position: relative;
-            padding-left: 18px;
-        }
-
-        .timeline::before {
-            content: "";
-            position: absolute;
-            left: 6px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: linear-gradient(to bottom, rgba(148, 163, 184, 0.6), transparent 80%);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 12px;
-            margin-bottom: 18px;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -1px;
-            top: 4px;
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: #0f172a;
-            border: 2px solid #a855f7;
-            box-shadow: 0 0 0 5px rgba(168, 85, 247, 0.15);
-        }
-
-        .timeline-role {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .timeline-company {
-            font-size: 13px;
-            color: #e5e7eb;
-        }
-
-        .timeline-date {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 2px;
-        }
-
-        .timeline-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        /* Goals */
-
-        .goals-list {
-            list-style: none;
-            display: grid;
-            gap: 10px;
-        }
-
-        .goal-item {
-            font-size: 13px;
-            color: #e5e7eb;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: rgba(15,23,42,0.95);
-            border: 1px solid rgba(148,163,184,0.7);
-            display: flex;
-            gap: 8px;
-        }
-
-        .goal-item span {
-            margin-top: 2px;
-        }
-
-        /* Contact / Footer */
-
-        .contact-card {
-            margin-top: 24px;
-            display: grid;
-            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-            gap: 18px;
-        }
-
-        .contact-main {
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--card-border);
-            padding: 18px 16px;
-            box-shadow: var(--shadow-soft);
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .contact-main p + p {
-            margin-top: 10px;
-        }
-
-        .contact-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 13px;
-        }
-
-        .contact-pill a {
-            color: #e5e7eb;
-            text-decoration: none;
-        }
-
-        .contact-side {
-            font-size: 12px;
-            color: #9ca3af;
-            padding: 12px 10px;
-        }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 11px;
-            color: #6b7280;
-        }
-
-        /* ================= RESPONSIVE ================= */
-
-        @media (max-width: 960px) {
-            .hero {
-                grid-template-columns: minmax(0, 1fr);
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        @include('themes.partials.seo-meta')
+        <link rel="icon" type="image/png" href="{{ asset(config('branding.logo')) }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg: #08080a;
+                --bg-elevated: #111113;
+                --surface: #161618;
+                --surface-hover: #1c1c1f;
+                --border: rgba(255, 255, 255, 0.08);
+                --border-strong: rgba(255, 255, 255, 0.14);
+                --text: #f4f4f5;
+                --text-muted: #a1a1aa;
+                --text-dim: #71717a;
+                --gold: #d4b896;
+                --gold-soft: rgba(212, 184, 150, 0.15);
+                --accent: #a78bfa;
+                --accent-soft: rgba(167, 139, 250, 0.12);
+                --radius: 14px;
+                --radius-lg: 22px;
+                --radius-xl: 28px;
+                --shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+                --shadow-hover: 0 32px 64px rgba(212, 184, 150, 0.08);
+                --font-display: "Cormorant Garamond", Georgia, serif;
+                --font-body: "Outfit", system-ui, sans-serif;
+                --max: 1120px;
+                --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            .contact-card {
-                grid-template-columns: minmax(0, 1fr);
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            html { scroll-behavior: smooth; }
+
+            body {
+                font-family: var(--font-body);
+                font-size: 16px;
+                line-height: 1.65;
+                color: var(--text);
+                background: var(--bg);
+                background-image:
+                    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(167, 139, 250, 0.08), transparent),
+                    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(212, 184, 150, 0.06), transparent);
+                min-height: 100vh;
+                -webkit-font-smoothing: antialiased;
             }
 
-            .grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
+            a { color: inherit; text-decoration: none; }
 
-        @media (max-width: 720px) {
+            .preview-ribbon {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                padding: 10px 20px;
+                text-align: center;
+                font-size: 13px;
+                font-weight: 500;
+                background: linear-gradient(90deg, rgba(212, 184, 150, 0.2), rgba(167, 139, 250, 0.2));
+                border-bottom: 1px solid var(--border);
+                backdrop-filter: blur(12px);
+            }
+
+            .preview-ribbon a {
+                color: var(--gold);
+                font-weight: 600;
+                margin-left: 8px;
+            }
+
+            body.has-preview { padding-top: 44px; }
+
+            .page {
+                max-width: var(--max);
+                margin: 0 auto;
+                padding: 32px 24px 80px;
+            }
+
+            /* ─── NAV ─── */
             .nav {
-                flex-wrap: wrap;
-                gap: 10px;
-                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 24px;
+                padding: 16px 0 40px;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 48px;
+            }
+
+            .nav-brand {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .nav-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                overflow: hidden;
+                background: var(--surface);
+                border: 1px solid var(--border-strong);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: var(--font-display);
+                font-size: 22px;
+                font-weight: 700;
+                color: var(--gold);
+            }
+
+            .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+            .nav-name {
+                font-family: var(--font-display);
+                font-size: 1.35rem;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+            }
+
+            .nav-role {
+                font-size: 13px;
+                color: var(--text-muted);
+                font-weight: 400;
             }
 
             .nav-links {
-                display: none;
+                display: flex;
+                align-items: center;
+                gap: 28px;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .nav-links a {
+                color: var(--text-muted);
+                transition: var(--transition);
+                position: relative;
+            }
+
+            .nav-links a::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 0;
+                height: 1px;
+                background: var(--gold);
+                transition: var(--transition);
+            }
+
+            .nav-links a:hover {
+                color: var(--gold);
+            }
+
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            .nav-cta {
+                padding: 10px 22px;
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 600;
+                background: var(--gold);
+                color: #1a1510;
+                transition: var(--transition);
+            }
+
+            .nav-cta:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 8px 24px rgba(212, 184, 150, 0.35);
+            }
+
+            @media (max-width: 720px) {
+                .nav-links { display: none; }
+            }
+
+            /* ─── HERO ─── */
+            .hero {
+                display: grid;
+                grid-template-columns: 1.2fr 0.8fr;
+                gap: 40px;
+                align-items: start;
+                margin-bottom: 72px;
+            }
+
+            @media (max-width: 960px) {
+                .hero { grid-template-columns: 1fr; }
+            }
+
+            .hero-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--gold);
+                margin-bottom: 20px;
+            }
+
+            .hero-eyebrow::before {
+                content: "";
+                width: 32px;
+                height: 1px;
+                background: var(--gold);
             }
 
             .hero-heading {
-                font-size: 26px;
+                font-family: var(--font-display);
+                font-size: clamp(2.5rem, 5vw, 3.75rem);
+                font-weight: 600;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+                margin-bottom: 20px;
             }
 
-            .page {
-                padding-inline: 14px;
+            .hero-heading em {
+                font-style: italic;
+                color: var(--gold);
+            }
+
+            .hero-lead {
+                font-size: 1.0625rem;
+                color: var(--text-muted);
+                max-width: 520px;
+                margin-bottom: 32px;
+                font-weight: 300;
+            }
+
+            .hero-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .btn-primary {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 14px 26px;
+                border-radius: 999px;
+                background: var(--gold);
+                color: #1a1510;
+                font-size: 14px;
+                font-weight: 600;
+                transition: var(--transition);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(212, 184, 150, 0.3);
+            }
+
+            .btn-ghost {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 13px 24px;
+                border-radius: 999px;
+                border: 1px solid var(--border-strong);
+                color: var(--text);
+                font-size: 14px;
+                font-weight: 500;
+                transition: var(--transition);
+            }
+
+            .btn-ghost:hover {
+                border-color: rgba(212, 184, 150, 0.4);
+                background: var(--surface);
+                transform: translateY(-2px);
+            }
+
+            .hero-panel {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-xl);
+                padding: 28px;
+                box-shadow: var(--shadow);
+                transition: var(--transition);
+            }
+
+            .hero-panel:hover {
+                border-color: rgba(212, 184, 150, 0.2);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .hero-profile {
+                display: flex;
+                gap: 18px;
+                align-items: center;
+                margin-bottom: 24px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero-avatar-lg {
+                width: 88px;
+                height: 88px;
+                border-radius: 20px;
+                overflow: hidden;
+                border: 1px solid var(--border-strong);
+                background: var(--bg-elevated);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: var(--font-display);
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--gold);
+            }
+
+            .hero-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+
+            .hero-profile-name {
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+            .hero-profile-role {
+                font-size: 14px;
+                color: var(--text-muted);
+                margin-top: 4px;
+            }
+
+            .hero-stats {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+
+            .hero-stat {
+                padding: 16px;
+                border-radius: var(--radius);
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                transition: var(--transition);
+            }
+
+            .hero-stat:hover {
+                border-color: var(--gold-soft);
+            }
+
+            .hero-stat-num {
+                font-family: var(--font-display);
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--gold);
+            }
+
+            .hero-stat-label {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--text-dim);
+                margin-top: 4px;
+            }
+
+            .hero-social-title {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--text-dim);
+                margin-bottom: 12px;
+            }
+
+            .hero-social-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .hero-social-links a {
+                padding: 8px 14px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 500;
+                border: 1px solid var(--border);
+                color: var(--text-muted);
+                transition: var(--transition);
+            }
+
+            .hero-social-links a:hover {
+                border-color: var(--gold);
+                color: var(--gold);
+                background: var(--gold-soft);
+                transform: translateY(-2px);
+            }
+
+            /* ─── SECTIONS ─── */
+            .section { margin-bottom: 64px; }
+
+            .section-head {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 24px;
+                margin-bottom: 28px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            @media (max-width: 720px) {
+                .section-head { flex-direction: column; align-items: flex-start; }
+                .section-sub { text-align: left; }
+            }
+
+            .section-kicker {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--gold);
+                margin-bottom: 8px;
+            }
+
+            .section-title {
+                font-family: var(--font-display);
+                font-size: 2rem;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+            .section-sub {
+                font-size: 14px;
+                color: var(--text-muted);
+                max-width: 280px;
+                text-align: right;
+                line-height: 1.5;
+            }
+
+            .card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 24px;
+                transition: var(--transition);
+            }
+
+            .card:hover {
+                border-color: rgba(212, 184, 150, 0.25);
             }
 
             .grid {
-                grid-template-columns: minmax(0, 1fr);
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
             }
-        }
-    </style>
-</head>
-<body>
 
-<div class="page-glow"></div>
-<div class="noise-overlay"></div>
+            .grid-2 { grid-template-columns: repeat(2, 1fr); }
 
-<div class="page">
+            @media (max-width: 960px) {
+                .grid { grid-template-columns: repeat(2, 1fr); }
+            }
 
-    <!-- ================= NAVBAR ================= -->
-    <header class="nav">
-        <div class="nav-left">
-            <div class="nav-avatar">
-                @if(isset($user->profile) && $user->profile->profile_image)
-                    <img src="{{ asset('storage/'.$user->profile->profile_image) }}" alt="{{ $user->name }}" style="width:100%;height:100%;object-fit:cover;">
-                @else
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                @endif
-            </div>
-            <div>
-                <div class="nav-name">{{ $user->name }}</div>
-                <div class="nav-role">
-                    {{ $user->profile->tagline ?? 'Creative Developer & Designer' }}
-                </div>
-            </div>
+            @media (max-width: 720px) {
+                .grid, .grid-2 { grid-template-columns: 1fr; }
+            }
+
+            /* ─── SKILLS ─── */
+            .skill-name {
+                font-weight: 600;
+                font-size: 15px;
+                margin-bottom: 4px;
+            }
+
+            .skill-level {
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--text-dim);
+                margin-bottom: 12px;
+            }
+
+            .skill-bar {
+                height: 4px;
+                border-radius: 999px;
+                background: var(--bg-elevated);
+                overflow: hidden;
+            }
+
+            .skill-bar-fill {
+                height: 100%;
+                border-radius: inherit;
+                background: linear-gradient(90deg, var(--gold), var(--accent));
+                width: 0;
+                transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            /* ─── PROJECTS ─── */
+            .project-title {
+                font-family: var(--font-display);
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 8px;
+            }
+
+            .project-desc {
+                font-size: 14px;
+                color: var(--text-muted);
+                line-height: 1.6;
+            }
+
+            .project-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 16px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--gold);
+                transition: var(--transition);
+            }
+
+            .project-link:hover {
+                gap: 12px;
+                text-decoration: underline;
+            }
+
+            /* ─── CERTIFICATIONS ─── */
+            .cert-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 16px;
+            }
+
+            .cert-item {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                transition: var(--transition);
+            }
+
+            .cert-item:hover {
+                border-color: var(--gold-soft);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .cert-icon {
+                font-size: 2.2rem;
+                flex-shrink: 0;
+            }
+
+            .cert-image {
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                object-fit: cover;
+                flex-shrink: 0;
+            }
+
+            .cert-info { flex: 1; }
+            .cert-title { font-weight: 600; font-size: 14px; }
+            .cert-org { font-size: 12px; color: var(--text-muted); }
+            .cert-date { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+            .cert-link { font-size: 12px; color: var(--gold); font-weight: 500; }
+
+            /* ─── SERVICES ─── */
+            .services-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            @media (max-width: 960px) {
+                .services-grid { grid-template-columns: repeat(2, 1fr); }
+            }
+
+            @media (max-width: 720px) {
+                .services-grid { grid-template-columns: 1fr; }
+            }
+
+            .service-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 24px 20px;
+                text-align: center;
+                transition: var(--transition);
+            }
+
+            .service-card:hover {
+                border-color: var(--gold-soft);
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .service-icon { font-size: 2.5rem; margin-bottom: 12px; }
+            .service-title { font-weight: 600; font-size: 15px; }
+            .service-desc { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+            /* ─── ACHIEVEMENTS ─── */
+            .achievement-item {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 18px 20px;
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                transition: var(--transition);
+            }
+
+            .achievement-item:hover {
+                border-color: var(--gold-soft);
+                transform: translateX(4px);
+            }
+
+            .achievement-icon { font-size: 1.8rem; flex-shrink: 0; }
+            .achievement-title { font-weight: 600; font-size: 14px; }
+            .achievement-org { font-size: 12px; color: var(--text-muted); }
+            .achievement-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+            .achievement-date { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+            /* ─── VOLUNTEER ─── */
+            .volunteer-item {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 18px 20px;
+                transition: var(--transition);
+            }
+
+            .volunteer-item:hover {
+                border-color: var(--gold-soft);
+                transform: translateX(4px);
+            }
+
+            .volunteer-org { font-weight: 600; font-size: 14px; }
+            .volunteer-role { font-size: 13px; color: var(--text-muted); }
+            .volunteer-location { font-size: 12px; color: var(--text-dim); }
+            .volunteer-date { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+            /* ─── TESTIMONIALS ─── */
+            .testimonial-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            @media (max-width: 720px) {
+                .testimonial-grid { grid-template-columns: 1fr; }
+            }
+
+            .testimonial-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 22px;
+                transition: var(--transition);
+            }
+
+            .testimonial-card:hover {
+                border-color: var(--gold-soft);
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .testimonial-text {
+                font-style: italic;
+                font-size: 14px;
+                color: var(--text-muted);
+                line-height: 1.7;
+                margin-bottom: 12px;
+            }
+            .testimonial-author { font-weight: 600; font-size: 14px; }
+            .testimonial-role { font-size: 12px; color: var(--text-muted); }
+            .testimonial-rating { color: #fbbf24; font-size: 14px; margin-top: 6px; }
+
+            /* ─── GALLERY ─── */
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 14px;
+            }
+
+            .gallery-item {
+                border-radius: var(--radius-lg);
+                overflow: hidden;
+                border: 1px solid var(--border);
+                aspect-ratio: 1;
+                transition: var(--transition);
+            }
+
+            .gallery-item:hover {
+                transform: scale(1.04);
+                border-color: var(--gold-soft);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            /* ─── TIMELINE ─── */
+            .timeline { padding-left: 20px; position: relative; }
+
+            .timeline::before {
+                content: "";
+                position: absolute;
+                left: 5px;
+                top: 8px;
+                bottom: 8px;
+                width: 1px;
+                background: linear-gradient(var(--gold), transparent);
+            }
+
+            .timeline-item {
+                position: relative;
+                padding-left: 24px;
+                margin-bottom: 24px;
+            }
+
+            .timeline-item:last-child { margin-bottom: 0; }
+
+            .timeline-dot {
+                position: absolute;
+                left: 0;
+                top: 6px;
+                width: 11px;
+                height: 11px;
+                border-radius: 50%;
+                background: var(--bg);
+                border: 2px solid var(--gold);
+                transition: var(--transition);
+            }
+
+            .timeline-item:hover .timeline-dot {
+                background: var(--gold);
+                box-shadow: 0 0 0 4px var(--gold-soft);
+            }
+
+            .timeline-role {
+                font-weight: 600;
+                font-size: 15px;
+            }
+
+            .timeline-org {
+                font-size: 14px;
+                color: var(--text-muted);
+                margin-top: 2px;
+            }
+
+            .timeline-date {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 4px;
+            }
+
+            .timeline-desc {
+                font-size: 14px;
+                color: var(--text-muted);
+                margin-top: 8px;
+                line-height: 1.6;
+            }
+
+            /* ─── GOALS ─── */
+            .goals-list { list-style: none; display: grid; gap: 12px; }
+
+            .goal-item {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                padding: 14px 16px;
+                border-radius: var(--radius);
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                font-size: 14px;
+                color: var(--text-muted);
+                transition: var(--transition);
+            }
+
+            .goal-item:hover {
+                border-color: var(--gold-soft);
+                transform: translateX(4px);
+            }
+
+            .goal-item::before {
+                content: "◆";
+                color: var(--gold);
+                font-size: 10px;
+                margin-top: 4px;
+                flex-shrink: 0;
+            }
+
+            /* ─── CONTACT ─── */
+            .contact-grid {
+                display: grid;
+                grid-template-columns: 1.4fr 1fr;
+                gap: 24px;
+            }
+
+            @media (max-width: 960px) {
+                .contact-grid { grid-template-columns: 1fr; }
+            }
+
+            .contact-lead {
+                font-size: 15px;
+                color: var(--text-muted);
+                line-height: 1.75;
+            }
+
+            .contact-lead p + p { margin-top: 12px; }
+
+            .contact-email {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 20px;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--gold);
+                transition: var(--transition);
+            }
+
+            .contact-email:hover {
+                color: #e8d5b8;
+                gap: 12px;
+            }
+
+            .contact-aside {
+                padding: 24px;
+                border-radius: var(--radius-lg);
+                background: var(--bg-elevated);
+                border: 1px dashed var(--border-strong);
+                font-size: 13px;
+                color: var(--text-dim);
+                line-height: 1.6;
+            }
+
+            .footer-note {
+                text-align: center;
+                margin-top: 56px;
+                padding-top: 24px;
+                border-top: 1px solid var(--border);
+                font-size: 12px;
+                color: var(--text-dim);
+                letter-spacing: 0.04em;
+            }
+
+            /* ─── EMPTY STATE ─── */
+            .empty-state {
+                text-align: center;
+                color: var(--text-dim);
+                padding: 2rem;
+                background: var(--bg-elevated);
+                border-radius: var(--radius-lg);
+                border: 1px dashed var(--border-strong);
+            }
+        </style>
+    </head>
+    <body class="{{ !empty($isPreview) ? 'has-preview' : '' }}">
+
+    @php
+        // ─── VARIABLES ───
+        $profile        = optional($user->profile);
+        $experiences    = $user->experiences ?? collect();
+        $educations     = $user->educations ?? collect();
+        $projects       = $user->projects ?? collect();
+        $skills         = $user->skills ?? collect();
+        $goals          = $user->goals ?? collect();
+        $certifications = $user->certifications ?? collect();
+        $gallery        = $user->gallery ?? collect();
+        $volunteers     = $user->volunteer ?? collect();
+        $achievements   = $user->achievements ?? collect();
+        $services       = $user->services ?? collect();
+        $testimonials   = $user->testimonials ?? collect();
+
+        // ─── FLAGS ───
+        $hasAbout    = $profile->about_short || $profile->about_long || $profile->about_title;
+        $hasSkills   = $skills->count() > 0;
+        $hasProjects = $projects->count() > 0;
+        $hasGoals    = $goals->count() > 0;
+        $hasCerts    = $certifications->count() > 0;
+        $hasGallery  = $gallery->count() > 0;
+        $hasServices = $services->count() > 0;
+        $hasAchievements = $achievements->count() > 0;
+        $hasVolunteers = $volunteers->count() > 0;
+        $hasTestimonials = $testimonials->count() > 0;
+        $hasExp      = $experiences->count() > 0;
+        $hasEdu      = $educations->count() > 0;
+        $hasContact  = $profile->contact_email || $profile->location || $profile->contact_phone;
+        $hasSocial   = $profile->social_facebook || $profile->social_linkedin || $profile->social_github
+                    || $profile->social_instagram || $profile->social_twitter;
+    @endphp
+
+    @if(!empty($isPreview))
+        <div class="preview-ribbon">
+            Theme preview — sample content
+            <a href="{{ url('/') }}#themes">Choose this template</a>
         </div>
+    @endif
 
-        <nav class="nav-links">
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            @if(isset($user->experiences) && $user->experiences->count())
-                <a href="#experience">Experience</a>
-            @endif
-            @if(isset($user->educations) && $user->educations->count())
-                <a href="#education">Education</a>
-            @endif
-            @if(isset($user->goals) && $user->goals->count())
-                <a href="#goals">Goals</a>
-            @endif
-        </nav>
-
-        @if(isset($user->profile) && $user->profile->contact_email)
-            <a href="#contact" class="nav-cta">
-                <span>✉️</span> Contact
-            </a>
-        @endif
-    </header>
-
-    <!-- ================= HERO ================= -->
-    <section class="hero" id="top">
-        <div class="hero-card">
-            <div class="hero-inner">
-                <div class="hero-pill-row">
-                    <div class="hero-pill">
-                        <span>✨</span>
-                        <span>Open for opportunities</span>
-                    </div>
-                    @if(isset($user->profile) && $user->profile->location)
-                        <div class="hero-pill">
-                            <span>📍</span>
-                            <span>{{ $user->profile->location }}</span>
-                        </div>
-                    @endif
-                </div>
-
-                <h1 class="hero-heading">
-                    I craft <span>digital experiences</span> that feel fast, clean, and unforgettable.
-                </h1>
-
-                <p class="hero-tagline">
-                    {{ $user->profile->about_short ?? 'I design and build modern web experiences, focusing on performance, clarity, and detail that makes products stand out.' }}
-                </p>
-
-                <div class="hero-meta">
-                    <div class="hero-meta-item">
-                        <div class="hero-meta-label">Name</div>
-                        <div class="hero-meta-value">{{ $user->name }}</div>
-                    </div>
-
-                    @if(isset($user->skills) && $user->skills->count())
-                        <div class="hero-meta-item">
-                            <div class="hero-meta-label">Core Stack</div>
-                            <div class="hero-meta-value">
-                                {{ $user->skills->take(3)->pluck('name')->implode(' · ') }}
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="hero-actions">
-                    @if(isset($user->profile) && $user->profile->contact_email)
-                        <a href="#contact" class="btn-primary">
-                            <span>Let’s work together</span>
-                            <span>→</span>
-                        </a>
-                    @endif
-
-                    @if(isset($user->projects) && $user->projects->count())
-                        <a href="#projects" class="btn-ghost">
-                            <span>View selected projects</span>
-                        </a>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <aside class="hero-aside">
-            <div class="hero-profile">
-                <div class="hero-avatar-lg">
-                    @if(isset($user->profile) && $user->profile->profile_image)
-                        <img src="{{ asset('storage/'.$user->profile->profile_image) }}" alt="{{ $user->name }}" style="width:100%;height:100%;object-fit:cover;">
+    <div class="page">
+        <!-- ─── NAV ─── -->
+        <header class="nav">
+            <div class="nav-brand">
+                <div class="nav-avatar">
+                    @if($profile && $profile->profile_image)
+                        <img src="{{ asset('storage/' . $profile->profile_image) }}" alt="{{ $user->name }}">
                     @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     @endif
                 </div>
-                <div class="hero-profile-text">
-                    <div class="hero-profile-name">{{ $user->name }}</div>
-                    <div class="hero-profile-role">
-                        {{ $user->profile->tagline ?? 'Full-Stack Developer' }}
-                    </div>
-                    @if(isset($user->profile) && $user->profile->location)
-                        <div class="hero-profile-location">
-                            <span>📍</span>
-                            <span>{{ $user->profile->location }}</span>
-                        </div>
+                <div>
+                    <div class="nav-name">{{ $user->name }}</div>
+                    <div class="nav-role">{{ $profile->tagline ?? 'Creative Developer' }}</div>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                @if($hasAbout)<a href="#about">About</a>@endif
+                @if($hasSkills)<a href="#skills">Skills</a>@endif
+                @if($hasCerts)<a href="#certifications">Certifications</a>@endif
+                @if($hasProjects)<a href="#projects">Work</a>@endif
+                @if($hasServices)<a href="#services">Services</a>@endif
+                @if($hasExp)<a href="#experience">Experience</a>@endif
+                @if($hasGoals)<a href="#goals">Goals</a>@endif
+                @if($hasVolunteers)<a href="#goals">Volunteers</a>@endif
+
+
+            </nav>
+
+            @if($hasContact)
+                <a href="#contact" class="nav-cta">Contact</a>
+            @endif
+        </header>
+
+        <!-- ─── HERO ─── -->
+        <section class="hero" id="top">
+            <div>
+                <div class="hero-eyebrow">Available for work</div>
+                <h1 class="hero-heading">
+                    Crafting <em>refined</em> digital experiences with purpose.
+                </h1>
+                <p class="hero-lead">
+                    {{ $profile->about_short ?? 'I design and build premium web products — focused on clarity, performance, and detail that earns trust.' }}
+                </p>
+                <div class="hero-actions">
+                    @if($hasContact)
+                        <a href="#contact" class="btn-primary">Start a conversation</a>
+                    @endif
+                    @if($hasProjects)
+                        <a href="#projects" class="btn-ghost">View work</a>
+                    @endif
+                    @if(empty($isPreview) && $user->id)
+                        <a href="{{ route('portfolio.pdf', ['id' => $user->id, 'username' => $user->username]) }}" class="btn-ghost" target="_blank">Download CV</a>
+                    @else
+                        <span class="btn-ghost" style="opacity:0.5;cursor:default;">Download CV</span>
+                    @endif
+                    @if($profile && $profile->live_link)
+                        <a href="{{ $profile->live_link }}" target="_blank" class="btn-ghost">Live Demo</a>
                     @endif
                 </div>
             </div>
 
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-number">
-                        {{ isset($user->projects) ? str_pad($user->projects->count(), 2, '0', STR_PAD_LEFT) : '05' }}+
+            <aside class="hero-panel">
+                <div class="hero-profile">
+                    <div class="hero-avatar-lg">
+                        @if($profile && $profile->profile_image)
+                            <img src="{{ asset('storage/' . $profile->profile_image) }}" alt="{{ $user->name }}">
+                        @else
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        @endif
                     </div>
-                    <div class="hero-stat-label">Projects shipped</div>
+                    <div>
+                        <div class="hero-profile-name">{{ $user->name }}</div>
+                        <div class="hero-profile-role">{{ $profile->tagline ?? 'Full-Stack Developer' }}</div>
+                        @if($profile && $profile->location)
+                            <div class="hero-profile-role" style="margin-top:6px;">{{ $profile->location }}</div>
+                        @endif
+                    </div>
                 </div>
-                @if(isset($user->experiences) && $user->experiences->count())
+
+                <div class="hero-stats">
                     <div class="hero-stat">
-                        <div class="hero-stat-number">
-                            {{ $user->experiences->count() }}+
+                        <div class="hero-stat-num">{{ $projects->count() }}</div>
+                        <div class="hero-stat-label">Projects</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">{{ $skills->count() }}</div>
+                        <div class="hero-stat-label">Core skills</div>
+                    </div>
+                </div>
+
+                @if($hasSocial)
+                    <div>
+                        <div class="hero-social-title">Connect</div>
+                        <div class="hero-social-links">
+                            @if($profile->social_github)
+                                <a href="{{ $profile->social_github }}" target="_blank" rel="noopener">GitHub</a>
+                            @endif
+                            @if($profile->social_linkedin)
+                                <a href="{{ $profile->social_linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+                            @endif
+                            @if($profile->social_twitter)
+                                <a href="{{ $profile->social_twitter }}" target="_blank" rel="noopener">Twitter</a>
+                            @endif
+                            @if($profile->social_instagram)
+                                <a href="{{ $profile->social_instagram }}" target="_blank" rel="noopener">Instagram</a>
+                            @endif
+                            @if($profile->social_facebook)
+                                <a href="{{ $profile->social_facebook }}" target="_blank" rel="noopener">Facebook</a>
+                            @endif
                         </div>
-                        <div class="hero-stat-label">Companies collaborated</div>
                     </div>
                 @endif
-            </div>
-
-            @if(
-                isset($user->profile)
-                && (
-                    $user->profile->social_github
-                    || $user->profile->social_linkedin
-                    || $user->profile->social_twitter
-                    || $user->profile->social_instagram
-                    || $user->profile->social_facebook
-                )
-            )
-                <div class="hero-social">
-                    <div class="hero-social-title">Connect</div>
-                    <div class="hero-social-links">
-                        @if($user->profile->social_github)
-                            <a href="{{ $user->profile->social_github }}" target="_blank">
-                                <span class="emoji">🐙</span> GitHub
-                            </a>
-                        @endif
-                        @if($user->profile->social_linkedin)
-                            <a href="{{ $user->profile->social_linkedin }}" target="_blank">
-                                <span class="emoji">💼</span> LinkedIn
-                            </a>
-                        @endif
-                        @if($user->profile->social_twitter)
-                            <a href="{{ $user->profile->social_twitter }}" target="_blank">
-                                <span class="emoji">🐦</span> Twitter
-                            </a>
-                        @endif
-                        @if($user->profile->social_instagram)
-                            <a href="{{ $user->profile->social_instagram }}" target="_blank">
-                                <span class="emoji">📸</span> Instagram
-                            </a>
-                        @endif
-                        @if($user->profile->social_facebook)
-                            <a href="{{ $user->profile->social_facebook }}" target="_blank">
-                                <span class="emoji">📘</span> Facebook
-                            </a>
-                        @endif
-                    </div>
-                </div>
-            @endif
-        </aside>
-    </section>
-
-    <!-- ================= ABOUT ================= -->
-    @if(isset($user->profile) && ($user->profile->about_title || $user->profile->about_long || $user->profile->about_short))
-        <section class="section" id="about">
-            <div class="section-header">
-                <div>
-                    <div class="section-kicker">About</div>
-                    <h2 class="section-title">{{ $user->profile->about_title ?? 'Who I am' }}</h2>
-                </div>
-                <div class="section-subtitle">
-                    A quick snapshot of how I think and build.
-                </div>
-            </div>
-
-            <div class="card">
-                <p style="font-size: 14px; color: var(--text-muted); line-height: 1.8;">
-                    {{ $user->profile->about_long ?? $user->profile->about_short }}
-                </p>
-            </div>
+            </aside>
         </section>
-    @endif
 
-    <!-- ================= SKILLS ================= -->
-    @if(isset($user->skills) && $user->skills->count() > 0)
-        <section class="section" id="skills">
-            <div class="section-header">
-                <div>
-                    <div class="section-kicker">Skills</div>
-                    <h2 class="section-title">What I work with</h2>
+        <!-- ─── ABOUT ─── -->
+        @if($hasAbout)
+            <section class="section" id="about">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">About</div>
+                        <h2 class="section-title">{{ $profile->about_title ?? 'Philosophy' }}</h2>
+                    </div>
+                    <p class="section-sub">How I approach design, code, and collaboration.</p>
                 </div>
-                <div class="section-subtitle">
-                    A blend of tools and languages I use to ship real products.
+                <div class="card">
+                    <p style="font-size:15px;color:var(--text-muted);line-height:1.8;">
+                        {{ $profile->about_long ?? $profile->about_short }}
+                    </p>
                 </div>
-            </div>
+            </section>
+        @endif
 
-            <div class="grid">
-                @foreach($user->skills as $skill)
-                    @php
-                        $level = strtolower($skill->level ?? '');
-                        $percentage = 60;
-                        if ($level === 'expert') $percentage = 95;
-                        elseif ($level === 'intermediate') $percentage = 75;
-                        elseif ($level === 'beginner') $percentage = 50;
-                    @endphp
-                    <div class="card">
-                        <div class="skill-title">{{ $skill->name }}</div>
-                        @if($skill->level)
-                            <div class="skill-level">{{ strtoupper($skill->level) }}</div>
-                        @endif
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: {{ $percentage }}%;"></div>
+        <!-- ─── SKILLS ─── -->
+        @if($hasSkills)
+            <section class="section" id="skills">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Expertise</div>
+                        <h2 class="section-title">Skills & tools</h2>
+                    </div>
+                    <p class="section-sub">Technologies I use to ship polished products.</p>
+                </div>
+                <div class="grid">
+                    @foreach($skills as $skill)
+                        @php
+                            $level = strtolower($skill->level ?? '');
+                            $percentage = match($level) {
+                                'expert' => 95,
+                                'intermediate' => 72,
+                                'beginner' => 45,
+                                default => 60,
+                            };
+                        @endphp
+                        <div class="card">
+                            <div class="skill-name">{{ $skill->name }}</div>
+                            @if($skill->level)
+                                <div class="skill-level">{{ $skill->level }}</div>
+                            @endif
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="{{ $percentage }}%"></div>
+                            </div>
                         </div>
-                        @if(!empty($skill->description))
-                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-                                {{ $skill->description }}
-                            </p>
-                        @endif
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── CERTIFICATIONS ─── -->
+        @if($hasCerts)
+            <section class="section" id="certifications">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Credentials</div>
+                        <h2 class="section-title">📜 Certifications</h2>
                     </div>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
-    <!-- ================= PROJECTS ================= -->
-    @if(isset($user->projects) && $user->projects->count() > 0)
-        <section class="section" id="projects">
-            <div class="section-header">
-                <div>
-                    <div class="section-kicker">Projects</div>
-                    <h2 class="section-title">Selected work</h2>
+                    <p class="section-sub">Professional certifications that validate my expertise.</p>
                 </div>
-                <div class="section-subtitle">
-                    A few things I’ve built or collaborated on recently.
+                <div class="cert-grid">
+                    @foreach($certifications as $cert)
+                        <div class="cert-item">
+                            @if($cert->image)
+                                <img src="{{ asset('storage/' . $cert->image) }}" alt="{{ $cert->title }}" class="cert-image">
+                            @else
+                                <div class="cert-icon">🎓</div>
+                            @endif
+                            <div class="cert-info">
+                                <div class="cert-title">{{ $cert->title }}</div>
+                                <div class="cert-org">{{ $cert->organization }}</div>
+                                @if($cert->issue_date)
+                                    <div class="cert-date">{{ \Carbon\Carbon::parse($cert->issue_date)->format('M Y') }}</div>
+                                @endif
+                                @if($cert->credential_url)
+                                    <a href="{{ $cert->credential_url }}" target="_blank" class="cert-link">Verify →</a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
+            </section>
+        @endif
 
-            <div class="grid grid-2">
-                @foreach($user->projects as $project)
-                    <article class="card project-card">
-                        <div>
-                            <div class="project-title">{{ $project->title }}</div>
+        <!-- ─── SERVICES ─── -->
+        @if($hasServices)
+            <section class="section" id="services">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Offerings</div>
+                        <h2 class="section-title">💎 Services</h2>
+                    </div>
+                    <p class="section-sub">How I can help bring your ideas to life.</p>
+                </div>
+                <div class="services-grid">
+                    @foreach($services as $service)
+                        <div class="service-card">
+                            @if($service->icon)
+                                <div class="service-icon">{{ $service->icon }}</div>
+                            @endif
+                            <div class="service-title">{{ $service->title }}</div>
+                            @if($service->description)
+                                <div class="service-desc">{{ $service->description }}</div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── PROJECTS ─── -->
+        @if($hasProjects)
+            <section class="section" id="projects">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Portfolio</div>
+                        <h2 class="section-title">Selected work</h2>
+                    </div>
+                    <p class="section-sub">Projects that reflect my standards for craft.</p>
+                </div>
+                <div class="grid">
+                    @foreach($projects as $project)
+                        <article class="card">
+                            <h3 class="project-title">{{ $project->title }}</h3>
                             @if($project->short_description)
-                                <p class="project-description">{{ $project->short_description }}</p>
-                            @endif>
-                            @if($project->project_image)
-                                <div class="project-image-chip">
-                                    <span>🖼</span> Includes visuals
-                                </div>
+                                <p class="project-desc">{{ $project->short_description }}</p>
                             @endif
                             @if($project->project_url)
-                                <a href="{{ $project->project_url }}" target="_blank" class="project-link">
-                                    <span>Launch project</span>
-                                    <span>↗</span>
+                                <a href="{{ $project->project_url }}" target="_blank" rel="noopener" class="project-link">
+                                    View project →
                                 </a>
                             @endif
-                        </div>
-                        @if($project->tech_stack ?? false)
-                            <div class="project-meta">
-                                {{ $project->tech_stack }}
-                            </div>
-                        @endif
-                    </article>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
-    <!-- ================= EXPERIENCE ================= -->
-    @if(isset($user->experiences) && $user->experiences->count() > 0)
-        <section class="section" id="experience">
-            <div class="section-header">
-                <div>
-                    <div class="section-kicker">Experience</div>
-                    <h2 class="section-title">Where I’ve worked</h2>
+                        </article>
+                    @endforeach
                 </div>
-                <div class="section-subtitle">
-                    Roles and collaborations that shaped my craft.
-                </div>
-            </div>
+            </section>
+        @endif
 
-            <div class="card">
-                <div class="timeline">
-                    @foreach($user->experiences->sortByDesc('start_date') as $exp)
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-role">{{ $exp->role_title }}</div>
-                            <div class="timeline-company">
-                                {{ $exp->company }}
-                                @if($exp->location) · {{ $exp->location }} @endif
-                            </div>
-                            <div class="timeline-date">
-                                @if($exp->start_date)
-                                    {{ \Illuminate\Support\Carbon::parse($exp->start_date)->format('M Y') }}
-                                    –
-                                    @if($exp->is_current)
-                                        Present
-                                    @elseif($exp->end_date)
-                                        {{ \Illuminate\Support\Carbon::parse($exp->end_date)->format('M Y') }}
-                                    @else
-                                        …
-                                    @endif
+        <!-- ─── ACHIEVEMENTS ─── -->
+        @if($hasAchievements)
+            <section class="section" id="achievements">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Recognition</div>
+                        <h2 class="section-title">🏆 Achievements</h2>
+                    </div>
+                    <p class="section-sub">Milestones I'm proud of.</p>
+                </div>
+                <div style="display:grid; gap:12px;">
+                    @foreach($achievements as $achievement)
+                        <div class="achievement-item">
+                            <div class="achievement-icon">🏆</div>
+                            <div>
+                                <div class="achievement-title">{{ $achievement->title }}</div>
+                                @if($achievement->organization)
+                                    <div class="achievement-org">{{ $achievement->organization }}</div>
+                                @endif
+                                @if($achievement->description)
+                                    <div class="achievement-desc">{{ $achievement->description }}</div>
+                                @endif
+                                @if($achievement->achievement_date)
+                                    <div class="achievement-date">{{ \Carbon\Carbon::parse($achievement->achievement_date)->format('M Y') }}</div>
                                 @endif
                             </div>
-                            @if($exp->description)
-                                <div class="timeline-desc">{{ $exp->description }}</div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── VOLUNTEER ─── -->
+        @if($hasVolunteers)
+            <section class="section" id="volunteer">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Community</div>
+                        <h2 class="section-title">❤️ Volunteer Work</h2>
+                    </div>
+                    <p class="section-sub">Giving back to the community.</p>
+                </div>
+                <div style="display:grid; gap:12px;">
+                    @foreach($volunteers as $item)
+                        <div class="volunteer-item">
+                            <div class="volunteer-org">{{ $item->organization_name }}</div>
+                            <div class="volunteer-role">{{ $item->role }}</div>
+                            @if($item->location)
+                                <div class="volunteer-location">📍 {{ $item->location }}</div>
+                            @endif
+                            @if($item->description)
+                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">{{ $item->description }}</div>
+                            @endif
+                            <div class="volunteer-date">
+                                {{ optional($item->start_date)->format('M Y') }}
+                                @if($item->end_date)
+                                    – {{ \Carbon\Carbon::parse($item->end_date)->format('M Y') }}
+                                @elseif($item->currently_volunteering)
+                                    – Present
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── TESTIMONIALS ─── -->
+        @if($hasTestimonials)
+            <section class="section" id="testimonials">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Feedback</div>
+                        <h2 class="section-title">💬 Testimonials</h2>
+                    </div>
+                    <p class="section-sub">What people say about working with me.</p>
+                </div>
+                <div class="testimonial-grid">
+                    @foreach($testimonials as $testimonial)
+                        <div class="testimonial-card">
+                            @if($testimonial->message)
+                                <div class="testimonial-text">"{{ $testimonial->message }}"</div>
+                            @endif
+                            <div>
+                                <div class="testimonial-author">{{ $testimonial->name }}</div>
+                                @if($testimonial->role || $testimonial->company)
+                                    <div class="testimonial-role">
+                                        {{ $testimonial->role }}
+                                        @if($testimonial->company) • {{ $testimonial->company }} @endif
+                                    </div>
+                                @endif
+                                @if($testimonial->rating)
+                                    <div class="testimonial-rating">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            {!! $i <= $testimonial->rating ? '★' : '☆' !!}
+                                        @endfor
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── GALLERY ─── -->
+        @if($hasGallery)
+            <section class="section" id="gallery">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Visuals</div>
+                        <h2 class="section-title">📸 Gallery</h2>
+                    </div>
+                    <p class="section-sub">A glimpse into my creative world.</p>
+                </div>
+                <div class="gallery-grid">
+                    @foreach($gallery as $item)
+                        <div class="gallery-item">
+                            @if($item->image)
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title ?? 'Gallery' }}" loading="lazy">
                             @endif
                         </div>
                     @endforeach
                 </div>
-            </div>
-        </section>
-    @endif
+            </section>
+        @endif
 
-    <!-- ================= EDUCATION ================= -->
-    @if(isset($user->educations) && $user->educations->count() > 0)
-        <section class="section" id="education">
-            <div class="section-header">
-                <div>
-                    <div class="section-kicker">Education</div>
-                    <h2 class="section-title">Learning journey</h2>
+        <!-- ─── EXPERIENCE ─── -->
+        @if($hasExp)
+            <section class="section" id="experience">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Career</div>
+                        <h2 class="section-title">Experience</h2>
+                    </div>
+                    <p class="section-sub">Roles that shaped how I build.</p>
                 </div>
-                <div class="section-subtitle">
-                    Formal education that supports my technical background.
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="timeline">
-                    @foreach($user->educations->sortByDesc('start_date') as $edu)
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-role">
-                                {{ $edu->degree ?? 'Education' }}
-                                @if($edu->field_of_study) – {{ $edu->field_of_study }} @endif
-                            </div>
-                            <div class="timeline-company">
-                                {{ $edu->institution }}
-                                @if($edu->location) · {{ $edu->location }} @endif
-                            </div>
-                            <div class="timeline-date">
-                                @if($edu->start_date)
-                                    {{ \Illuminate\Support\Carbon::parse($edu->start_date)->format('Y') }}
-                                    –
-                                    @if($edu->is_current)
-                                        Present
-                                    @elseif($edu->end_date)
-                                        {{ \Illuminate\Support\Carbon::parse($edu->end_date)->format('Y') }}
-                                    @else
-                                        …
+                <div class="card">
+                    <div class="timeline">
+                        @foreach($experiences->sortByDesc('start_date') as $exp)
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-role">{{ $exp->role_title ?? $exp->title }}</div>
+                                <div class="timeline-org">
+                                    {{ $exp->company }}
+                                    @if($exp->location) · {{ $exp->location }} @endif
+                                    @if($exp->employment_type) · {{ $exp->employment_type }} @endif
+                                </div>
+                                <div class="timeline-date">
+                                    @if($exp->start_date)
+                                        {{ \Carbon\Carbon::parse($exp->start_date)->format('M Y') }} –
+                                        {{ $exp->is_current ? 'Present' : ($exp->end_date ? \Carbon\Carbon::parse($exp->end_date)->format('M Y') : '…') }}
                                     @endif
+                                </div>
+                                @if($exp->description)
+                                    <p class="timeline-desc">{{ $exp->description }}</p>
                                 @endif
                             </div>
-                            @if($edu->description)
-                                <div class="timeline-desc">{{ $edu->description }}</div>
-                            @endif
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        </section>
-    @endif
+            </section>
+        @endif
 
-    <!-- ================= GOALS ================= -->
-    @if(isset($user->goals) && $user->goals->count() > 0)
-        <section class="section" id="goals">
-            <div class="section-header">
+        <!-- ─── EDUCATION ─── -->
+        @if($hasEdu)
+            <section class="section" id="education">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Education</div>
+                        <h2 class="section-title">Academic path</h2>
+                    </div>
+                    <p class="section-sub">Learning journey that supports my work.</p>
+                </div>
+                <div class="card">
+                    <div class="timeline">
+                        @foreach($educations->sortByDesc('start_date') as $edu)
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-role">
+                                    {{ $edu->degree ?? 'Degree' }}
+                                    @if($edu->field_of_study) — {{ $edu->field_of_study }} @endif
+                                </div>
+                                <div class="timeline-org">
+                                    {{ $edu->institution }}
+                                    @if($edu->location) · {{ $edu->location }} @endif
+                                </div>
+                                <div class="timeline-date">
+                                    @if($edu->start_date)
+                                        {{ \Carbon\Carbon::parse($edu->start_date)->format('Y') }} –
+                                        {{ $edu->is_current ? 'Present' : ($edu->end_date ? \Carbon\Carbon::parse($edu->end_date)->format('Y') : '…') }}
+                                    @endif
+                                </div>
+                                @if($edu->description)
+                                    <p class="timeline-desc">{{ $edu->description }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── GOALS ─── -->
+        @if($hasGoals)
+            <section class="section" id="goals">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">Forward</div>
+                        <h2 class="section-title">Goals</h2>
+                    </div>
+                    <p class="section-sub">What I'm working toward next.</p>
+                </div>
+                <div class="card">
+                    <ul class="goals-list">
+                        @foreach($goals as $goal)
+                            <li class="goal-item">{{ $goal->goal_text }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </section>
+        @endif
+
+        <!-- ─── CONTACT ─── -->
+        <section class="section" id="contact">
+            <div class="section-head">
                 <div>
-                    <div class="section-kicker">Goals</div>
-                    <h2 class="section-title">What I’m aiming for</h2>
+                    <div class="section-kicker">Contact</div>
+                    <h2 class="section-title">Let's collaborate</h2>
                 </div>
-                <div class="section-subtitle">
-                    A look at what I want to build and learn next.
+                <p class="section-sub">Open to roles, freelance, and meaningful projects.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="card contact-lead">
+                    @if($profile && $profile->about_short)
+                        <p>{{ $profile->about_short }}</p>
+                    @else
+                        <p>I'd love to hear about what you're building. Share a brief overview and I'll respond within 48 hours.</p>
+                    @endif
+                    @if($profile && $profile->contact_email)
+                        <a href="mailto:{{ $profile->contact_email }}" class="contact-email">{{ $profile->contact_email }}</a>
+                    @endif
+                    @if($profile && $profile->contact_phone)
+                        <div style="margin-top:8px; font-size:14px; color:var(--text-dim);">
+                            📱 {{ $profile->contact_phone }}
+                        </div>
+                    @endif
+                </div>
+                <div class="contact-aside">
+                    @if($profile && $profile->location)
+                        📍 Based in {{ $profile->location }}<br>
+                    @endif
+                    Prefer email for first contact — calendar links and forms can be added in your dashboard.
+                    @if($profile && $profile->live_link)
+                        <br><br>
+                        🌐 <a href="{{ $profile->live_link }}" target="_blank" style="color:var(--gold);">{{ $profile->live_link }}</a>
+                    @endif
                 </div>
             </div>
-
-            <div class="card">
-                <ul class="goals-list">
-                    @foreach($user->goals as $goal)
-                        <li class="goal-item">
-                            <span>🎯</span>
-                            <span>{{ $goal->goal_text }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+            <p class="footer-note">© {{ now()->year }} {{ $user->name }}</p>
         </section>
-    @endif
+    </div>
 
-    <!-- ================= CONTACT ================= -->
-    <section class="section" id="contact">
-        <div class="section-header">
-            <div>
-                <div class="section-kicker">Contact</div>
-                <h2 class="section-title">Let’s build something</h2>
-            </div>
-            <div class="section-subtitle">
-                A short message is all it takes to start.
-            </div>
-        </div>
+    <script>
+        // ─── ANIMATE SKILL BARS ───
+        const skillSection = document.querySelector('#skills');
+        if (skillSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                            const width = bar.getAttribute('data-width');
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            }, { threshold: 0.3 });
 
-        <div class="contact-card">
-            <div class="contact-main">
-                @if(isset($user->profile) && $user->profile->about_short)
-                    <p>{{ $user->profile->about_short }}</p>
-                @else
-                    <p>
-                        I’m always open to discussing new projects, collaborations, or just talking about design, code,
-                        and ideas. Tell me what you’re working on and how I can help.
-                    </p>
-                @endif
+            observer.observe(skillSection);
+        }
 
-                @if(isset($user->profile) && $user->profile->contact_email)
-                    <div class="contact-pill">
-                        <span>✉️</span>
-                        <a href="mailto:{{ $user->profile->contact_email }}">{{ $user->profile->contact_email }}</a>
-                    </div>
-                @endif
+        // ─── SMOOTH SCROLL ───
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 
-                @if(isset($user->profile) && $user->profile->location)
-                    <div class="contact-pill">
-                        <span>📍</span>
-                        <span>{{ $user->profile->location }}</span>
-                    </div>
-                @endif
-            </div>
+    </body>
+    </html>
 
-            <div class="contact-side">
-                Tip: you can add a real contact form here in Laravel (name, email, message) and send it to your inbox
-                or store as leads in your database.
-            </div>
-        </div>
-
-        <div class="footer-note">
-            © {{ now()->year }} {{ $user->name }} · Designed with care.
-        </div>
-    </section>
-</div>
-
-</body>
-</html>
