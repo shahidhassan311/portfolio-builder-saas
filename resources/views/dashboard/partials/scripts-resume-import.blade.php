@@ -1,14 +1,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-    const flashWrapper = document.getElementById('flash-message');
-    const flashInner = document.getElementById('flash-message-inner');
-
     function showFlash(message, type = 'success') {
-        if (!flashWrapper || !flashInner) return;
-        flashInner.textContent = message;
-        flashWrapper.className = 'portal-flash ' + (type === 'success' ? 'success' : 'error');
-        flashWrapper.classList.remove('hidden');
+        if (typeof window.showPortalFlash === 'function') {
+            window.showPortalFlash(type, message);
+        }
     }
 
     const resumeDropzone = document.getElementById('resume-dropzone');

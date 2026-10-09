@@ -1216,14 +1216,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
             const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
-            const flashWrapper = document.getElementById('flash-message');
-            const flashInner = document.getElementById('flash-message-inner');
-
             function showFlash(message, type = 'success') {
-                if (!flashWrapper || !flashInner) return;
-                flashInner.textContent = message;
-                flashWrapper.className = 'portal-flash ' + (type === 'success' ? 'success' : 'error');
-                flashWrapper.classList.remove('hidden');
+                if (typeof window.showPortalFlash === 'function') {
+                    window.showPortalFlash(type, message);
+                }
             }
 
             function clearErrors(form) {
@@ -1532,26 +1528,13 @@
                     let data = {};
                     try { data = await res.json(); } catch (e) {}
 
-                    const flashWrapper = document.getElementById('flash-message');
-                    const flashInner = document.getElementById('flash-message-inner');
-                    if (!flashWrapper || !flashInner) return;
-
                     if (res.ok) {
-                        flashInner.textContent = data.message || 'Order saved.';
-                        flashWrapper.className = 'portal-flash success';
+                        showFlash(data.message || 'Order saved.', 'success');
                     } else {
-                        flashInner.textContent = data.message || 'Could not save order.';
-                        flashWrapper.className = 'portal-flash error';
+                        showFlash(data.message || 'Could not save order.', 'error');
                     }
-                    flashWrapper.classList.remove('hidden');
                 }).catch(() => {
-                    const flashWrapper = document.getElementById('flash-message');
-                    const flashInner = document.getElementById('flash-message-inner');
-                    if (flashWrapper && flashInner) {
-                        flashInner.textContent = 'Could not save order. Please try again.';
-                        flashWrapper.className = 'portal-flash error';
-                        flashWrapper.classList.remove('hidden');
-                    }
+                    showFlash('Could not save order. Please try again.', 'error');
                 });
             }
 
@@ -1735,25 +1718,13 @@
                 body: formData
             }).then(res => res.json())
             .then(data => {
-                const flashWrapper = document.getElementById('flash-message');
-                const flashInner = document.getElementById('flash-message-inner');
-                if (flashWrapper && flashInner) {
-                    flashInner.textContent = data.message || 'Skill updated successfully!';
-                    flashWrapper.className = 'portal-flash success';
-                    flashWrapper.classList.remove('hidden');
-                }
+                window.showPortalFlash?.('success', data.message || 'Skill updated successfully!');
                 const row = document.querySelector(`[data-skill-id="${id}"] span`);
                 if (row) {
-                    row.innerHTML = `<strong>${newName}</strong>` + (newLevel ? ` <span class="portal-meta">— ${newLevel}</span>` : '');
+                    row.innerHTML = `<strong>${newName}</strong>` + (newLevel ? ` <span class="portal-meta"> · ${newLevel}</span>` : '');
                 }
             }).catch(() => {
-                const flashWrapper = document.getElementById('flash-message');
-                const flashInner = document.getElementById('flash-message-inner');
-                if (flashWrapper && flashInner) {
-                    flashInner.textContent = 'Network error. Please try again.';
-                    flashWrapper.className = 'portal-flash error';
-                    flashWrapper.classList.remove('hidden');
-                }
+                window.showPortalFlash?.('error', 'Network error. Please try again.');
             });
         }
 
@@ -1782,23 +1753,11 @@
             })
             .then(res => res.json())
             .then(data => {
-                const flashWrapper = document.getElementById('flash-message');
-                const flashInner = document.getElementById('flash-message-inner');
-                if (flashWrapper && flashInner) {
-                    flashInner.textContent = data.message || 'Gallery image updated successfully!';
-                    flashWrapper.className = 'portal-flash success';
-                    flashWrapper.classList.remove('hidden');
-                }
+                window.showPortalFlash?.('success', data.message || 'Gallery image updated successfully!');
                 setTimeout(() => window.location.reload(), 700);
             })
             .catch(() => {
-                const flashWrapper = document.getElementById('flash-message');
-                const flashInner = document.getElementById('flash-message-inner');
-                if (flashWrapper && flashInner) {
-                    flashInner.textContent = 'Network error. Please try again.';
-                    flashWrapper.className = 'portal-flash error';
-                    flashWrapper.classList.remove('hidden');
-                }
+                window.showPortalFlash?.('error', 'Network error. Please try again.');
             });
         }
 

@@ -1,125 +1,76 @@
 <x-guest-layout>
 
-    <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold">Verify Email</h2>
-
-        <p class="mt-2 text-gray-600">
-            We have sent a 6-digit OTP to
+    <div class="auth-header">
+        <h1>Verify Email</h1>
+        <p>
+            We sent a 6-digit OTP to
             <strong>{{ $user->email }}</strong>
         </p>
     </div>
 
-
-    {{-- Success Message --}}
-    @if(session('success'))
-        <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
-
-
-    {{-- Error Message --}}
-    @if(session('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            {{ session('error') }}
-        </div>
-    @endif
-
-
-    {{-- Validation Error --}}
-    @if($errors->any())
-        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            {{ $errors->first() }}
-        </div>
-    @endif
-
-
-
-    {{-- OTP Verify Form --}}
-    <form method="POST" action="{{ route('otp.verify', $user) }}">
+    <form method="POST" action="{{ route('otp.verify', $user) }}" class="auth-form">
         @csrf
 
-        <div>
-            <x-input-label for="otp" value="OTP Code" />
-
-            <x-text-input
+        <div class="auth-field">
+            <label for="otp">OTP Code</label>
+            <input
                 id="otp"
                 name="otp"
                 type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 maxlength="6"
-                class="block mt-1 w-full text-center tracking-widest"
+                class="auth-input"
+                style="text-align: center; letter-spacing: 0.35em; font-size: 1.25rem; font-weight: 600;"
                 autofocus
-            />
-
-            <x-input-error
-                :messages="$errors->get('otp')"
-                class="mt-2"
-            />
+                required
+                autocomplete="one-time-code"
+            >
+            @if ($errors->has('otp'))
+                <ul class="auth-error">
+                    @foreach ($errors->get('otp') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
-
-        <div class="mt-6">
-            <x-primary-button class="w-full justify-center">
+        <div class="auth-actions">
+            <button type="submit" class="btn btn-primary auth-submit">
                 Verify OTP
-            </x-primary-button>
+            </button>
         </div>
-
     </form>
 
-
-
-    {{-- Resend OTP --}}
-    <div class="mt-5 text-center">
-
+    <div class="auth-actions" style="margin-top: 8px;">
         <form method="POST" action="{{ route('otp.resend', $user) }}">
             @csrf
-
             <button
                 id="resendBtn"
                 type="submit"
-                class="text-blue-600 hover:underline disabled:text-gray-400"
+                class="btn btn-outline auth-submit auth-resend-btn"
                 disabled
             >
-                Resend OTP in
-                <span id="timer">60</span> seconds
+                Resend OTP in <span id="timer">60</span> seconds
             </button>
-
         </form>
-
     </div>
 
+    <script>
+        let time = 60;
+        const timerEl = document.getElementById('timer');
+        const resendBtn = document.getElementById('resendBtn');
 
+        const countdown = setInterval(function () {
+            time--;
+            timerEl.textContent = time;
 
-<script>
-
-let time = 60;
-
-let timer = document.getElementById('timer');
-let resendBtn = document.getElementById('resendBtn');
-
-
-let countdown = setInterval(function(){
-
-    time--;
-
-    timer.innerHTML = time;
-
-
-    if(time <= 0){
-
-        clearInterval(countdown);
-
-        resendBtn.disabled = false;
-
-        resendBtn.innerHTML = "Resend OTP";
-
-    }
-
-
-},1000);
-
-
-</script>
-
+            if (time <= 0) {
+                clearInterval(countdown);
+                resendBtn.disabled = false;
+                resendBtn.textContent = 'Resend OTP';
+            }
+        }, 1000);
+    </script>
 
 </x-guest-layout>

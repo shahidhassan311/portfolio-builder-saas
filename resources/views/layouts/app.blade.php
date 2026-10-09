@@ -37,5 +37,6 @@
             </main>
         </div>
         @stack('portal-scripts')
+        <x-toast-stack />
     </body>
 </html>

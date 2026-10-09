@@ -45,5 +45,3 @@
         </div>
     </div>
 </footer>
-
-<x-webchat-widget />

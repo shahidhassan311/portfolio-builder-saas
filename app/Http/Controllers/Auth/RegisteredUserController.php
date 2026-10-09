@@ -10,12 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use App\Models\UserBlock;
 use App\Models\ProfessionBlock;
 use Illuminate\View\View;
 use App\Models\EmailOtp;
 use App\Events\UserRegistered;
+use App\Support\RegistrationDraft;
+use App\Models\Theme;
+use Illuminate\Http\JsonResponse;
 
 
 class RegisteredUserController extends Controller
@@ -75,17 +79,41 @@ class RegisteredUserController extends Controller
     /**
      * STEP 3 (Register View)
      */
-    public function create(): View
-{
-    $themes = \App\Models\Theme::where('is_active', true)->get();
+    public function create(Request $request): View
+    {
+        $themes = Theme::where('is_active', true)->get();
+        $professions = Profession::orderBy('name')->get();
+        $draft = RegistrationDraft::get($request);
 
-    $professions = Profession::orderBy('name')->get();
+        return view('auth.register', [
+            'themes' => $themes,
+            'professions' => $professions,
+            'draftProfessionId' => RegistrationDraft::resolvedProfessionId($request),
+            'draftThemeId' => RegistrationDraft::resolvedThemeId($request),
+            'draftName' => old('name', $draft['name'] ?? ''),
+            'draftUsername' => old('username', $draft['username'] ?? ''),
+            'draftEmail' => old('email', $draft['email'] ?? ''),
+        ]);
+    }
 
-    return view('auth.register', [
-        'themes' => $themes,
-        'professions' => $professions,
-    ]);
-}
+    public function saveDraft(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'profession_id' => ['sometimes', 'nullable', 'integer', 'exists:professions,id'],
+            'theme_id' => ['sometimes', 'nullable', 'integer', 'exists:themes,id'],
+            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'username' => ['sometimes', 'nullable', 'string', 'max:255', 'alpha_dash'],
+            'email' => ['sometimes', 'nullable', 'string', 'email', 'max:255'],
+        ]);
+
+        if (isset($validated['theme_id']) && ! RegistrationDraft::isActiveTheme((int) $validated['theme_id'])) {
+            return response()->json(['message' => 'The selected template is not available.'], 422);
+        }
+
+        RegistrationDraft::merge($request, $validated);
+
+        return response()->json(['saved' => true]);
+    }
     /**
      * FINAL REGISTER
      */
@@ -114,8 +142,8 @@ class RegisteredUserController extends Controller
             ],
 
             'theme_id' => [
-                'nullable',
-                'exists:themes,id',
+                'required',
+                Rule::exists('themes', 'id')->where('is_active', true),
             ],
 
             'profession_id' => [
@@ -128,6 +156,14 @@ class RegisteredUserController extends Controller
         $existingUser = User::where('email', $request->email)->first();
 
         // Already verified
+        RegistrationDraft::merge($request, $request->only([
+            'profession_id',
+            'theme_id',
+            'name',
+            'username',
+            'email',
+        ]));
+
         if ($existingUser && $existingUser->email_verified_at) {
             return back()
                 ->withErrors([
@@ -210,6 +246,8 @@ class RegisteredUserController extends Controller
         $message = $existingUser
             ? 'You already started registration. A new OTP has been sent to your email.'
             : 'Registration successful. Please verify your email using the OTP we sent.';
+
+        RegistrationDraft::forget($request);
 
         return redirect()
             ->route('otp.verify.form', $user)

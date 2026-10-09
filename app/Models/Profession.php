@@ -13,7 +13,23 @@ class Profession extends Model
 
     protected $fillable = [
         'name',
+        'icon',
     ];
+
+    /**
+     * Font Awesome 6 class suffix for the stored icon key (Lucide-style slugs from seed data).
+     */
+    public function fontAwesomeIconClass(): string
+    {
+        $icon = $this->icon ?? 'briefcase';
+
+        return match ($icon) {
+            'pen-tool' => 'pen-nib',
+            'megaphone' => 'bullhorn',
+            'bar-chart-3' => 'chart-column',
+            default => $icon,
+        };
+    }
 
     public function users()
     {

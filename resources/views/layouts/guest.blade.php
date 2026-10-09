@@ -19,6 +19,6 @@
             </div>
             <p class="auth-back"><a href="{{ url('/') }}">&larr; Back to home</a></p>
         </div>
-        <x-webchat-widget />
+        <x-toast-stack />
     </body>
 </html>

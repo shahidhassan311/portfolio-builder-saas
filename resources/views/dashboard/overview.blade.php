@@ -80,7 +80,7 @@
                 </form>
             </div>
         @else
-            <div class="portal-flash success">You’re on the Pro waitlist. Preview Pro UI: <strong>pro@resumizo.test</strong> / password</div>
+            <div class="portal-callout portal-callout--info">You are on the Pro waitlist. Preview Pro UI: <strong>pro@resumizo.test</strong> / password</div>
         @endif
 
     @elseif ($user->isProPlan())

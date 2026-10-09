@@ -4,10 +4,6 @@
         <p>Enter your email and we'll send you a link to choose a new password.</p>
     </div>
 
-    @if (session('status'))
-        <div class="auth-status" style="margin-bottom: 20px;">{{ session('status') }}</div>
-    @endif
-
     <form method="POST" action="{{ route('password.email') }}" class="auth-form">
         @csrf
 

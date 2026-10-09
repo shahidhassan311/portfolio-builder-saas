@@ -19,3 +19,4 @@
 <meta property="og:description" content="{{ $portfolioSeo['description'] }}">
 <meta property="og:image" content="{{ $portfolioSeo['og_image'] }}">
 <link rel="icon" type="image/png" href="{{ asset(config('branding.logo')) }}">
+<x-ahrefs-analytics />
