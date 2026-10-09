@@ -23,5 +23,6 @@
 
     <x-marketing-footer />
 </div>
+<x-toast-stack />
 </body>
 </html>

@@ -13,19 +13,21 @@ return [
 
     'site_name' => env('SEO_SITE_NAME', 'Resumizo'),
 
-    'tagline' => 'Portfolio & resume builder — no code required',
+    'tagline' => 'Portfolio and resume builder. No code required.',
 
     'default_title' => 'Portfolio Builder & Resume Builder | Resumizo',
 
     'title_separator' => ' | ',
 
-    'default_description' => 'Create a professional portfolio and resume website with Resumizo. Choose templates, publish a live link, and export PDF — no coding required.',
+    'default_description' => 'Create a professional portfolio and resume website with Resumizo. Choose templates, publish a live link, and export a PDF. No coding required.',
 
     'default_keywords' => 'portfolio builder, resume builder, resume website, online portfolio, ATS resume, resumizo',
 
     'default_robots' => 'index, follow',
 
     'twitter_handle' => env('SEO_TWITTER_HANDLE', '@resumizo'),
+
+    'ahrefs_analytics_key' => env('SEO_AHREFS_KEY'),
 
     'locale' => env('SEO_LOCALE', 'en_US'),
 

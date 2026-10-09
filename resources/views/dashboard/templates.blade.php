@@ -15,11 +15,7 @@
             @foreach ($recommendedThemes as $theme)
                 <article class="portal-template-card {{ $user->active_theme_id === $theme->id ? 'is-active' : '' }}">
                     <div class="portal-template-preview">
-                        @if ($theme->preview_image)
-                            <img src="{{ asset('storage/' . $theme->preview_image) }}" alt="{{ $theme->name }}">
-                        @else
-                            <div class="portal-template-placeholder">{{ $theme->name }}</div>
-                        @endif
+                        <x-theme-preview-thumb :theme="$theme" class="portal-template-preview-inner" />
 
                         @if ($user->active_theme_id === $theme->id)
                             <span class="portal-template-active-badge">Active</span>
@@ -61,11 +57,7 @@
             @foreach ($otherThemes as $theme)
                 <article class="portal-template-card {{ $user->active_theme_id === $theme->id ? 'is-active' : '' }}">
                     <div class="portal-template-preview">
-                        @if ($theme->preview_image)
-                            <img src="{{ asset('storage/' . $theme->preview_image) }}" alt="{{ $theme->name }}">
-                        @else
-                            <div class="portal-template-placeholder">{{ $theme->name }}</div>
-                        @endif
+                        <x-theme-preview-thumb :theme="$theme" class="portal-template-preview-inner" />
 
                         @if ($user->active_theme_id === $theme->id)
                             <span class="portal-template-active-badge">Active</span>

@@ -22,6 +22,9 @@ Route::post('/theme', [RegisteredUserController::class, 'storeTheme'])->name('th
 Route::post('/profession', [RegisteredUserController::class, 'storeProfession'])->name('profession.store');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register/draft', [RegisteredUserController::class, 'saveDraft'])
+    ->middleware('throttle:60,1')
+    ->name('register.draft');
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])

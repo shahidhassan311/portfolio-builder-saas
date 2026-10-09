@@ -1,13 +1,13 @@
 @php $user = auth()->user(); @endphp
 <x-portal-layout active="export" title="PDF export" description="{{ config('plans.free.features.pdf') }} — download a resume-style PDF from your portfolio.">
     @if (! $user->active_theme_id)
-        <div class="portal-flash error">
-            Choose a template first — <a href="{{ route('dashboard.templates') }}" style="text-decoration:underline;">Browse templates</a>
+        <div class="portal-callout portal-callout--warn">
+            Choose a template first. <a href="{{ route('dashboard.templates') }}" style="text-decoration:underline;">Browse templates</a>
         </div>
     @endif
 
     @if ($user->isProPlan())
-        <div class="portal-flash success">Priority PDF export is enabled on your Pro plan.</div>
+        <div class="portal-callout portal-callout--info">Priority PDF export is enabled on your Pro plan.</div>
     @endif
 
     <div class="portal-action-card portal-action-card--center">

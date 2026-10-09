@@ -17,13 +17,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 // Programmatic SEO hubs (must stay above the portfolio catch-all route)
-$seoHubs = implode('|', array_keys(config('seo.programmatic_hubs', [])));
-Route::get('/{hub}', [ProgrammaticSeoController::class, 'hub'])
-    ->where('hub', $seoHubs)
-    ->name('seo.hub');
-Route::get('/{hub}/{slug}', [ProgrammaticSeoController::class, 'page'])
-    ->where('hub', $seoHubs)
-    ->name('seo.page');
+$seoHubKeys = array_keys(config('seo.programmatic_hubs', []));
+if ($seoHubKeys !== []) {
+    $seoHubs = implode('|', $seoHubKeys);
+    Route::get('/{hub}', [ProgrammaticSeoController::class, 'hub'])
+        ->where('hub', $seoHubs)
+        ->name('seo.hub');
+    Route::get('/{hub}/{slug}', [ProgrammaticSeoController::class, 'page'])
+        ->where('hub', $seoHubs)
+        ->name('seo.page');
+}
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');

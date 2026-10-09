@@ -15,7 +15,7 @@
                         The fastest way to ship a <em>hire-ready portfolio</em>
                     </h1>
                     <p class="hero-sub">
-                        Pick a polished template, add your story, and publish a live site plus matching PDF — built for recruiters, not designers.
+                        Choose a professional template, add your experience, and publish a live portfolio with a matching PDF export.
                     </p>
                     <div class="hero-badges">
                         <span class="badge"><x-marketing-icon name="check" /> Unlimited edits</span>
@@ -79,7 +79,7 @@
 
         <section class="trust-bar">
             <div class="max">
-                <p>Built for people who need a professional presence — fast</p>
+                <p>Built for professionals who need a credible online presence quickly</p>
                 <div class="trust-chips">
                     <span class="trust-chip">Fresh graduates</span>
                     <span class="trust-chip">Freelancers</span>
@@ -95,13 +95,13 @@
                 <div class="section-head">
                     <span class="section-label">Product</span>
                     <h2>Everything you need to get hired</h2>
-                    <p class="section-sub">A focused portfolio builder — no bloated page builders, no code. Ship a recruiter-ready site in one afternoon.</p>
+                    <p class="section-sub">A focused portfolio builder without page-builder complexity or code. Launch a recruiter-ready site in one session.</p>
                 </div>
                 <div class="features-grid">
                     <article class="feature-card">
                         <div class="feature-icon"><x-marketing-icon name="templates" /></div>
                         <h3>Premium templates</h3>
-                        <p>Professional layouts tuned for screen and PDF — switch themes without rewriting content.</p>
+                        <p>Professional layouts optimized for web and PDF. Switch themes without rewriting your content.</p>
                     </article>
                     <article class="feature-card">
                         <div class="feature-icon"><x-marketing-icon name="preview" /></div>
@@ -116,7 +116,7 @@
                     <article class="feature-card">
                         <div class="feature-icon"><x-marketing-icon name="link" /></div>
                         <h3>Shareable link</h3>
-                        <p>One link for email, LinkedIn, and applications — always up to date.</p>
+                        <p>One link for email, LinkedIn, and applications that stays current as you update your profile.</p>
                     </article>
                     <article class="feature-card">
                         <div class="feature-icon"><x-marketing-icon name="lock" /></div>
@@ -126,7 +126,7 @@
                     <article class="feature-card">
                         <div class="feature-icon"><x-marketing-icon name="mobile" /></div>
                         <h3>Mobile-ready</h3>
-                        <p>Every theme looks sharp on phones — where many recruiters first look.</p>
+                        <p>Every theme is responsive and readable on mobile devices.</p>
                     </article>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                 <div class="section-head">
                     <span class="section-label">Process</span>
                     <h2>How it works</h2>
-                    <p class="section-sub">Three steps and you’re portfolio-ready. Students, freshers, freelancers — anyone can launch.</p>
+                    <p class="section-sub">Three steps to a portfolio-ready profile. Suitable for students, graduates, freelancers, and career changers.</p>
                 </div>
                 <div class="steps">
                     <div class="step-card">
@@ -148,7 +148,7 @@
                     <div class="step-card">
                         <div class="step-num">02</div>
                         <h3>Add your story</h3>
-                        <p>Fill simple sections — about, skills, projects, experience — no complicated settings.</p>
+                        <p>Complete structured sections for your summary, skills, projects, and experience.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-num">03</div>
@@ -164,7 +164,7 @@
                 <div class="section-head">
                     <span class="section-label">Templates</span>
                     <h2>Choose your theme</h2>
-                    <p class="section-sub">Switch anytime — your content stays intact across every layout.</p>
+                    <p class="section-sub">Change templates anytime. Your content remains intact across every layout.</p>
                 </div>
 
                 @if(isset($themes) && $themes->count())
@@ -217,7 +217,7 @@
                         @endforeach
                     </div>
                 @else
-                    <p class="section-sub">No themes are available yet. Please check back soon — new layouts are coming.</p>
+                    <p class="section-sub">No themes are available yet. Please check back soon for new layouts.</p>
                 @endif
             </div>
         </section>
@@ -247,7 +247,7 @@
                             <div class="point-icon"><x-marketing-icon name="target" /></div>
                             <div>
                                 <strong>Built for job hunts</strong>
-                                <p style="margin:6px 0 0; color:var(--text-muted); font-size:14px;">Share a live link in emails, export PDF for HR — both stay in sync.</p>
+                                <p style="margin:6px 0 0; color:var(--text-muted); font-size:14px;">Share a live link in applications and export a PDF for HR. Both stay in sync.</p>
                             </div>
                         </div>
                     </div>
@@ -275,7 +275,7 @@
                 <div class="section-head">
                     <span class="section-label">Social proof</span>
                     <h2>Loved by people building their careers</h2>
-                    <p class="section-sub">Real outcomes from a simple workflow — pick a template, fill your story, share your link.</p>
+                    <p class="section-sub">Results from a straightforward workflow: select a template, add your content, and share your link.</p>
                 </div>
                 <div class="testimonials-grid">
                     @foreach([
@@ -365,7 +365,7 @@
                     <div class="why-card">
                         <h3>Designed for clarity</h3>
                         <ul>
-                            <li>No complicated settings — just the fields recruiters expect.</li>
+                            <li>Structured fields aligned with what recruiters expect to see.</li>
                             <li>Modern typography tuned for screen and PDF.</li>
                             <li>Themes handle the polish; you focus on content.</li>
                         </ul>
@@ -383,7 +383,7 @@
                         <ul>
                             <li>Share a link recruiters skim faster than attachments.</li>
                             <li>Look professional on first impression.</li>
-                            <li>Update once — site and PDF stay aligned.</li>
+                            <li>Update once and keep your live site and PDF aligned.</li>
                         </ul>
                         <a href="{{ route('register') }}" class="btn btn-primary" style="width:100%; margin-top:24px;">Start free</a>
                     </div>
@@ -395,7 +395,7 @@
             <div class="max">
                 <div class="cta-banner">
                     <h2>Your next role starts with a better portfolio</h2>
-                    <p>Join thousands who ship a professional site and PDF in minutes — not weeks.</p>
+                    <p>Join professionals who publish a portfolio site and PDF in minutes, not weeks.</p>
                     <div class="cta-actions">
                         <a href="{{ route('register') }}" class="btn btn-primary">Create free account</a>
                         <a href="#themes" class="btn btn-outline">Browse templates</a>
@@ -478,28 +478,6 @@
                 </div>
                 <div class="contact-container">
                     <div class="contact-form-wrapper">
-                        @if(session('success'))
-                            <div class="alert alert-success">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                {{ session('success') }}
-                            </div>
-                        @endif
-
-                        @if($errors->any())
-                            <div class="alert alert-error">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                                </svg>
-                                <ul>
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
                         <form action="{{ route('contact.submit') }}" method="POST" class="contact-form">
                             @csrf
                             <div class="form-row">

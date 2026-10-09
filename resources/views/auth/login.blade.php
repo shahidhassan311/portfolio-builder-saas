@@ -4,10 +4,6 @@
         <p>Log in to edit your portfolio and export your PDF.</p>
     </div>
 
-    @if (session('status'))
-        <div class="auth-status" style="margin-bottom: 20px;">{{ session('status') }}</div>
-    @endif
-
     <form method="POST" action="{{ route('login') }}" class="auth-form">
         @csrf
 

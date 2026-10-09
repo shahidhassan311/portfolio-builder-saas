@@ -69,3 +69,5 @@
 @if($json = $schemaJson())
 <script type="application/ld+json">{!! $json !!}</script>
 @endif
+
+<x-ahrefs-analytics />
